@@ -44,22 +44,22 @@ class PieChart extends THREE.Group {
     // chart 描く
     let prev_damage_position = 0;
     const drowPie = (start, end, chartColor, sectorNum) => {
-      //geometryの宣言と生成
-      var geometry = new THREE.Geometry();
 
       for(var i = start; i < end; i+= stride){
         const positions = getRotPosition(i, radius);
 
-        
-        // draw pie
-        geometry.vertices.push( new THREE.Vector3( 0, 0, 0) ); 
-        geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) ); 
-        geometry.vertices.push( new THREE.Vector3( positions.x, 15, positions.z) ); 
-        geometry.vertices.push( new THREE.Vector3( 0, 15, 0) ); 
-        //線オブジェクトの生成	
-        var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: chartColor} ) );
-        //scenelistにlineを追加
-        this.add(line);
+        // Draw each segments
+        const group = new THREE.Group();
+        const geometry = new THREE.BoxGeometry( 1, 15, radius );
+        var material = new THREE.MeshBasicMaterial( {color: chartColor} );
+        const box = new THREE.Mesh( geometry, material );
+        box.position.y = 7.5;
+        box.position.z = radius/2;
+        group.add( box );
+        const radian = i * Math.PI / 180;
+        group.rotation.y = radian;
+        this.add(group);
+
 
         // 負荷のグラフ
         //geometryの宣言と生成
@@ -71,10 +71,10 @@ class PieChart extends THREE.Group {
           //頂点座標の追加
           damage_geometry.vertices.push( new THREE.Vector3( positions.x, prev_damage_position, positions.z) ); 
           damage_geometry.vertices.push( new THREE.Vector3( positions.x, damage_position, positions.z) ); 
-          var material = new THREE.LineBasicMaterial( { color: 0xffffff} );
+          material = new THREE.LineBasicMaterial( { color: 0xffffff} );
           material.linewidth = 3;
           //線オブジェクトの生成	
-          line = new THREE.Line( damage_geometry, material );
+          var line = new THREE.Line( damage_geometry, material );
           //sceneにlineを追加
           this.add( line );
           prev_damage_position = damage_position;
