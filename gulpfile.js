@@ -49,7 +49,7 @@ gulp.task('scss.compile', function () {
 // jsファイル用
 // concat
 gulp.task('js.concat', function () {
-    return gulp.src('public/assets/js/*.js')
+    return gulp.src('public/assets/js/chart/*.js')
     .pipe(plumber())
     .pipe(concat('bundle.js'))
     .pipe(gulp.dest('public/assets/main-js/'));
@@ -61,14 +61,15 @@ gulp.task('js.uglify', function() {
       .pipe(uglify('bundle.min.js'))
       .pipe(gulp.dest('public/assets/main-js/'));
 });
-gulp.task('js', gulp.series('js.concat', 'js.uglify'))
-gulp.task('scss', gulp.series('scss.concat', 'scss.compile'))
+// gulp.task('js', gulp.series('js.concat', 'js.uglify'));
+gulp.task('js', gulp.series('js.concat'));
+gulp.task('scss', gulp.series('scss.concat', 'scss.compile'));
 
 
 
 gulp.task('watch', function () {
     gulp.watch('public/assets/scss/*.scss', gulp.task('scss'));
-    gulp.watch('public/assets/js/*.js', gulp.task('js'));
+    gulp.watch('public/assets/js/chart/*.js', gulp.task('js'));
 });
 
 gulp.task('default', gulp.series( gulp.parallel('scss', 'js')));

@@ -1,13 +1,13 @@
-.pieChart {
-  width: 600px;
-  height: 400px;
-}
-
 #maps {
-  width: 300px;
+  width: 500px;
   height: 400px;
+  // margin: 0 auto;
 }
 
-.float {
-  display: float;
+.graphs {
+  .pieChart {
+    width: 600px;
+    height: 400px;
+  }
 }
+
