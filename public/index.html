@@ -8,17 +8,19 @@
 <body>
   <!-- 親のタグの基準点をリセット -->
   
-  <div id="maps"></div>
+  
   <section class="graphs">
     <h2>ターンテーブル軸受にかかる負荷のグラフ（３D）</h2>
-    <div class="pieChart">
-      <canvas id="myCanvas"></canvas>
+    <div class="flex">
+      <div id="maps"></div>
+      <div class="pieChart">
+        <canvas id="myCanvas"></canvas>
+      </div>
     </div>
     <h2>canvasグラフのサンプル</h2>
     <div class="frame">
       <div class="chart" id="lineChartContainer" style="height: 370px;"></div>
       <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
-      <div class="chart" id="pieChartContainer" style="height: 300px;"></div>
       <div class="chart" id="mixChartContainer" style="height: 300px;"></div>
     </div>
   </section>

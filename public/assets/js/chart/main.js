@@ -36,9 +36,14 @@ function init() {
   camera.rotation.set(0, -Math.PI/2,0);
   // カメラコントローラーを作成
   const controls = new THREE.OrbitControls(camera);
-  controls.minDistance = radius*2;
-  controls.maxDistance = Infinity;
+  // controls.minDistance = radius*2;
+  // controls.maxDistance = Infinity;
   controls.maxPolarAngle = Math.PI/2;
+  // to disable zoom 
+  controls.enableZoom = false;
+
+// to disable pan 
+controls.enablePan = false; 
   controls.update();
 
   camera.lookAt(new THREE.Vector3(0, 0, 0));

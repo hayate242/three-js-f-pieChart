@@ -42,6 +42,11 @@ class PieChart extends THREE.Group {
         const sin = 10 * Math.sin(10*radian) + 40 + 10*radian/2;
         return sin;
     }
+    // 適当な負荷値を返す関数
+    const getDamage = ( angle ) => {
+      
+    }
+
 
     // chart 描く
     let prev_damage_position = 0;
@@ -137,7 +142,7 @@ class PieChart extends THREE.Group {
         that.add(textMesh);
       });
     }
-    
+
     // 関数呼び出し
     drowPie(start, end, chartColor, sectorNum);
     drawVerticalLines(start);

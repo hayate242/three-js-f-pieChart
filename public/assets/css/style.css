@@ -3,7 +3,16 @@
   height: 400px;
 }
 
+.flex {
+  display: flex;
+}
+
+.graphs {
+  margin: 30px;
+}
+
 .graphs .pieChart {
   width: 600px;
   height: 400px;
+  margin-left: 15px;
 }

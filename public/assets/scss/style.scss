@@ -4,9 +4,14 @@
   // margin: 0 auto;
 }
 
+.flex {
+  display: flex;
+}
 .graphs {
+  margin: 30px;
   .pieChart {
     width: 600px;
     height: 400px;
+    margin-left: 15px;
   }
 }
