@@ -40,7 +40,7 @@ function init() {
   // controls.maxDistance = Infinity;
   controls.maxPolarAngle = Math.PI/2;
   // to disable zoom 
-  controls.enableZoom = false;
+  // controls.enableZoom = false;
 
 // to disable pan 
 controls.enablePan = false; 
