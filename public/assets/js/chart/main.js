@@ -18,11 +18,13 @@ function init() {
 
   // レンダラーを作成
   const renderer = new THREE.WebGLRenderer({
-    // antialias: true,
+    antialias: true,
     canvas: document.querySelector('#myCanvas'),
   });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
+  // 背景色
+  renderer.setClearColor(0xf8f8f8);
 
   // シーンを作成
   const scene = new THREE.Scene();

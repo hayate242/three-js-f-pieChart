@@ -69,8 +69,8 @@ class PieChart extends THREE.Group {
           var holi_geometry = new THREE.Geometry();
           holi_geometry.vertices.push( new THREE.Vector3( positions.x, line_height, positions.z) );
           holi_geometry.vertices.push( new THREE.Vector3( next_positions.x, line_height, next_positions.z) );
-          material = new THREE.LineBasicMaterial( { color: 0xffffff} );
-          material.linewidth = 3;
+          material = new THREE.LineBasicMaterial( { color: 0x000000} );
+          material.linewidth = 2;
           var holizontal_line = new THREE.Line( holi_geometry, material );
           //sceneにlineを追加
           // console.log(this);
@@ -88,7 +88,7 @@ class PieChart extends THREE.Group {
           damage_geometry.vertices.push( new THREE.Vector3( positions.x, prev_damage_position, positions.z) ); 
           damage_geometry.vertices.push( new THREE.Vector3( positions.x, damage_position, positions.z) ); 
           material = new THREE.LineBasicMaterial( { color: 0xff0000} );
-          material.linewidth = 3;
+          material.linewidth = 2;
           //線オブジェクトの生成	
           var line = new THREE.Line( damage_geometry, material );
           //sceneにlineを追加
@@ -105,17 +105,14 @@ class PieChart extends THREE.Group {
         var ver_geometry = new THREE.Geometry();
         ver_geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) );
         ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_damage, positions.z) );
-        var material = new THREE.LineBasicMaterial( { color: 0xffffff} );
-        material.linewidth = 3;
+        var material = new THREE.LineBasicMaterial( { color: 0x000000} );
+        material.linewidth = 2;
         var vertical_line = new THREE.Line( ver_geometry, material );
         //sceneにlineを追加
         console.log(this);
         this.add( vertical_line );
     }
-    // 横の線
-    const drawHorizontalLine = (interval) => {
-
-    }
+    
 
     // textを描く
     const drawText = (text, angle) => {
