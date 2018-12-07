@@ -2,7 +2,7 @@
 class PieChart extends THREE.Group {
 
   
-  constructor(start, end, chartColor, sectorNum, text) {
+  constructor(startAngle, endAngle, chartColor, sectorNum, text) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
     super();
 
@@ -16,6 +16,7 @@ class PieChart extends THREE.Group {
       
       var positions = {
         x: x,
+        y: 0,
         z: z
       };
       return positions;
@@ -87,12 +88,14 @@ class PieChart extends THREE.Group {
     const interval = 20;
     var max_damage = getMaxDamage();
 
+    this.axisLabelGroup = new THREE.Group();
+
     console.log(max_damage);
 
     // chart 描く
-    const drowPie = (start, end, chartColor, sectorNum) => {
+    const drowPie = (startAngle, endAngle, chartColor, sectorNum) => {
 
-      for(var i = start; i < end; i+= stride){
+      for(var i = startAngle; i < endAngle; i+= stride){
         const positions = getRotPosition(i, radius);
         const next_positions = getRotPosition(i + stride, radius);
 
@@ -143,22 +146,52 @@ class PieChart extends THREE.Group {
       }
     }
     // 縦の線を書く
-    const drawVerticalLines = (start) => {
-      const positions = getRotPosition(start, radius);
-        // console.log(positions);
-        // 縦の線
-        var ver_geometry = new THREE.Geometry();
-        ver_geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) );
-        ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_damage, positions.z) );
-        var material = new THREE.LineBasicMaterial( { color: 0x000000} );
-        material.linewidth = 2;
-        var vertical_line = new THREE.Line( ver_geometry, material );
-        //sceneにlineを追加
-        this.add( vertical_line );
+    const drawVerticalLines = (startAngle, angle) => {
+      const positions = getRotPosition(startAngle, radius);
+      // console.log(positions);
+      // 縦の線
+      var ver_geometry = new THREE.Geometry();
+      ver_geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) );
+      ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_damage, positions.z) );
+      var material = new THREE.LineBasicMaterial( { color: 0x000000} );
+      material.linewidth = 2;
+      var vertical_line = new THREE.Line( ver_geometry, material );
+      //sceneにlineを追加
+      this.add( vertical_line );
+
+      for(var i = 0; i <= max_damage; i += interval){
+        // positions.y = i + 5;
+        drawAxisLabelVal( positions, String(i) , i+5 ,startAngle);
+      }
+    }
+
+    const drawAxisLabelVal = (positions, text, y, angle) => {
+
+      // 縦軸の数値を追加
+      const that = this;
+      const loader = new THREE.FontLoader();
+      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+        const textGeometry = new THREE.TextGeometry(text, {
+          font: font,
+          size: 5,
+          height: 1,
+          curveSegments: 12
+        });
+        const materials = [
+          new THREE.MeshBasicMaterial( { color: 0x0f0f0f, overdraw: 0.5 } ),
+          new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
+        ];
+        const textMesh = new THREE.Mesh(textGeometry, materials);
+        console.log(positions);
+        textMesh.position.set(positions.x, y, positions.z);
+        textMesh.rotation.set( 0,Math.PI * angle / 180,0 );
+        that.axisLabelGroup.add(textMesh);
+        that.add(that.axisLabelGroup);
+      });
     }
     
 
-    // textを描く
+    // pie上のtextを描く
     const drawText = (text, angle) => {
       const positions = getRotPosition(angle, radius*0.7);
       // function内でthisの内容が変わるためthatで記憶しておく
@@ -183,10 +216,15 @@ class PieChart extends THREE.Group {
     }
 
     // 関数呼び出し
-    drowPie(start, end, chartColor, sectorNum);
-    drawVerticalLines(start);
+    drowPie(startAngle, endAngle, chartColor, sectorNum);
+    drawVerticalLines(startAngle);
     drawText(text, (sectorNum+1)*sectorAngle-25);
   }
+
+  // /** 更新命令を定義します。 */
+  // update() {
+  //   // this.axisLabelGroup.rotation.setFromRotationMatrix( this.camera.matrix );　//これを追加
+  // }
 }
 
 
@@ -288,8 +326,8 @@ function init() {
   // to disable zoom 
   // controls.enableZoom = false;
 
-// to disable pan 
-controls.enablePan = false; 
+  // to disable pan 
+  // controls.enablePan = false; 
   controls.update();
 
   camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -347,10 +385,15 @@ controls.enablePan = false;
 
   //描画
   function render() {
-    renderer.render(scene, camera);
     // animation
     requestAnimationFrame(render);
     controls.update();
+
+    // directionalLight.position = camera.position; //これを追加
+    // for(var i = 0; i <= sectorNum; i++ ){
+    //   sectorlist[i].update();
+    // }
+    renderer.render(scene, camera);
   }
 
   // // 初期化のために実行

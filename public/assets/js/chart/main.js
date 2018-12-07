@@ -42,8 +42,8 @@ function init() {
   // to disable zoom 
   // controls.enableZoom = false;
 
-// to disable pan 
-controls.enablePan = false; 
+  // to disable pan 
+  // controls.enablePan = false; 
   controls.update();
 
   camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -101,10 +101,15 @@ controls.enablePan = false;
 
   //描画
   function render() {
-    renderer.render(scene, camera);
     // animation
     requestAnimationFrame(render);
     controls.update();
+
+    // directionalLight.position = camera.position; //これを追加
+    // for(var i = 0; i <= sectorNum; i++ ){
+    //   sectorlist[i].update();
+    // }
+    renderer.render(scene, camera);
   }
 
   // // 初期化のために実行
