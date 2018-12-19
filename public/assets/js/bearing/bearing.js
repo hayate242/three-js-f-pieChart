@@ -1,5 +1,5 @@
 /** グループを継承したサブクラスです。 */
-class PieChart extends THREE.Group {
+class Bearing extends THREE.Group {
 
   
   constructor(startAngle, endAngle, chartColor, sectorNum, text) {

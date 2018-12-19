@@ -64,7 +64,7 @@ class PieChart extends THREE.Group {
     }
     const getMaxDamage = () => {
       var max_damage = 0;
-      for(i = 0; i < 360; i+= stride){
+      for(var i = 0; i < 360; i+= stride){
         const damage = getDamage(i);
         // 最大値の更新
         if( max_damage < damage ){ max_damage = Number(damage); }
@@ -182,7 +182,6 @@ class PieChart extends THREE.Group {
           new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
-        console.log(positions);
         textMesh.position.set(positions.x, y, positions.z);
         textMesh.rotation.set( 0,Math.PI * angle / 180,0 );
         that.axisLabelGroup.add(textMesh);
@@ -228,58 +227,58 @@ class PieChart extends THREE.Group {
 }
 
 
-var chart = new CanvasJS.Chart("columnChartContainer", {
-    theme: "light1", // "light2", "dark1", "dark2"
-    animationEnabled: false, // change to true		
-    title:{
-        text: "棒グラフ"
-    },
-    data: [
-    {
-        // Change type to "bar", "area", "spline", "pie",etc.
-        type: "column",
-        dataPoints: [
-            { label: "apple",  y: 10  },
-            { label: "orange", y: 15  },
-            { label: "banana", y: 25  },
-            { label: "mango",  y: 30  },
-            { label: "grape",  y: 28  }
-        ]
-    }
-    ]
-});
-chart.render();
+// var chart = new CanvasJS.Chart("columnChartContainer", {
+//     theme: "light1", // "light2", "dark1", "dark2"
+//     animationEnabled: false, // change to true		
+//     title:{
+//         text: "棒グラフ"
+//     },
+//     data: [
+//     {
+//         // Change type to "bar", "area", "spline", "pie",etc.
+//         type: "column",
+//         dataPoints: [
+//             { label: "apple",  y: 10  },
+//             { label: "orange", y: 15  },
+//             { label: "banana", y: 25  },
+//             { label: "mango",  y: 30  },
+//             { label: "grape",  y: 28  }
+//         ]
+//     }
+//     ]
+// });
+// chart.render();
     
     
 
-    var limit = 1000;
+    // var limit = 1000;
     
-    var y = 0;
-    var data = [];
-    var dataSeries = { type: "line" };
-    var dataPoints = [];
-    for (var i = 0; i < limit; i += 1) {
-        y += (Math.random() * 10 - 5);
-        dataPoints.push({
-            x: i - limit / 2,
-            y: y
-        });
-    }
-    dataSeries.dataPoints = dataPoints;
-    data.push(dataSeries);
+    // var y = 0;
+    // var data = [];
+    // var dataSeries = { type: "line" };
+    // var dataPoints = [];
+    // for (var i = 0; i < limit; i += 1) {
+    //     y += (Math.random() * 10 - 5);
+    //     dataPoints.push({
+    //         x: i - limit / 2,
+    //         y: y
+    //     });
+    // }
+    // dataSeries.dataPoints = dataPoints;
+    // data.push(dataSeries);
 
-    var chart = new CanvasJS.Chart("lineChartContainer", {
-        animationEnabled: true,
-        zoomEnabled: true,
-        title:{
-            text: "折れ線グラフ" 
-        },
-        axisY :{
-            includeZero:false
-        },
-        data: data  // random generator below
-    });
-    chart.render();
+    // var chart = new CanvasJS.Chart("lineChartContainer", {
+    //     animationEnabled: true,
+    //     zoomEnabled: true,
+    //     title:{
+    //         text: "クレーンの使用頻度" 
+    //     },
+    //     axisY :{
+    //         includeZero:false
+    //     },
+    //     data: data  // random generator below
+    // });
+    // chart.render();
     
 
 // ページの読み込みを待つ
@@ -424,110 +423,170 @@ function init() {
   // }
 
 }
-var chart = new CanvasJS.Chart("mixChartContainer", {
-	animationEnabled: true,
-	theme: "light2",
-	title: {
-		text: "月別xxxデータ"
-	},
-	axisX: {
-		valueFormatString: "MMM"
-	},
-	axisY: {
-		prefix: "",
-		labelFormatter: addSymbols
-	},
-	toolTip: {
-		shared: true
-	},
-	legend: {
-		cursor: "pointer",
-		itemclick: toggleDataSeries
-	},
-	data: [
-	{
-		type: "column",
-		name: "実際の量",
-		showInLegend: true,
-		xValueFormatString: "MMMM YYYY",
-		yValueFormatString: "#,##0",
-		dataPoints: [
-			{ x: new Date(2018, 0), y: 20000 },
-			{ x: new Date(2018, 1), y: 30000 },
-			{ x: new Date(2018, 2), y: 25000 },
-			{ x: new Date(2018, 3), y: 70000, indexLabel: "High Renewals" },
-			{ x: new Date(2018, 4), y: 50000 },
-			{ x: new Date(2018, 5), y: 35000 },
-			{ x: new Date(2018, 6), y: 30000 },
-			{ x: new Date(2018, 7), y: 43000 },
-			{ x: new Date(2018, 8), y: 35000 },
-			{ x: new Date(2018, 9), y:  30000},
-			{ x: new Date(2018, 10), y: 40000 },
-			{ x: new Date(2018, 11), y: 50000 }
-		]
-	}, 
-	{
-		type: "line",
-		name: "予想量",
-		showInLegend: true,
-		yValueFormatString: "#,##0",
-		dataPoints: [
-			{ x: new Date(2018, 0), y: 40000 },
-			{ x: new Date(2018, 1), y: 42000 },
-			{ x: new Date(2018, 2), y: 45000 },
-			{ x: new Date(2018, 3), y: 45000 },
-			{ x: new Date(2018, 4), y: 47000 },
-			{ x: new Date(2018, 5), y: 43000 },
-			{ x: new Date(2018, 6), y: 42000 },
-			{ x: new Date(2018, 7), y: 43000 },
-			{ x: new Date(2018, 8), y: 41000 },
-			{ x: new Date(2018, 9), y: 45000 },
-			{ x: new Date(2018, 10), y: 42000 },
-			{ x: new Date(2018, 11), y: 50000 }
-		]
-	},
-	{
-		type: "area",
-		name: "xxxx",
-		markerBorderColor: "white",
-		markerBorderThickness: 2,
-		showInLegend: true,
-		yValueFormatString: "#,##0",
-		dataPoints: [
-			{ x: new Date(2018, 0), y: 5000 },
-			{ x: new Date(2018, 1), y: 7000 },
-			{ x: new Date(2018, 2), y: 6000},
-			{ x: new Date(2018, 3), y: 30000 },
-			{ x: new Date(2018, 4), y: 20000 },
-			{ x: new Date(2018, 5), y: 15000 },
-			{ x: new Date(2018, 6), y: 13000 },
-			{ x: new Date(2018, 7), y: 20000 },
-			{ x: new Date(2018, 8), y: 15000 },
-			{ x: new Date(2018, 9), y:  10000},
-			{ x: new Date(2018, 10), y: 19000 },
-			{ x: new Date(2018, 11), y: 22000 }
-		]
-	}]
-});
-chart.render();
+// var chart = new CanvasJS.Chart("mixChartContainer", {
+// 	animationEnabled: true,
+// 	theme: "light2",
+// 	title: {
+// 		text: "月別xxxデータ"
+// 	},
+// 	axisX: {
+// 		valueFormatString: "MMM"
+// 	},
+// 	axisY: {
+// 		prefix: "",
+// 		labelFormatter: addSymbols
+// 	},
+// 	toolTip: {
+// 		shared: true
+// 	},
+// 	legend: {
+// 		cursor: "pointer",
+// 		itemclick: toggleDataSeries
+// 	},
+// 	data: [
+// 	{
+// 		type: "column",
+// 		name: "実際の量",
+// 		showInLegend: true,
+// 		xValueFormatString: "MMMM YYYY",
+// 		yValueFormatString: "#,##0",
+// 		dataPoints: [
+// 			{ x: new Date(2018, 0), y: 20000 },
+// 			{ x: new Date(2018, 1), y: 30000 },
+// 			{ x: new Date(2018, 2), y: 25000 },
+// 			{ x: new Date(2018, 3), y: 70000, indexLabel: "High Renewals" },
+// 			{ x: new Date(2018, 4), y: 50000 },
+// 			{ x: new Date(2018, 5), y: 35000 },
+// 			{ x: new Date(2018, 6), y: 30000 },
+// 			{ x: new Date(2018, 7), y: 43000 },
+// 			{ x: new Date(2018, 8), y: 35000 },
+// 			{ x: new Date(2018, 9), y:  30000},
+// 			{ x: new Date(2018, 10), y: 40000 },
+// 			{ x: new Date(2018, 11), y: 50000 }
+// 		]
+// 	}, 
+// 	{
+// 		type: "line",
+// 		name: "予想量",
+// 		showInLegend: true,
+// 		yValueFormatString: "#,##0",
+// 		dataPoints: [
+// 			{ x: new Date(2018, 0), y: 40000 },
+// 			{ x: new Date(2018, 1), y: 42000 },
+// 			{ x: new Date(2018, 2), y: 45000 },
+// 			{ x: new Date(2018, 3), y: 45000 },
+// 			{ x: new Date(2018, 4), y: 47000 },
+// 			{ x: new Date(2018, 5), y: 43000 },
+// 			{ x: new Date(2018, 6), y: 42000 },
+// 			{ x: new Date(2018, 7), y: 43000 },
+// 			{ x: new Date(2018, 8), y: 41000 },
+// 			{ x: new Date(2018, 9), y: 45000 },
+// 			{ x: new Date(2018, 10), y: 42000 },
+// 			{ x: new Date(2018, 11), y: 50000 }
+// 		]
+// 	},
+// 	{
+// 		type: "area",
+// 		name: "xxxx",
+// 		markerBorderColor: "white",
+// 		markerBorderThickness: 2,
+// 		showInLegend: true,
+// 		yValueFormatString: "#,##0",
+// 		dataPoints: [
+// 			{ x: new Date(2018, 0), y: 5000 },
+// 			{ x: new Date(2018, 1), y: 7000 },
+// 			{ x: new Date(2018, 2), y: 6000},
+// 			{ x: new Date(2018, 3), y: 30000 },
+// 			{ x: new Date(2018, 4), y: 20000 },
+// 			{ x: new Date(2018, 5), y: 15000 },
+// 			{ x: new Date(2018, 6), y: 13000 },
+// 			{ x: new Date(2018, 7), y: 20000 },
+// 			{ x: new Date(2018, 8), y: 15000 },
+// 			{ x: new Date(2018, 9), y:  10000},
+// 			{ x: new Date(2018, 10), y: 19000 },
+// 			{ x: new Date(2018, 11), y: 22000 }
+// 		]
+// 	}]
+// });
+// chart.render();
 
-function addSymbols(e) {
-	var suffixes = ["", "K", "M", "B"];
-	var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
+// function addSymbols(e) {
+// 	var suffixes = ["", "K", "M", "B"];
+// 	var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
 
-	if(order > suffixes.length - 1)                	
-		order = suffixes.length - 1;
+// 	if(order > suffixes.length - 1)                	
+// 		order = suffixes.length - 1;
 
-	var suffix = suffixes[order];      
-	return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
-}
+// 	var suffix = suffixes[order];      
+// 	return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+// }
 
-function toggleDataSeries(e) {
-	if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-		e.dataSeries.visible = false;
-	} else {
-		e.dataSeries.visible = true;
-	}
-	e.chart.render();
-}
+// function toggleDataSeries(e) {
+// 	if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+// 		e.dataSeries.visible = false;
+// 	} else {
+// 		e.dataSeries.visible = true;
+// 	}
+// 	e.chart.render();
+// }
 
+
+
+
+  var chart = new CanvasJS.Chart("scatterChartContainer", {
+    animationEnabled: true,
+    title:{
+      text: "クレーンの吊り荷の分布"
+    },
+    axisX: {
+      title:"吊り荷の重さ(100kg)"
+    },
+    axisY:{
+      title: "中心から吊り荷の距離(m)"
+    },
+    data: [{
+      type: "scatter",
+		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
+      name: "クレーン１",
+      showInLegend: true,
+      dataPoints: [
+        { x: 23, y: 330 },
+        { x: 28, y: 390 },
+        { x: 39, y: 400 },
+        { x: 34, y: 430 },
+        { x: 24, y: 321 },
+        { x: 29, y: 250 },
+        { x: 29, y: 370 },
+        { x: 23, y: 290 },
+        { x: 27, y: 250 },
+        { x: 34, y: 380 },
+        { x: 36, y: 320 },
+        { x: 33, y: 405 },
+        { x: 32, y: 453 },
+        { x: 21, y: 292 }
+      ]
+    },
+    {
+      type: "scatter",
+      name: "クレーン2",
+      showInLegend: true, 
+		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
+      dataPoints: [
+        { x: 19, y: 200 },
+        { x: 27, y: 300 },
+        { x: 35, y: 330 },
+        { x: 32, y: 190 },
+        { x: 29, y: 189 },
+        { x: 22, y: 150 },
+        { x: 27, y: 200 },
+        { x: 26, y: 190 },
+        { x: 24, y: 225 },
+        { x: 33, y: 330 },
+        { x: 34, y: 250 },
+        { x: 30, y: 120 },
+        { x: 37, y: 153 },
+        { x: 24, y: 196 }
+      ]
+    }]
+  });
+  chart.render();
