@@ -1,7 +1,36 @@
 // ページの読み込みを待つ
 window.addEventListener('load', init);
 
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+  }
+}
+
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+  var result = []; // 最終的な二次元配列を入れるための配列
+  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+
+  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+  for(var i=0;i<tmp.length;++i){
+      result[i] = tmp[i].split(',');
+  }
+
+  console.log(result); // 300yen
+}
+
 function init() {
+  console.log("getCSV");
+  getCSV("../../data/demo.csv");
+
+
   // サイズを指定
   const width = 600;
   const height = 400;
@@ -79,6 +108,8 @@ function init() {
   mesh.position.set(130,0,20);
   scene.add( mesh );
 
+  //PieChat用データの読み込み
+  
 
   // draw pieChart
   var color_list = [0x42bcf4,0x41f447,0xf4f441,0xf47941,0xf4424b,0xf441eb,0xc1f441,0x4167f4];
@@ -90,7 +121,7 @@ function init() {
     sectorNum = i/sectorAngle;
     // 3D空間にグループを追加する
     sectorlist[sectorNum] = new THREE.Group();
-    sectorlist[sectorNum] = new Bearing(i, i+sectorAngle, color_list[sectorNum], sectorNum, String.fromCharCode(65+sectorNum));
+    sectorlist[sectorNum] = new Bearing(i, i+sectorAngle, color_list[sectorNum], sectorNum, String.fromCharCode(65+sectorNum), 10);
     sectorlist[sectorNum].rotation.y = Math.PI/2;
     scene.add(sectorlist[sectorNum]);
     // console.log(sectorlist[sectorNum]);

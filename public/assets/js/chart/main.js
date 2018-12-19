@@ -1,7 +1,40 @@
 // ページの読み込みを待つ
-window.addEventListener('load', init);
+window.addEventListener('load', getCSV("assets/data/demo.csv"));
 
-function init() {
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+  var result = [];
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    // console.log(result);
+    // return result;
+    init(result);
+  }
+}
+
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+  var result = []; // 最終的な二次元配列を入れるための配列
+  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+  for(var i=0;i<tmp.length;++i){
+      result[i] = tmp[i].split(',');
+  }
+  return result;
+}
+
+function init(damage_data) {
+  // console.log("getCSV");
+  // var result = getCSV("assets/data/demo.csv");
+  // console.log(damage_data[0][1]);
+  // console.log(damage_data);
+  
+
+
   // サイズを指定
   const width = 600;
   const height = 400;
@@ -90,12 +123,11 @@ function init() {
     sectorNum = i/sectorAngle;
     // 3D空間にグループを追加する
     sectorlist[sectorNum] = new THREE.Group();
-    sectorlist[sectorNum] = new PieChart(i, i+sectorAngle, color_list[sectorNum], sectorNum, String.fromCharCode(65+sectorNum));
+    sectorlist[sectorNum] = new PieChart(i, i+sectorAngle, sectorNum, String.fromCharCode(65+sectorNum),damage_data);
     sectorlist[sectorNum].rotation.y = Math.PI/2;
     scene.add(sectorlist[sectorNum]);
     // console.log(sectorlist[sectorNum]);
   }
-  
 
   render();
 

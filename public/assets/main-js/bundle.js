@@ -2,10 +2,10 @@
 class PieChart extends THREE.Group {
 
   
-  constructor(startAngle, endAngle, chartColor, sectorNum, text) {
+  constructor(startAngle, endAngle, sectorNum, text, damage_data) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
     super();
-
+    console.log(damage_data);
     // 角度から座標を取得(x,z)
     const getRotPosition = (angle, radius) => {
       // ラジアンに変換する
@@ -36,31 +36,7 @@ class PieChart extends THREE.Group {
     }
     // 適当な負荷値を返す関数
     const getDamage = ( angle ) => {
-      if( angle >= 0 && angle < 15)        { return 100; }
-      else if(angle >= 15 && angle < 30)   { return 100; }
-      else if(angle >= 30 && angle < 45)   { return 100; }
-      else if(angle >= 45 && angle < 60)   { return 100; }
-      else if(angle >= 60 && angle < 75)   { return 100; }
-      else if(angle >= 75 && angle < 90)   { return 100; }
-      else if(angle >= 90 && angle < 105)  { return 100; }
-      else if(angle >= 105 && angle < 120) { return 100; }
-      else if(angle >= 120 && angle < 135) { return 100; }
-      else if(angle >= 135 && angle < 150) { return 100; }
-      else if(angle >= 150 && angle < 165) { return 100; }
-      else if(angle >= 165 && angle < 180) { return 100; }
-      else if(angle >= 180 && angle < 195) { return 100; }
-      else if(angle >= 195 && angle < 210) { return 100; }
-      else if(angle >= 210 && angle < 225) { return 100; }
-      else if(angle >= 225 && angle < 240) { return 100; }
-      else if(angle >= 240 && angle < 255) { return 100; }
-      else if(angle >= 255 && angle < 270) { return 100; }
-      else if(angle >= 270 && angle < 285) { return 100; }
-      else if(angle >= 285 && angle < 300) { return 100; }
-      else if(angle >= 300 && angle < 315) { return 100; }
-      else if(angle >= 315 && angle < 330) { return 100; }
-      else if(angle >= 330 && angle < 345) { return 100; }
-      else if(angle >= 345 && angle < 360) { return 100; }
-      // else                                 { return 100; }
+      return damage_data[Math.floor(angle)][1];
     }
     const getMaxDamage = () => {
       var max_damage = 0;
@@ -70,6 +46,29 @@ class PieChart extends THREE.Group {
         if( max_damage < damage ){ max_damage = Number(damage); }
       }
       return max_damage;
+    }
+    const sumDamage = () => {
+      var sum = 0;
+      for(var i = startAngle; i < endAngle; i++){
+        // 最大値の更新
+        sum += Number(damage_data[i][1]); 
+      }
+      return sum;
+    }
+    const getColor = ( max_damage ) => {
+      const damageSum = sumDamage();
+      console.log(damageSum);
+      console.log('threshold',max_damage*45*0.5);
+      const maxTimes45 = max_damage*45;
+      if( maxTimes45*0.8 < damageSum ){ return 0xd81200; }
+      else if( maxTimes45*0.7 < damageSum ){ return 0xd82e00; }
+      else if( maxTimes45*0.6 < damageSum ){ return 0xd85200; }
+      else if( maxTimes45*0.5 < damageSum ){ return 0xd88500; }
+      else if( maxTimes45*0.4 < damageSum ){ return 0xd8b000; }
+      else if( maxTimes45*0.3 < damageSum ){ return 0xd4d800; }
+      else if( maxTimes45*0.2 < damageSum ){ return 0x7dd800; }
+      else if( maxTimes45*0.1 < damageSum ){ return 0x4fd800; }
+      else { return 0x00d832; }
     }
 
 
@@ -85,8 +84,8 @@ class PieChart extends THREE.Group {
     const sectorAngle = 45;
 
     // 横の線
-    const interval = 20;
     var max_damage = getMaxDamage();
+    const interval = max_damage/5;
 
     this.axisLabelGroup = new THREE.Group();
 
@@ -102,7 +101,11 @@ class PieChart extends THREE.Group {
         // Draw each segments
         const group = new THREE.Group();
         const geometry = new THREE.BoxGeometry( 1, 15, radius );
-        var material = new THREE.MeshBasicMaterial( {color: chartColor} );
+        if(i == startAngle){
+          var material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+        }else {
+          var material = new THREE.MeshBasicMaterial( {color: chartColor} );
+        }
         const box = new THREE.Mesh( geometry, material );
         box.position.y = -7.5;
         box.position.z = radius/2;
@@ -215,6 +218,7 @@ class PieChart extends THREE.Group {
     }
 
     // 関数呼び出し
+    const chartColor = getColor( max_damage );
     drowPie(startAngle, endAngle, chartColor, sectorNum);
     drawVerticalLines(startAngle);
     drawText(text, (sectorNum+1)*sectorAngle-25);
@@ -282,9 +286,42 @@ class PieChart extends THREE.Group {
     
 
 // ページの読み込みを待つ
-window.addEventListener('load', init);
+window.addEventListener('load', getCSV("assets/data/demo.csv"));
 
-function init() {
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+  var result = [];
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    // console.log(result);
+    // return result;
+    init(result);
+  }
+}
+
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+  var result = []; // 最終的な二次元配列を入れるための配列
+  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+  for(var i=0;i<tmp.length;++i){
+      result[i] = tmp[i].split(',');
+  }
+  return result;
+}
+
+function init(damage_data) {
+  // console.log("getCSV");
+  // var result = getCSV("assets/data/demo.csv");
+  // console.log(damage_data[0][1]);
+  // console.log(damage_data);
+  
+
+
   // サイズを指定
   const width = 600;
   const height = 400;
@@ -373,12 +410,11 @@ function init() {
     sectorNum = i/sectorAngle;
     // 3D空間にグループを追加する
     sectorlist[sectorNum] = new THREE.Group();
-    sectorlist[sectorNum] = new PieChart(i, i+sectorAngle, color_list[sectorNum], sectorNum, String.fromCharCode(65+sectorNum));
+    sectorlist[sectorNum] = new PieChart(i, i+sectorAngle, sectorNum, String.fromCharCode(65+sectorNum),damage_data);
     sectorlist[sectorNum].rotation.y = Math.PI/2;
     scene.add(sectorlist[sectorNum]);
     // console.log(sectorlist[sectorNum]);
   }
-  
 
   render();
 

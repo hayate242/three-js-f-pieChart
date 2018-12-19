@@ -2,7 +2,7 @@
 class Bearing extends THREE.Group {
 
   
-  constructor(startAngle, endAngle, chartColor, sectorNum, text) {
+  constructor(startAngle, endAngle, chartColor, sectorNum, text, data) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
     super();
 
