@@ -37,7 +37,7 @@ function init(damage_data) {
 
   // サイズを指定
   const width = 600;
-  const height = 400;
+  const height = 350;
   // 刻み幅
   const stride = 0.2;
   // 円の半径

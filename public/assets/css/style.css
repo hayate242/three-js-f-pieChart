@@ -14,11 +14,12 @@
 .graphs .pieChartContainer h2 {
   margin: 0px;
   text-align: center;
+  font-size: 23px;
 }
 
 .graphs .pieChartContainer .pieChart {
   width: 600px;
-  height: 370px;
+  height: 350px;
 }
 
 .graphs #startLineChartContainer {
