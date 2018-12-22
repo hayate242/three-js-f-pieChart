@@ -6,26 +6,35 @@
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+  <header>
+    <h1>クレーンのターンテーブル軸受にかかる負荷のデータ</h1>
+  </header>
   <!-- 親のタグの基準点をリセット -->
-  
-  
   <section class="graphs">
-    <h2>ターンテーブル軸受にかかる負荷のグラフ（３D）</h2>
     <div class="flex">
       <!-- Google mapの表示 -->
       <!-- <div id="maps"></div> -->
-      <div class="pieChart">
-        <canvas id="myCanvas"></canvas>
+      <div class="chart" id="startLineChartContainer" style="height: 370px;"></div>
+      <div class="chart" id="endLineChartContainer" style="height: 370px;"></div>
+    </div>
+    <div class="flex">
+      <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
+      <div class="pieChartContainer">
+        <h2>ターンテーブル軸受にかかる負荷のグラフ（３D）</h2>
+        <div class="pieChart">
+            <canvas id="myCanvas"></canvas>
+          </div>
       </div>
     </div>
-    <h2>canvasグラフのサンプル</h2>
+
     <div class="frame">
-      <!-- <div class="chart" id="lineChartContainer" style="height: 370px;"></div>
-      <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
-      <div class="chart" id="mixChartContainer" style="height: 300px;"></div> -->
       <div class="chart" id="scatterChartContainer" style="height: 300px;"></div>
     </div>
+    
   </section>
+  <!-- <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
+      <div class="chart" id="mixChartContainer" style="height: 300px;"></div> -->
+
 
   <!-- JS読み込み -->
   <script src="./assets/js/three.min.js"></script>

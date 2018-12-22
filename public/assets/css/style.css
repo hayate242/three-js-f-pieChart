@@ -11,8 +11,27 @@
   margin: 30px;
 }
 
-.graphs .pieChart {
+.graphs .pieChartContainer h2 {
+  margin: 0px;
+  text-align: center;
+}
+
+.graphs .pieChartContainer .pieChart {
   width: 600px;
-  height: 400px;
-  margin-left: 15px;
+  height: 370px;
+}
+
+.graphs #startLineChartContainer {
+  width: 50%;
+  height: 370px;
+}
+
+.graphs #endLineChartContainer {
+  width: 50%;
+  height: 370px;
+}
+
+.graphs #allLineChartContainer {
+  width: 50%;
+  height: 370px;
 }

@@ -1,8 +1,8 @@
 // ページの読み込みを待つ
-window.addEventListener('load', getCSV("assets/data/demo.csv"));
+window.addEventListener('load', getCSV_init("assets/data/demo.csv"));
 
 //CSVファイルを読み込む関数getCSV()の定義
-function getCSV(targetFile){
+function getCSV_init(targetFile){
   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
   req.open("get", targetFile, true); // アクセスするファイルを指定
   req.send(null); // HTTPリクエストの発行

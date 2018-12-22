@@ -7,12 +7,32 @@
 .flex {
   display: flex;
 }
+
+
 .graphs {
   margin: 30px;
-  .pieChart {
-    width: 600px;
-    height: 400px;
-    margin-left: 15px;
+  .pieChartContainer {
+    h2 {
+      margin: 0px;
+      text-align: center;
+    }
+    .pieChart {
+      width: 600px;
+      height: 370px;
+    }
+  }
+  
+  #startLineChartContainer {
+    width: 50%;
+    height: 370px;
+  }
+  #endLineChartContainer {
+    width: 50%;
+    height: 370px;
+  }
+  #allLineChartContainer {
+    width: 50%;
+    height: 370px;
   }
 }
 

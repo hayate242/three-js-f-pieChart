@@ -5,7 +5,7 @@ class PieChart extends THREE.Group {
   constructor(startAngle, endAngle, sectorNum, text, damage_data) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
     super();
-    console.log(damage_data);
+    // console.log(damage_data);
     // 角度から座標を取得(x,z)
     const getRotPosition = (angle, radius) => {
       // ラジアンに変換する
@@ -57,8 +57,8 @@ class PieChart extends THREE.Group {
     }
     const getColor = ( max_damage ) => {
       const damageSum = sumDamage();
-      console.log(damageSum);
-      console.log('threshold',max_damage*45*0.5);
+      // console.log(damageSum);
+      // console.log('threshold',max_damage*45*0.5);
       const maxTimes45 = max_damage*45;
       if( maxTimes45*0.8 < damageSum ){ return 0xd81200; }
       else if( maxTimes45*0.7 < damageSum ){ return 0xd82e00; }
@@ -89,7 +89,7 @@ class PieChart extends THREE.Group {
 
     this.axisLabelGroup = new THREE.Group();
 
-    console.log(max_damage);
+    // console.log(max_damage);
 
     // chart 描く
     const drowPie = (startAngle, endAngle, chartColor, sectorNum) => {
@@ -181,8 +181,8 @@ class PieChart extends THREE.Group {
           curveSegments: 12
         });
         const materials = [
-          new THREE.MeshBasicMaterial( { color: 0x0f0f0f, overdraw: 0.5 } ),
-          new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
+          new THREE.MeshBasicMaterial( { color: 0x0f0f0f } ),
+          new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x, y, positions.z);
@@ -207,8 +207,8 @@ class PieChart extends THREE.Group {
           curveSegments: 12
         });
         const materials = [
-          new THREE.MeshBasicMaterial( { color: 0xffffff, overdraw: 0.5 } ),
-          new THREE.MeshBasicMaterial( { color: 0x000000, overdraw: 0.5 } )
+          new THREE.MeshBasicMaterial( { color: 0xffffff } ),
+          new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x-10, -3, positions.z-10);
