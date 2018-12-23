@@ -480,7 +480,8 @@ function init(damage_data) {
   camera.position.set(0, 350, 0);
   camera.rotation.set(0, -Math.PI/2,0);
   // カメラコントローラーを作成
-  const controls = new THREE.OrbitControls(camera);
+  var canvas = document.getElementById('myCanvas');
+  const controls = new THREE.OrbitControls(camera, canvas);
   // controls.minDistance = radius*2;
   // controls.maxDistance = Infinity;
   controls.maxPolarAngle = Math.PI/2;
