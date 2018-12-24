@@ -30,7 +30,7 @@ function drawColumnLineChart( damage_data ){
     exportEnabled: true,
     theme: "light1", // "light1", "light2", "dark1", "dark2"
     title:{
-      text: "ジブクレーンに掛かったモーメントの割合"
+      text: "モーメントの分布"
     },
     axisX: {
       title:"モーメント（100kg×メートル）",
