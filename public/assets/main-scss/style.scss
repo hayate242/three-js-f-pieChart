@@ -8,6 +8,11 @@
   display: flex;
 }
 
+.chart {
+  border: solid 2px #000;
+  margin: 3px;
+  filter: drop-shadow(7px 7px 5px rgba(0,0,0,0.3));
+}
 
 .graphs {
   margin: 30px;
@@ -23,7 +28,7 @@
     }
   }
   
-  #startLineChartContainer {
+  #startLineChartContainer,#scatterChartContainer,#columnChartContainer {
     width: 50%;
     height: 370px;
   }

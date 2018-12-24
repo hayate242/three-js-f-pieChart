@@ -16,16 +16,7 @@ function getCSV_init(targetFile){
   }
 }
 
-// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
-function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
-  var result = []; // 最終的な二次元配列を入れるための配列
-  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
-  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
-  for(var i=0;i<tmp.length;++i){
-      result[i] = tmp[i].split(',');
-  }
-  return result;
-}
+
 
 function init(damage_data) {
   // console.log("getCSV");
@@ -61,6 +52,9 @@ function init(damage_data) {
 
   // シーンを作成
   const scene = new THREE.Scene();
+  // 座標軸を表示
+  var axis = new THREE.AxisHelper(300);
+  scene.add(axis);
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height);
@@ -68,7 +62,7 @@ function init(damage_data) {
   camera.position.set(0, 350, 0);
   camera.rotation.set(0, -Math.PI/2,0);
   // カメラコントローラーを作成
-  var canvas = document.getElementById('myCanvas');
+  let canvas = document.getElementById('myCanvas');
   const controls = new THREE.OrbitControls(camera, canvas);
   // controls.minDistance = radius*2;
   // controls.maxDistance = Infinity;
@@ -107,11 +101,11 @@ function init(damage_data) {
   } );
 
   // 画像貼り付け用板
-  var geometry = new THREE.PlaneGeometry(107*0.2, 199*0.2);
-  var mesh = new THREE.Mesh( geometry, material );
-  mesh.rotation.set(-Math.PI/2, 0, -Math.PI/2);
-  mesh.position.set(130,0,20);
-  scene.add( mesh );
+  // var geometry = new THREE.PlaneGeometry(107*0.2, 199*0.2);
+  // var mesh = new THREE.Mesh( geometry, material );
+  // mesh.rotation.set(-Math.PI/2, 0, -Math.PI/2);
+  // mesh.position.set(130,0,20);
+  // scene.add( mesh );
 
 
   // draw pieChart

@@ -47,27 +47,16 @@ class PieChart extends THREE.Group {
       }
       return max_damage;
     }
-    const sumDamage = () => {
-      var sum = 0;
-      for(var i = startAngle; i < endAngle; i++){
-        // 最大値の更新
-        sum += Number(damage_data[i][1]); 
-      }
-      return sum;
-    }
-    const getColor = ( max_damage ) => {
-      const damageSum = sumDamage();
-      // console.log(damageSum);
-      // console.log('threshold',max_damage*45*0.5);
-      const maxTimes45 = max_damage*45;
-      if( maxTimes45*0.8 < damageSum ){ return 0xd81200; }
-      else if( maxTimes45*0.7 < damageSum ){ return 0xd82e00; }
-      else if( maxTimes45*0.6 < damageSum ){ return 0xd85200; }
-      else if( maxTimes45*0.5 < damageSum ){ return 0xd88500; }
-      else if( maxTimes45*0.4 < damageSum ){ return 0xd8b000; }
-      else if( maxTimes45*0.3 < damageSum ){ return 0xd4d800; }
-      else if( maxTimes45*0.2 < damageSum ){ return 0x7dd800; }
-      else if( maxTimes45*0.1 < damageSum ){ return 0x4fd800; }
+    const getColor_grad = ( angle ) => {
+      const damage = damage_data[Math.floor(angle)][1];
+      if( max_damage*0.8 < damage ){ return 0xd81200; }      //赤
+      else if( max_damage*0.7 < damage ){ return 0xd82e00; }
+      else if( max_damage*0.6 < damage ){ return 0xd85200; }
+      else if( max_damage*0.5 < damage ){ return 0xd88500; }
+      else if( max_damage*0.4 < damage ){ return 0xd8b000; }
+      else if( max_damage*0.3 < damage ){ return 0xd4d800; }
+      else if( max_damage*0.2 < damage ){ return 0x7dd800; }
+      else if( max_damage*0.1 < damage ){ return 0x4fd800; } //緑
       else { return 0x00d832; }
     }
 
@@ -92,7 +81,7 @@ class PieChart extends THREE.Group {
     // console.log(max_damage);
 
     // chart 描く
-    const drowPie = (startAngle, endAngle, chartColor, sectorNum) => {
+    const drowPie = (startAngle, endAngle, sectorNum) => {
 
       for(var i = startAngle; i < endAngle; i+= stride){
         const positions = getRotPosition(i, radius);
@@ -104,7 +93,7 @@ class PieChart extends THREE.Group {
         if(i == startAngle){
           var material = new THREE.MeshBasicMaterial( {color: 0x000000} );
         }else {
-          var material = new THREE.MeshBasicMaterial( {color: chartColor} );
+          var material = new THREE.MeshBasicMaterial( {color: getColor_grad(i)} );
         }
         const box = new THREE.Mesh( geometry, material );
         box.position.y = -7.5;
@@ -113,6 +102,12 @@ class PieChart extends THREE.Group {
         const radian = i * Math.PI / 180;
         group.rotation.y = radian;
         this.add(group);
+
+        // 角度の表示
+        if( i % 45 == 0 ){
+          // console.log(String(i)+"角度表示！");
+          drawPieAngleLabel(positions, i, 0, i);
+        }
 
         // 横の線
         for(var line_height = interval; line_height <= max_damage; line_height += interval){
@@ -168,9 +163,8 @@ class PieChart extends THREE.Group {
       }
     }
 
+    // 縦軸の数値を追加
     const drawAxisLabelVal = (positions, text, y, angle) => {
-
-      // 縦軸の数値を追加
       const that = this;
       const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
@@ -181,12 +175,42 @@ class PieChart extends THREE.Group {
           curveSegments: 12
         });
         const materials = [
-          new THREE.MeshBasicMaterial( { color: 0x0f0f0f } ),
+          new THREE.MeshBasicMaterial( { color: 0xff0f0f } ),
           new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x, y, positions.z);
         textMesh.rotation.set( 0,Math.PI * angle / 180,0 );
+        that.axisLabelGroup.add(textMesh);
+        that.add(that.axisLabelGroup);
+      });
+    }
+
+    // draw Pie angle labels
+    const drawPieAngleLabel = (positions, text, y, angle) => {
+
+      // Pie Chartの数値を追加
+      const that = this;
+      const loader = new THREE.FontLoader();
+      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+        const textGeometry = new THREE.TextGeometry(String(text)+"°", {
+          font: font,
+          size: 10,
+          height: 1,
+          curveSegments: 12
+        });
+        const materials = [
+          new THREE.MeshBasicMaterial( { color: 0x0fff0f } ),
+          new THREE.MeshBasicMaterial( { color: 0x000000 } )
+        ];
+        const textMesh = new THREE.Mesh(textGeometry, materials);
+        textMesh.rotation.set( -Math.PI/2, 0, -Math.PI/2 );
+        if(angle == 135){ textMesh.position.set(positions.x+0, y, positions.z-29); }
+        else if(angle == 180){ textMesh.position.set(positions.x+0, y, positions.z-29); }
+        else if(angle == 225){ textMesh.position.set(positions.x-10, y, positions.z-29); }
+        else if(angle == 270){ textMesh.position.set(positions.x-13, y, positions.z); }
+        else if(angle == 315){ textMesh.position.set(positions.x-10, y, positions.z); }
+        else { textMesh.position.set(positions.x, 2, positions.z); }
         that.axisLabelGroup.add(textMesh);
         that.add(that.axisLabelGroup);
       });
@@ -218,8 +242,7 @@ class PieChart extends THREE.Group {
     }
 
     // 関数呼び出し
-    const chartColor = getColor( max_damage );
-    drowPie(startAngle, endAngle, chartColor, sectorNum);
+    drowPie(startAngle, endAngle, sectorNum);
     drawVerticalLines(startAngle);
     drawText(text, (sectorNum+1)*sectorAngle-25);
   }
@@ -246,7 +269,7 @@ function getCSV_drawAllLineChart(targetFile){
   }
 }
 function drawAllLineChart( damage_data ){
-  console.log(damage_data);
+  // console.log(damage_data);
   
 
   var y = 0;
@@ -285,31 +308,58 @@ function drawAllLineChart( damage_data ){
 
     
 
+window.addEventListener('load', getCSV_drawColumnLineChart("assets/data/moment.csv"));
 
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV_drawColumnLineChart(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+  var result = [];
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    drawColumnLineChart(result);
+  }
+}
 
-// var chart = new CanvasJS.Chart("columnChartContainer", {
-//     theme: "light1", // "light2", "dark1", "dark2"
-//     animationEnabled: false, // change to true		
-//     title:{
-//         text: "棒グラフ"
-//     },
-//     data: [
-//     {
-//         // Change type to "bar", "area", "spline", "pie",etc.
-//         type: "column",
-//         dataPoints: [
-//             { label: "apple",  y: 10  },
-//             { label: "orange", y: 15  },
-//             { label: "banana", y: 25  },
-//             { label: "mango",  y: 30  },
-//             { label: "grape",  y: 28  }
-//         ]
-//     }
-//     ]
-// });
-// chart.render();
+function drawColumnLineChart( damage_data ){
+  // console.log(damage_data);
+
+  var dataPoints = [];
+  for(i = 0; i < damage_data.length; i++){
+    console.log(damage_data.length);
+    dataPoints.push({
+      label: damage_data[i][0],
+      y: Number(damage_data[i][1])
+    });
+  }
+
+  var chart = new CanvasJS.Chart("columnChartContainer", {
+    animationEnabled: true,
+    exportEnabled: true,
+    theme: "light1", // "light1", "light2", "dark1", "dark2"
+    title:{
+      text: "ジブクレーンに掛かったモーメントの割合"
+    },
+    axisX: {
+      title:"モーメント（100kg×メートル）",
+    },
+    axisY :{
+      title:"回数",
+      includeZero:false
+    },
+    data: [{
+      type: "column", //change type to bar, line, area, pie, etc
+      //indexLabel: "{y}", //Shows y value on all Data Points
+      indexLabelFontColor: "#5A5757",
+      indexLabelPlacement: "outside",
+      dataPoints: dataPoints
+    }]
+  });
+  chart.render();
     
-    
+}
 window.addEventListener('load', getCSV_drawEndLineChart("assets/data/end.csv"));
 
 //CSVファイルを読み込む関数getCSV()の定義
@@ -327,7 +377,7 @@ function getCSV_drawEndLineChart(targetFile){
   }
 }
 function drawEndLineChart( damage_data ){
-  console.log(damage_data);
+  // console.log(damage_data);
   
 
   var y = 0;
@@ -380,6 +430,17 @@ function getCSV(targetFile){
   }
 }
 
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+  var result = []; // 最終的な二次元配列を入れるための配列
+  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+  for(var i=0;i<tmp.length;++i){
+      result[i] = tmp[i].split(',');
+  }
+  return result;
+}
+
     // var limit = 1000;
     
     // var y = 0;
@@ -428,16 +489,7 @@ function getCSV_init(targetFile){
   }
 }
 
-// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
-function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
-  var result = []; // 最終的な二次元配列を入れるための配列
-  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
-  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
-  for(var i=0;i<tmp.length;++i){
-      result[i] = tmp[i].split(',');
-  }
-  return result;
-}
+
 
 function init(damage_data) {
   // console.log("getCSV");
@@ -473,6 +525,9 @@ function init(damage_data) {
 
   // シーンを作成
   const scene = new THREE.Scene();
+  // 座標軸を表示
+  var axis = new THREE.AxisHelper(300);
+  scene.add(axis);
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height);
@@ -480,7 +535,7 @@ function init(damage_data) {
   camera.position.set(0, 350, 0);
   camera.rotation.set(0, -Math.PI/2,0);
   // カメラコントローラーを作成
-  var canvas = document.getElementById('myCanvas');
+  let canvas = document.getElementById('myCanvas');
   const controls = new THREE.OrbitControls(camera, canvas);
   // controls.minDistance = radius*2;
   // controls.maxDistance = Infinity;
@@ -519,11 +574,11 @@ function init(damage_data) {
   } );
 
   // 画像貼り付け用板
-  var geometry = new THREE.PlaneGeometry(107*0.2, 199*0.2);
-  var mesh = new THREE.Mesh( geometry, material );
-  mesh.rotation.set(-Math.PI/2, 0, -Math.PI/2);
-  mesh.position.set(130,0,20);
-  scene.add( mesh );
+  // var geometry = new THREE.PlaneGeometry(107*0.2, 199*0.2);
+  // var mesh = new THREE.Mesh( geometry, material );
+  // mesh.rotation.set(-Math.PI/2, 0, -Math.PI/2);
+  // mesh.position.set(130,0,20);
+  // scene.add( mesh );
 
 
   // draw pieChart
@@ -693,7 +748,32 @@ function init(damage_data) {
 // }
 
 
+window.addEventListener('load', getCSV_drawScatterChart("assets/data/weight_distance.csv"));
 
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV_drawScatterChart(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+  var result = [];
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    drawScatterChart(result);
+  }
+}
+
+function drawScatterChart( damage_data ){
+  // console.log(damage_data);
+  var dataPoints = [];
+  for(i = 0; i < damage_data.length; i++){
+    // console.log(Number(damage_data[i][1]));
+    dataPoints.push({
+      x: Number(damage_data[i][0]),
+      y: Number(damage_data[i][1]),
+      color: "blue"
+    });
+  }
 
   var chart = new CanvasJS.Chart("scatterChartContainer", {
     animationEnabled: true,
@@ -711,47 +791,11 @@ function init(damage_data) {
 		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
       name: "クレーン１",
       showInLegend: true,
-      dataPoints: [
-        { x: 23, y: 33 },
-        { x: 28, y: 39 },
-        { x: 39, y: 40 },
-        { x: 44, y: 43 },
-        { x: 24, y: 32 },
-        { x: 29, y: 25 },
-        { x: 9, y: 97 },
-        { x: 3, y: 89 },
-        { x: 7, y: 95 },
-        { x: 3, y: 80 },
-        { x: 6, y: 83 },
-        { x: 3, y: 90 },
-        { x: 2, y: 55 },
-        { x: 1, y: 99 }
-      ]
-    },
-    {
-      type: "scatter",
-      name: "クレーン2",
-      showInLegend: true, 
-		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
-      dataPoints: [
-        { x: 19, y: 40 },
-        { x: 27, y: 20 },
-        { x: 35, y: 30 },
-        { x: 32, y: 10 },
-        { x: 29, y: 59 },
-        { x: 22, y: 25 },
-        { x: 27, y: 22 },
-        { x: 26, y: 19 },
-        { x: 4, y: 75 },
-        { x: 3, y: 83 },
-        { x: 4, y: 85 },
-        { x: 3, y: 72 },
-        { x: 7, y: 93 },
-        { x: 4, y: 96 }
-      ]
+      dataPoints: dataPoints
     }]
   });
   chart.render();
+}
 window.addEventListener('load', getCSV_drawStartLineChart("assets/data/start.csv"));
 
 //CSVファイルを読み込む関数getCSV()の定義
@@ -769,7 +813,7 @@ function getCSV_drawStartLineChart(targetFile){
   }
 }
 function drawStartLineChart( damage_data ){
-  console.log(damage_data);
+  // console.log(damage_data);
   var y = 0;
   var data = [];
   var dataSeries = { type: "line" };
@@ -789,12 +833,12 @@ function drawStartLineChart( damage_data ){
       title:{
           text: "吊り上げ地点" 
       },
-      axisX: {
+      axisX:{
         title:"角度",
         interval: 45,
         gridThickness: 1,
       },
-      axisY :{
+      axisY:{
         title:"回数",
         includeZero:false
       },

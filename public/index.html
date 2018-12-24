@@ -19,7 +19,7 @@
     </div>
     <div class="flex">
       <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
-      <div class="pieChartContainer">
+      <div class="pieChartContainer chart">
         <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
         <div class="pieChart">
             <canvas id="myCanvas"></canvas>
@@ -27,22 +27,22 @@
         <p>※ドラッグで回転，スクロールでズーム</p>
       </div>
     </div>
-
-    <div class="frame">
-      <div class="chart" id="scatterChartContainer" style="height: 300px;"></div>
+    <div class="flex">
+      <div class="chart" id="scatterChartContainer" style="height: 370px;"></div>
+      <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
     </div>
     
+    
   </section>
-  <!-- <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
-      <div class="chart" id="mixChartContainer" style="height: 300px;"></div> -->
+      <!-- <div class="chart" id="mixChartContainer" style="height: 300px;"></div> -->
 
 
-  <!-- JS読み込み -->
+  <!-- Three JS読み込み -->
   <script src="./assets/js/three.min.js"></script>
   <script src="./assets/js/controls/OrbitControls.js"></script>
   <!-- Google Map読み込み -->
-  <script src="./assets/js/map/GoogleMap.js"></script>
-  <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDjOCUT_oXFbyAKjdZz3qHCTwezThsayxc&callback=initMap" async></script>
+  <!-- <script src="./assets/js/map/GoogleMap.js"></script> -->
+  <!-- <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDjOCUT_oXFbyAKjdZz3qHCTwezThsayxc&callback=initMap" async></script> -->
   <!-- canvas読み込み -->
   <script type="text/javascript" src="./assets/js/canvasjs.min.js"></script>
   

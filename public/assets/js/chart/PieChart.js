@@ -47,27 +47,16 @@ class PieChart extends THREE.Group {
       }
       return max_damage;
     }
-    const sumDamage = () => {
-      var sum = 0;
-      for(var i = startAngle; i < endAngle; i++){
-        // 最大値の更新
-        sum += Number(damage_data[i][1]); 
-      }
-      return sum;
-    }
-    const getColor = ( max_damage ) => {
-      const damageSum = sumDamage();
-      // console.log(damageSum);
-      // console.log('threshold',max_damage*45*0.5);
-      const maxTimes45 = max_damage*45;
-      if( maxTimes45*0.8 < damageSum ){ return 0xd81200; }
-      else if( maxTimes45*0.7 < damageSum ){ return 0xd82e00; }
-      else if( maxTimes45*0.6 < damageSum ){ return 0xd85200; }
-      else if( maxTimes45*0.5 < damageSum ){ return 0xd88500; }
-      else if( maxTimes45*0.4 < damageSum ){ return 0xd8b000; }
-      else if( maxTimes45*0.3 < damageSum ){ return 0xd4d800; }
-      else if( maxTimes45*0.2 < damageSum ){ return 0x7dd800; }
-      else if( maxTimes45*0.1 < damageSum ){ return 0x4fd800; }
+    const getColor_grad = ( angle ) => {
+      const damage = damage_data[Math.floor(angle)][1];
+      if( max_damage*0.8 < damage ){ return 0xd81200; }      //赤
+      else if( max_damage*0.7 < damage ){ return 0xd82e00; }
+      else if( max_damage*0.6 < damage ){ return 0xd85200; }
+      else if( max_damage*0.5 < damage ){ return 0xd88500; }
+      else if( max_damage*0.4 < damage ){ return 0xd8b000; }
+      else if( max_damage*0.3 < damage ){ return 0xd4d800; }
+      else if( max_damage*0.2 < damage ){ return 0x7dd800; }
+      else if( max_damage*0.1 < damage ){ return 0x4fd800; } //緑
       else { return 0x00d832; }
     }
 
@@ -92,7 +81,7 @@ class PieChart extends THREE.Group {
     // console.log(max_damage);
 
     // chart 描く
-    const drowPie = (startAngle, endAngle, chartColor, sectorNum) => {
+    const drowPie = (startAngle, endAngle, sectorNum) => {
 
       for(var i = startAngle; i < endAngle; i+= stride){
         const positions = getRotPosition(i, radius);
@@ -104,7 +93,7 @@ class PieChart extends THREE.Group {
         if(i == startAngle){
           var material = new THREE.MeshBasicMaterial( {color: 0x000000} );
         }else {
-          var material = new THREE.MeshBasicMaterial( {color: chartColor} );
+          var material = new THREE.MeshBasicMaterial( {color: getColor_grad(i)} );
         }
         const box = new THREE.Mesh( geometry, material );
         box.position.y = -7.5;
@@ -113,6 +102,12 @@ class PieChart extends THREE.Group {
         const radian = i * Math.PI / 180;
         group.rotation.y = radian;
         this.add(group);
+
+        // 角度の表示
+        if( i % 45 == 0 ){
+          // console.log(String(i)+"角度表示！");
+          drawPieAngleLabel(positions, i, 0, i);
+        }
 
         // 横の線
         for(var line_height = interval; line_height <= max_damage; line_height += interval){
@@ -168,9 +163,8 @@ class PieChart extends THREE.Group {
       }
     }
 
+    // 縦軸の数値を追加
     const drawAxisLabelVal = (positions, text, y, angle) => {
-
-      // 縦軸の数値を追加
       const that = this;
       const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
@@ -181,12 +175,42 @@ class PieChart extends THREE.Group {
           curveSegments: 12
         });
         const materials = [
-          new THREE.MeshBasicMaterial( { color: 0x0f0f0f } ),
+          new THREE.MeshBasicMaterial( { color: 0xff0f0f } ),
           new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x, y, positions.z);
         textMesh.rotation.set( 0,Math.PI * angle / 180,0 );
+        that.axisLabelGroup.add(textMesh);
+        that.add(that.axisLabelGroup);
+      });
+    }
+
+    // draw Pie angle labels
+    const drawPieAngleLabel = (positions, text, y, angle) => {
+
+      // Pie Chartの数値を追加
+      const that = this;
+      const loader = new THREE.FontLoader();
+      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+        const textGeometry = new THREE.TextGeometry(String(text)+"°", {
+          font: font,
+          size: 10,
+          height: 1,
+          curveSegments: 12
+        });
+        const materials = [
+          new THREE.MeshBasicMaterial( { color: 0x0fff0f } ),
+          new THREE.MeshBasicMaterial( { color: 0x000000 } )
+        ];
+        const textMesh = new THREE.Mesh(textGeometry, materials);
+        textMesh.rotation.set( -Math.PI/2, 0, -Math.PI/2 );
+        if(angle == 135){ textMesh.position.set(positions.x+0, y, positions.z-29); }
+        else if(angle == 180){ textMesh.position.set(positions.x+0, y, positions.z-29); }
+        else if(angle == 225){ textMesh.position.set(positions.x-10, y, positions.z-29); }
+        else if(angle == 270){ textMesh.position.set(positions.x-13, y, positions.z); }
+        else if(angle == 315){ textMesh.position.set(positions.x-10, y, positions.z); }
+        else { textMesh.position.set(positions.x, 2, positions.z); }
         that.axisLabelGroup.add(textMesh);
         that.add(that.axisLabelGroup);
       });
@@ -218,8 +242,7 @@ class PieChart extends THREE.Group {
     }
 
     // 関数呼び出し
-    const chartColor = getColor( max_damage );
-    drowPie(startAngle, endAngle, chartColor, sectorNum);
+    drowPie(startAngle, endAngle, sectorNum);
     drawVerticalLines(startAngle);
     drawText(text, (sectorNum+1)*sectorAngle-25);
   }

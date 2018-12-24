@@ -15,7 +15,7 @@ function getCSV_drawAllLineChart(targetFile){
   }
 }
 function drawAllLineChart( damage_data ){
-  console.log(damage_data);
+  // console.log(damage_data);
   
 
   var y = 0;

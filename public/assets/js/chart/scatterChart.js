@@ -1,4 +1,29 @@
+window.addEventListener('load', getCSV_drawScatterChart("assets/data/weight_distance.csv"));
 
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV_drawScatterChart(targetFile){
+  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+  req.open("get", targetFile, true); // アクセスするファイルを指定
+  req.send(null); // HTTPリクエストの発行
+  var result = [];
+  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+  req.onload = function(){
+    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    drawScatterChart(result);
+  }
+}
+
+function drawScatterChart( damage_data ){
+  // console.log(damage_data);
+  var dataPoints = [];
+  for(i = 0; i < damage_data.length; i++){
+    // console.log(Number(damage_data[i][1]));
+    dataPoints.push({
+      x: Number(damage_data[i][0]),
+      y: Number(damage_data[i][1]),
+      color: "blue"
+    });
+  }
 
   var chart = new CanvasJS.Chart("scatterChartContainer", {
     animationEnabled: true,
@@ -16,44 +41,8 @@
 		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
       name: "クレーン１",
       showInLegend: true,
-      dataPoints: [
-        { x: 23, y: 33 },
-        { x: 28, y: 39 },
-        { x: 39, y: 40 },
-        { x: 44, y: 43 },
-        { x: 24, y: 32 },
-        { x: 29, y: 25 },
-        { x: 9, y: 97 },
-        { x: 3, y: 89 },
-        { x: 7, y: 95 },
-        { x: 3, y: 80 },
-        { x: 6, y: 83 },
-        { x: 3, y: 90 },
-        { x: 2, y: 55 },
-        { x: 1, y: 99 }
-      ]
-    },
-    {
-      type: "scatter",
-      name: "クレーン2",
-      showInLegend: true, 
-		  toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
-      dataPoints: [
-        { x: 19, y: 40 },
-        { x: 27, y: 20 },
-        { x: 35, y: 30 },
-        { x: 32, y: 10 },
-        { x: 29, y: 59 },
-        { x: 22, y: 25 },
-        { x: 27, y: 22 },
-        { x: 26, y: 19 },
-        { x: 4, y: 75 },
-        { x: 3, y: 83 },
-        { x: 4, y: 85 },
-        { x: 3, y: 72 },
-        { x: 7, y: 93 },
-        { x: 4, y: 96 }
-      ]
+      dataPoints: dataPoints
     }]
   });
   chart.render();
+}

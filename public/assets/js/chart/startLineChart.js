@@ -15,7 +15,7 @@ function getCSV_drawStartLineChart(targetFile){
   }
 }
 function drawStartLineChart( damage_data ){
-  console.log(damage_data);
+  // console.log(damage_data);
   var y = 0;
   var data = [];
   var dataSeries = { type: "line" };
@@ -35,12 +35,12 @@ function drawStartLineChart( damage_data ){
       title:{
           text: "吊り上げ地点" 
       },
-      axisX: {
+      axisX:{
         title:"角度",
         interval: 45,
         gridThickness: 1,
       },
-      axisY :{
+      axisY:{
         title:"回数",
         includeZero:false
       },
