@@ -276,7 +276,7 @@ function drawAllLineChart( damage_data ){
   var data = [];
   var dataSeries = { type: "line" };
   var dataPoints = [];
-  for (var i = 0; i < 360; i += 1) {
+  for (var i = 0; i < damage_data.length; i += 1) {
       y += (Math.random() * 10 - 5);
       dataPoints.push({
           x: i,
@@ -384,7 +384,7 @@ function drawEndLineChart( damage_data ){
   var data = [];
   var dataSeries = { type: "line" };
   var dataPoints = [];
-  for (var i = 0; i < 360; i += 1) {
+  for (var i = 0; i < damage_data.length; i += 1) {
       y += (Math.random() * 10 - 5);
       dataPoints.push({
           x: i,
@@ -818,7 +818,7 @@ function drawStartLineChart( damage_data ){
   var data = [];
   var dataSeries = { type: "line" };
   var dataPoints = [];
-  for (var i = 0; i < 360; i += 1) {
+  for (var i = 0; i < damage_data.length; i += 1) {
       dataPoints.push({
           x: i,
           y: Number(damage_data[i][1])

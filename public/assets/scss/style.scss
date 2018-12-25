@@ -1,7 +1,12 @@
+
 #maps {
   width: 500px;
   height: 400px;
   // margin: 0 auto;
+}
+
+.text_center {
+  text-align: center;
 }
 
 .flex {
@@ -27,15 +32,21 @@
       height: 350px;
     }
   }
+  .color_bar {
+    width: 400px;
+    height: 20px;
+    margin: 0 auto;
+    margin-top: 10px;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#39ef2f+0,fff600+50,fff600+50,f4ff28+50,fff600+50,fff600+51,fff600+51,fff600+51,fff600+51,ff0000+100 */
+    background: #39ef2f; /* Old browsers */
+    background: -moz-linear-gradient(left, #39ef2f 0%, #fff600 50%, #fff600 50%, #f4ff28 50%, #fff600 50%, #fff600 51%, #fff600 51%, #fff600 51%, #fff600 51%, #ff0000 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #39ef2f 0%,#fff600 50%,#fff600 50%,#f4ff28 50%,#fff600 50%,#fff600 51%,#fff600 51%,#fff600 51%,#fff600 51%,#ff0000 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #39ef2f 0%,#fff600 50%,#fff600 50%,#f4ff28 50%,#fff600 50%,#fff600 51%,#fff600 51%,#fff600 51%,#fff600 51%,#ff0000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39ef2f', endColorstr='#ff0000',GradientType=1 ); /* IE6-9 */
+  }
   
-  #startLineChartContainer,#scatterChartContainer,#columnChartContainer {
-    width: 50%;
-    height: 370px;
-  }
-  #endLineChartContainer {
-    width: 50%;
-    height: 370px;
-  }
+  #startLineChartContainer,#scatterChartContainer,
+  #columnChartContainer, #endLineChartContainer,
   #allLineChartContainer {
     width: 50%;
     height: 370px;

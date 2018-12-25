@@ -22,7 +22,7 @@ function drawAllLineChart( damage_data ){
   var data = [];
   var dataSeries = { type: "line" };
   var dataPoints = [];
-  for (var i = 0; i < 360; i += 1) {
+  for (var i = 0; i < damage_data.length; i += 1) {
       y += (Math.random() * 10 - 5);
       dataPoints.push({
           x: i,
