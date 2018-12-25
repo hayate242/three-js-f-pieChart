@@ -1,7 +1,5 @@
 /** グループを継承したサブクラスです。 */
 class PieChart extends THREE.Group {
-
-  
   constructor(startAngle, endAngle, sectorNum, text, damage_data) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
     super();
