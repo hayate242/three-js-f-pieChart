@@ -82,10 +82,17 @@ class PieChart extends THREE.Group {
 
     // chart 描く
     const drowPie = (startAngle, endAngle, sectorNum) => {
-
+      let positions = [];
+      let next_positions = [];
       for(var i = startAngle; i < endAngle; i+= stride){
-        const positions = getRotPosition(i, radius);
-        const next_positions = getRotPosition(i + stride, radius);
+        // 円周のポジションの取得
+        if( i == startAngle){
+          positions = getRotPosition(i, radius);
+          next_positions = getRotPosition(i + stride, radius);
+        }else{
+          positions = next_positions;
+          next_positions = getRotPosition(i + stride, radius);
+        }
 
         // Draw each segments
         const group = new THREE.Group();
@@ -115,7 +122,7 @@ class PieChart extends THREE.Group {
           holi_geometry.vertices.push( new THREE.Vector3( positions.x, line_height, positions.z) );
           holi_geometry.vertices.push( new THREE.Vector3( next_positions.x, line_height, next_positions.z) );
           material = new THREE.LineBasicMaterial( { color: 0x000000} );
-          material.linewidth = 2;
+          // material.linewidth = 2;
           var holizontal_line = new THREE.Line( holi_geometry, material );
           //sceneにlineを追加
           // console.log(this);
@@ -152,7 +159,7 @@ class PieChart extends THREE.Group {
       ver_geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) );
       ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_damage, positions.z) );
       var material = new THREE.LineBasicMaterial( { color: 0x000000} );
-      material.linewidth = 2;
+      // material.linewidth = 2;
       var vertical_line = new THREE.Line( ver_geometry, material );
       //sceneにlineを追加
       this.add( vertical_line );
