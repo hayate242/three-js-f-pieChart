@@ -19,12 +19,13 @@
 
 
 // gulpプラグインの読み込み
-const gulp = require('gulp');
+const gulp     = require('gulp');
 // Sassをコンパイルするプラグインの読み込み
 const sass     = require('gulp-sass');
 const plumber  = require('gulp-plumber');
 const concat   = require('gulp-concat');
 const uglify   = require('gulp-uglify');
+const babel    = require('gulp-babel');
 
 // style.scssをタスクを作成する
 // concat
@@ -61,8 +62,20 @@ gulp.task('js.uglify', function() {
       .pipe(uglify('bundle.min.js'))
       .pipe(gulp.dest('public/assets/main-js/'));
 });
+
+// IE11対応
+gulp.task('js.es5', function() {
+    return gulp.src('public/assets/main-js/bundle.js')
+        .pipe(babel({
+            "presets": [
+                "@babel/preset-env"
+            ]
+        }))
+        .pipe(gulp.dest('public/assets/main-js/'));
+});
+
 // gulp.task('js', gulp.series('js.concat', 'js.uglify'));
-gulp.task('js', gulp.series('js.concat'));
+gulp.task('js', gulp.series('js.concat','js.es5'));
 gulp.task('scss', gulp.series('scss.concat', 'scss.compile'));
 
 
