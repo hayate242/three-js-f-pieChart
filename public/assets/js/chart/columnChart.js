@@ -17,7 +17,7 @@ function drawColumnLineChart( damage_data ){
   // console.log(damage_data);
 
   var dataPoints = [];
-  for(i = 0; i < damage_data.length; i++){
+  for(var i = 0; i < damage_data.length; i++){
     console.log(damage_data.length);
     dataPoints.push({
       label: damage_data[i][0],

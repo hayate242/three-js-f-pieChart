@@ -16,7 +16,7 @@ function getCSV_drawScatterChart(targetFile){
 function drawScatterChart( damage_data ){
   // console.log(damage_data);
   var dataPoints = [];
-  for(i = 0; i < damage_data.length; i++){
+  for(var i = 0; i < damage_data.length; i++){
     // console.log(Number(damage_data[i][1]));
     dataPoints.push({
       x: Number(damage_data[i][0]),
