@@ -64,7 +64,7 @@ class PieChart extends THREE.Group {
 //--------------------
 
     // 刻み幅
-    const stride = 0.2;
+    const stride = 0.6;
     // 円の半径
     const radius = 100;
     // piechartの1sectorの角度

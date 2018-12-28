@@ -106,7 +106,7 @@ function (_THREE$Group) {
     // 刻み幅
 
 
-    var stride = 0.2; // 円の半径
+    var stride = 0.6; // 円の半径
 
     var radius = 100; // piechartの1sectorの角度
 
