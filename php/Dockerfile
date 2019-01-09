@@ -1,3 +1,3 @@
 FROM php:7.0-apache
 COPY php.ini /usr/local/etc/php/
-RUN apt-get update 
+RUN apt-get update
