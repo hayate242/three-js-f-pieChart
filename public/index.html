@@ -7,9 +7,72 @@
 </head>
 <body>
   <header>
-    <h1>クレーンのターンテーブル軸受にかかる負荷のデータ</h1>
+    <h1>JC旋回負荷分布</h1>
   </header>
-  <!-- 親のタグの基準点をリセット -->
+  <section class="controlls">
+    <ul class="flex list_style_none crane_data_label_li">
+      <li>号機</li>
+      <li>定格荷重（Ton）</li>
+      <li>最大旋回半径（m）</li>
+      <li>TTB_PCD（D）</li>
+    </ul>
+    <!-- クレーン情報 -->
+    <ul class="flex list_style_none crane_data_li">
+      <li class="cp_ipselect cp_sl01">
+        <select name="example" required>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </li>
+      <li class="max_weight">20</li>
+      <li class="max_turn_radius">40</li>
+      <li class="ttb_pcd">4.24</li>
+    </ul>
+    <!-- 表示期間 -->
+    <div class="display_period">
+        <ul class="flex list_style_none crane_data_label_li">
+          <li></li>
+          <li>開始年月日</li>
+          <li>終了年月日</li>
+        </ul>
+        <ul class="flex list_style_none crane_data_li setting">
+          <li>表示期間　</li>
+          <li class="cp_ipselect cp_sl01 display_start_date">
+            <select name="開始年月日" required>
+              <option value="2000">2000</option>
+              <option value="2000">2001</option>
+              <option value="2000">2002</option>
+              <option value="2000">2003</option>
+              <option value="2000">2004</option>
+              <option value="2000">2005</option>
+              <option value="2000">2006</option>
+              <option value="2000">2007</option>
+              <option value="2000">2008</option>
+            </select>
+          </li>
+          <li class="cp_ipselect cp_sl01 display_end_date">
+            <select name="終了年月日" required>
+              <option value="2000">2000</option>
+              <option value="2000">2001</option>
+              <option value="2000">2002</option>
+              <option value="2000">2003</option>
+              <option value="2000">2004</option>
+              <option value="2000">2005</option>
+              <option value="2000">2006</option>
+              <option value="2000">2007</option>
+              <option value="2000">2008</option>
+            </select>
+          </li>
+        </ul>
+    </div>
+  </section>
+
+  <!-- 集計表 -->
+  <section class="summary_sheet">
+    
+  </section>
+
   <section class="graphs">
     <div class="flex">
       <!-- Google mapの表示 -->
@@ -21,6 +84,7 @@
       <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
       <div class="pieChartContainer chart">
         <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
+        <!-- 親のタグの基準点をリセット -->
         <div class="pieChart">
             <canvas id="myCanvas"></canvas>
         </div>

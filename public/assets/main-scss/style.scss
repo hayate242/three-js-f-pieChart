@@ -19,6 +19,83 @@
   filter: drop-shadow(7px 7px 5px rgba(0,0,0,0.3));
 }
 
+.list_style_none {
+  list-style: none;
+}
+
+// セレクトボックス
+.cp_ipselect {
+	overflow: hidden;
+	width: 90%;
+	// margin: 2em auto;
+	text-align: center;
+}
+.cp_ipselect select {
+	width: 100%;
+	padding-right: 1em;
+	cursor: pointer;
+	text-indent: 0.01px;
+	text-overflow: ellipsis;
+	border: none;
+	outline: none;
+	background: transparent;
+	background-image: none;
+	box-shadow: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+.cp_ipselect select::-ms-expand {
+    display: none;
+}
+.cp_ipselect.cp_sl01 {
+	position: relative;
+	border: 1px solid #bbbbbb;
+	// border-radius: 2px;
+	background: #ffffff;
+}
+.cp_ipselect.cp_sl01::before {
+	position: absolute;
+	top: 0.8em;
+	right: 0.9em;
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid #666666;
+	pointer-events: none;
+}
+.cp_ipselect.cp_sl01 select {
+	padding: 8px 38px 8px 8px;
+	color: #666666;
+}
+
+// listの形式（クレーン情報，表示期間）
+.crane_data_label_li {
+  margin-bottom: -25px;
+  li {
+    width: 140px;
+    height: 30px;
+    text-align: center;
+  }
+}
+.crane_data_li {
+  li {
+    border: solid 1px #bbbbbb;
+    width: 140px;
+    height: 30px;
+    text-align: right;
+    line-height: 30px;
+  }
+}
+
+.display_period {
+  .setting :nth-child(1) {
+      border: none;
+  }
+}
+
 .graphs {
   margin: 30px;
   .pieChartContainer {
