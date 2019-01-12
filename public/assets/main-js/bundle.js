@@ -1,37 +1,193 @@
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+// csvファイル読み込み関数(同期)
+function openFile(url) {
+  const xhr = new XMLHttpRequest();
+  const p = new Promise((resolve, reject) => {
+    xhr.open('GET', url);
+    xhr.addEventListener('load', e => resolve(xhr));
+    xhr.send();
+  });
+  return p;
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+async function loadAllFiles() {
+  const xhr1 = await openFile('assets/data/crane_specs.csv');
+  const xhr2 = await openFile('assets/data/crane_log.csv'); // const xhr3 = await openFile('baz.txt');
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+  console.log('load_done!');
+  save_spec_data(xhr1);
+  save_log_data(xhr2);
+}
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function save_spec_data(spec_data) {
+  // console.log(spec_data.responseText);
+  spec_data_list = convertCSVtoArray(spec_data.responseText); // 渡されるのは読み込んだCSVデータ
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function save_log_data(log_data) {
+  // console.log(log_data.responseText);
+  log_data_list = convertCSVtoArray(log_data.responseText); // 渡されるのは読み込んだCSVデータ
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+  console.log(log_data_list);
+  var j = 0; // 全部のidを調べて保存用配列の作成
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+  var added_id = [];
 
+  for (var i = 1; i < log_data_list.length; i++) {
+    // 登録されたことがなかったら,crane_dataに追加
+    if (added_id.indexOf(log_data_list[i][0]) == -1) {
+      crane_data[j] = new Info(log_data_list[i][0], "A", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "B", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "C", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "D", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "E", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "F", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "G", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      crane_data[j] = new Info(log_data_list[i][0], "H", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      j++;
+      added_id.push(log_data_list[i][0]);
+    }
+  }
+
+  console.log(crane_data);
+  var isFirst = true;
+  log_data_list.forEach(function (data) {
+    if (isFirst) {
+      isFirst = false;
+    } else {
+      // console.log(data);
+      // 負荷率
+      if (data[7] > 0 && data[7] <= 0.10) {
+        classify_data(data, 0);
+      } else if (data[7] > 0.10 && data[7] <= 0.50) {
+        classify_data(data, 1);
+      } else if (data[7] > 0.50 && data[7] <= 0.63) {
+        classify_data(data, 2);
+      } else if (data[7] > 0.63 && data[7] <= 0.80) {
+        classify_data(data, 3);
+      } else if (data[7] > 0.80 && data[7] <= 1) {
+        classify_data(data, 4);
+      } else if (data[7] > 1) {
+        classify_data(data, 5);
+      }
+    }
+  });
+  console.log(crane_data);
+}
+
+function get_segment_num(segment) {
+  if (segment == "A") {
+    return 0;
+  }
+
+  if (segment == "B") {
+    return 1;
+  }
+
+  if (segment == "C") {
+    return 2;
+  }
+
+  if (segment == "D") {
+    return 3;
+  }
+
+  if (segment == "E") {
+    return 4;
+  }
+
+  if (segment == "F") {
+    return 5;
+  }
+
+  if (segment == "G") {
+    return 6;
+  }
+
+  if (segment == "H") {
+    return 7;
+  }
+}
+
+function classify_data(data, range_id) {
+  const index1 = data[0] - 1 + get_segment_num(data[8]);
+  const index2 = data[0] - 1 + get_segment_num(data[9]);
+
+  if (range_id == 0) {
+    crane_data[index1]._0_10 += 1;
+    crane_data[index2]._0_10 += 1;
+  }
+
+  if (range_id == 1) {
+    crane_data[index1]._10_50 += 1;
+    crane_data[index2]._10_50 += 1;
+  }
+
+  if (range_id == 2) {
+    crane_data[index1]._50_63 += 1;
+    crane_data[index2]._50_63 += 1;
+  }
+
+  if (range_id == 3) {
+    crane_data[index1]._63_80 += 1;
+    crane_data[index2]._63_80 += 1;
+  }
+
+  if (range_id == 4) {
+    crane_data[index1]._80_100 += 1;
+    crane_data[index2]._80_100 += 1;
+  }
+
+  if (range_id == 5) {
+    crane_data[index1]._100_over += 1;
+    crane_data[index2]._100_over += 1;
+  }
+}
+/* ----------------------------
+変数定義
+ ----------------------------*/
+
+
+var spec_data_list = [];
+var log_data_list = [];
+var crane_data = [];
+
+function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
+  this.id = _id, this.segment = _segment;
+  this._0_10 = _0_10;
+  this._10_50 = _10_50;
+  this._50_63 = _50_63;
+  this._63_80 = _63_80;
+  this._80_100 = _80_100;
+  this._100_over = _100_over;
+  this._0_10 = _0_10_time;
+  this._10_50 = _10_50_time;
+  this._50_63 = _50_63_time;
+  this._63_80 = _63_80_time;
+  this._80_100 = _80_100_time;
+  this._100_over = _100_over_time;
+}
+
+loadAllFiles();
 /** グループを継承したサブクラスです。 */
-var PieChart =
-/*#__PURE__*/
-function (_THREE$Group) {
-  _inherits(PieChart, _THREE$Group);
 
-  function PieChart(startAngle, endAngle, sectorNum, text, damage_data) {
-    var _this;
-
-    _classCallCheck(this, PieChart);
-
+class PieChart extends THREE.Group {
+  constructor(startAngle, endAngle, sectorNum, text, damage_data) {
     // 何かのクラスを継承した場合はsuper()を呼び出す必要がある
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(PieChart).call(this)); // console.log(damage_data);
+    super(); // console.log(damage_data);
     // 角度から座標を取得(x,z)
 
-    var getRotPosition = function getRotPosition(angle, radius) {
+    const getRotPosition = (angle, radius) => {
       // ラジアンに変換する
-      var radian = angle * Math.PI / 180; // 角度に応じて位置を設定
+      const radian = angle * Math.PI / 180; // 角度に応じて位置を設定
 
       var x = radius * Math.sin(radian);
       var z = radius * Math.cos(radian);
@@ -49,24 +205,24 @@ function (_THREE$Group) {
     //sin計算関数
 
 
-    var getSin = function getSin(angle) {
+    const getSin = angle => {
       // ラジアンに変換する
-      var radian = angle * Math.PI / 180; // 角度に応じて位置を設定
+      const radian = angle * Math.PI / 180; // 角度に応じて位置を設定
 
-      var sin = 10 * Math.sin(10 * radian) + 40 + 10 * radian / 2;
+      const sin = 10 * Math.sin(10 * radian) + 40 + 10 * radian / 2;
       return sin;
     }; // 適当な負荷値を返す関数
 
 
-    var getDamage = function getDamage(angle) {
+    const getDamage = angle => {
       return damage_data[Math.floor(angle)][1];
     };
 
-    var getMaxDamage = function getMaxDamage() {
+    const getMaxDamage = () => {
       var max_damage = 0;
 
       for (var i = 0; i < 360; i += stride) {
-        var damage = getDamage(i); // 最大値の更新
+        const damage = getDamage(i); // 最大値の更新
 
         if (max_damage < damage) {
           max_damage = Number(damage);
@@ -76,8 +232,8 @@ function (_THREE$Group) {
       return max_damage;
     };
 
-    var getColor_grad = function getColor_grad(angle) {
-      var damage = damage_data[Math.floor(angle)][1];
+    const getColor_grad = angle => {
+      const damage = damage_data[Math.floor(angle)][1];
 
       if (max_damage * 0.8 < damage) {
         return 0xd81200;
@@ -106,20 +262,20 @@ function (_THREE$Group) {
     // 刻み幅
 
 
-    var stride = 0.6; // 円の半径
+    const stride = 0.6; // 円の半径
 
-    var radius = 100; // piechartの1sectorの角度
+    const radius = 100; // piechartの1sectorの角度
 
-    var sectorAngle = 45; // 横の線
+    const sectorAngle = 45; // 横の線
 
     var max_damage = getMaxDamage();
-    var interval = max_damage / 5;
-    _this.axisLabelGroup = new THREE.Group(); // console.log(max_damage);
+    const interval = max_damage / 5;
+    this.axisLabelGroup = new THREE.Group(); // console.log(max_damage);
     // chart 描く
 
-    var drowPie = function drowPie(startAngle, endAngle, sectorNum) {
-      var positions = [];
-      var next_positions = [];
+    const drowPie = (startAngle, endAngle, sectorNum) => {
+      let positions = [];
+      let next_positions = [];
 
       for (var i = startAngle; i < endAngle; i += stride) {
         // 円周のポジションの取得
@@ -132,8 +288,8 @@ function (_THREE$Group) {
         } // Draw each segments
 
 
-        var group = new THREE.Group();
-        var geometry = new THREE.BoxGeometry(1, 15, radius);
+        const group = new THREE.Group();
+        const geometry = new THREE.BoxGeometry(1, 15, radius);
 
         if (i == startAngle) {
           var material = new THREE.MeshBasicMaterial({
@@ -145,15 +301,13 @@ function (_THREE$Group) {
           });
         }
 
-        var box = new THREE.Mesh(geometry, material);
+        const box = new THREE.Mesh(geometry, material);
         box.position.y = -7.5;
         box.position.z = radius / 2;
         group.add(box);
-        var radian = i * Math.PI / 180;
+        const radian = i * Math.PI / 180;
         group.rotation.y = radian;
-
-        _this.add(group); // 角度の表示
-
+        this.add(group); // 角度の表示
 
         if (i % 45 == 0) {
           // console.log(String(i)+"角度表示！");
@@ -172,15 +326,15 @@ function (_THREE$Group) {
           var holizontal_line = new THREE.Line(holi_geometry, material); //sceneにlineを追加
           // console.log(this);
 
-          _this.add(holizontal_line);
+          this.add(holizontal_line);
         } // 負荷のグラフ
         //geometryの宣言と生成
 
 
         if (i + stride <= 360) {
           var damage_geometry = new THREE.Geometry();
-          var damage_position = getDamage(i);
-          var next_damage_position = getDamage(i + stride); //頂点座標の追加
+          const damage_position = getDamage(i);
+          const next_damage_position = getDamage(i + stride); //頂点座標の追加
 
           damage_geometry.vertices.push(new THREE.Vector3(positions.x, damage_position, positions.z));
           damage_geometry.vertices.push(new THREE.Vector3(next_positions.x, next_damage_position, next_positions.z));
@@ -191,14 +345,14 @@ function (_THREE$Group) {
 
           var line = new THREE.Line(damage_geometry, material); //sceneにlineを追加
 
-          _this.add(line);
+          this.add(line);
         }
       }
     }; // 縦の線を書く
 
 
-    var drawVerticalLines = function drawVerticalLines(startAngle, angle) {
-      var positions = getRotPosition(startAngle, radius); // console.log(positions);
+    const drawVerticalLines = (startAngle, angle) => {
+      const positions = getRotPosition(startAngle, radius); // console.log(positions);
       // 縦の線
 
       var ver_geometry = new THREE.Geometry();
@@ -210,7 +364,7 @@ function (_THREE$Group) {
 
       var vertical_line = new THREE.Line(ver_geometry, material); //sceneにlineを追加
 
-      _this.add(vertical_line);
+      this.add(vertical_line);
 
       for (var i = 0; i <= max_damage; i += interval) {
         // positions.y = i + 5;
@@ -219,23 +373,22 @@ function (_THREE$Group) {
     }; // 縦軸の数値を追加
 
 
-    var drawAxisLabelVal = function drawAxisLabelVal(positions, text, y, angle) {
-      var that = _assertThisInitialized(_assertThisInitialized(_this));
-
-      var loader = new THREE.FontLoader();
+    const drawAxisLabelVal = (positions, text, y, angle) => {
+      const that = this;
+      const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function (font) {
-        var textGeometry = new THREE.TextGeometry(text, {
+        const textGeometry = new THREE.TextGeometry(text, {
           font: font,
           size: 5,
           height: 1,
           curveSegments: 12
         });
-        var materials = [new THREE.MeshBasicMaterial({
+        const materials = [new THREE.MeshBasicMaterial({
           color: 0xff0f0f
         }), new THREE.MeshBasicMaterial({
           color: 0x000000
         })];
-        var textMesh = new THREE.Mesh(textGeometry, materials);
+        const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x, y, positions.z);
         textMesh.rotation.set(0, Math.PI * angle / 180, 0);
         that.axisLabelGroup.add(textMesh);
@@ -244,24 +397,23 @@ function (_THREE$Group) {
     }; // draw Pie angle labels
 
 
-    var drawPieAngleLabel = function drawPieAngleLabel(positions, text, y, angle) {
+    const drawPieAngleLabel = (positions, text, y, angle) => {
       // Pie Chartの数値を追加
-      var that = _assertThisInitialized(_assertThisInitialized(_this));
-
-      var loader = new THREE.FontLoader();
+      const that = this;
+      const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function (font) {
-        var textGeometry = new THREE.TextGeometry(String(text) + "°", {
+        const textGeometry = new THREE.TextGeometry(String(text) + "°", {
           font: font,
           size: 10,
           height: 1,
           curveSegments: 12
         });
-        var materials = [new THREE.MeshBasicMaterial({
+        const materials = [new THREE.MeshBasicMaterial({
           color: 0x0fff0f
         }), new THREE.MeshBasicMaterial({
           color: 0x000000
         })];
-        var textMesh = new THREE.Mesh(textGeometry, materials);
+        const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.rotation.set(-Math.PI / 2, 0, -Math.PI / 2);
 
         if (angle == 135) {
@@ -284,25 +436,24 @@ function (_THREE$Group) {
     }; // pie上のtextを描く
 
 
-    var drawText = function drawText(text, angle) {
-      var positions = getRotPosition(angle, radius * 0.7); // function内でthisの内容が変わるためthatで記憶しておく
+    const drawText = (text, angle) => {
+      const positions = getRotPosition(angle, radius * 0.7); // function内でthisの内容が変わるためthatで記憶しておく
 
-      var that = _assertThisInitialized(_assertThisInitialized(_this));
-
-      var loader = new THREE.FontLoader();
+      const that = this;
+      const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function (font) {
-        var textGeometry = new THREE.TextGeometry(text, {
+        const textGeometry = new THREE.TextGeometry(text, {
           font: font,
           size: 20,
           height: 5,
           curveSegments: 12
         });
-        var materials = [new THREE.MeshBasicMaterial({
+        const materials = [new THREE.MeshBasicMaterial({
           color: 0xffffff
         }), new THREE.MeshBasicMaterial({
           color: 0x000000
         })];
-        var textMesh = new THREE.Mesh(textGeometry, materials);
+        const textMesh = new THREE.Mesh(textGeometry, materials);
         textMesh.position.set(positions.x - 10, -3, positions.z - 10);
         textMesh.rotation.set(-Math.PI / 2, 0, -Math.PI / 2);
         that.add(textMesh);
@@ -313,15 +464,13 @@ function (_THREE$Group) {
     drowPie(startAngle, endAngle, sectorNum);
     drawVerticalLines(startAngle);
     drawText(text, (sectorNum + 1) * sectorAngle - 25);
-    return _this;
   } // /** 更新命令を定義します。 */
   // update() {
   //   // this.axisLabelGroup.rotation.setFromRotationMatrix( this.camera.matrix );　//これを追加
   // }
 
 
-  return PieChart;
-}(THREE.Group);
+}
 
 window.addEventListener('load', getCSV_drawAllLineChart("assets/data/demo.csv")); //CSVファイルを読み込む関数getCSV()の定義
 
@@ -381,124 +530,54 @@ function drawAllLineChart(damage_data) {
 
   });
   chart.render();
-}
-
-window.addEventListener('load', getCSV_drawColumnLineChart("assets/data/moment.csv")); //CSVファイルを読み込む関数getCSV()の定義
-
-function getCSV_drawColumnLineChart(targetFile) {
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-
-  req.open("get", targetFile, true); // アクセスするファイルを指定
-
-  req.send(null); // HTTPリクエストの発行
-
-  var result = []; // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-
-  req.onload = function () {
-    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-
-    drawColumnLineChart(result);
-  };
-}
-
-function drawColumnLineChart(damage_data) {
-  // console.log(damage_data);
-  var dataPoints = [];
-
-  for (var i = 0; i < damage_data.length; i++) {
-    console.log(damage_data.length);
-    dataPoints.push({
-      label: damage_data[i][0],
-      y: Number(damage_data[i][1])
-    });
-  }
-
-  var chart = new CanvasJS.Chart("columnChartContainer", {
-    animationEnabled: true,
-    exportEnabled: true,
-    theme: "light1",
-    // "light1", "light2", "dark1", "dark2"
-    title: {
-      text: "モーメントの分布"
-    },
-    axisX: {
-      title: "モーメント（100kg×メートル）"
-    },
-    axisY: {
-      title: "回数",
-      includeZero: false
-    },
-    data: [{
-      type: "column",
-      //change type to bar, line, area, pie, etc
-      //indexLabel: "{y}", //Shows y value on all Data Points
-      indexLabelFontColor: "#5A5757",
-      indexLabelPlacement: "outside",
-      dataPoints: dataPoints
-    }]
-  });
-  chart.render();
-}
-
-window.addEventListener('load', getCSV_drawEndLineChart("assets/data/end.csv")); //CSVファイルを読み込む関数getCSV()の定義
-
-function getCSV_drawEndLineChart(targetFile) {
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-
-  req.open("get", targetFile, true); // アクセスするファイルを指定
-
-  req.send(null); // HTTPリクエストの発行
-
-  var result = []; // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-
-  req.onload = function () {
-    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-    // console.log(result);
-    // return result;
-
-    drawEndLineChart(result);
-  };
-}
-
-function drawEndLineChart(damage_data) {
-  // console.log(damage_data);
-  var y = 0;
-  var data = [];
-  var dataSeries = {
-    type: "line"
-  };
-  var dataPoints = [];
-
-  for (var i = 0; i < damage_data.length; i += 1) {
-    y += Math.random() * 10 - 5;
-    dataPoints.push({
-      x: i,
-      y: Number(damage_data[i][1])
-    });
-  }
-
-  dataSeries.dataPoints = dataPoints;
-  data.push(dataSeries);
-  var chart = new CanvasJS.Chart("endLineChartContainer", {
-    animationEnabled: true,
-    zoomEnabled: true,
-    title: {
-      text: "つり降ろし地点"
-    },
-    axisX: {
-      title: "角度",
-      interval: 45,
-      gridThickness: 1
-    },
-    axisY: {
-      title: "回数",
-      includeZero: false
-    },
-    data: data // random generator below
-
-  });
-  chart.render();
-} //CSVファイルを読み込む関数getCSV()の定義
+} // window.addEventListener('load', getCSV_drawColumnLineChart("assets/data/moment.csv"));
+// //CSVファイルを読み込む関数getCSV()の定義
+// function getCSV_drawColumnLineChart(targetFile){
+//   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+//   req.open("get", targetFile, true); // アクセスするファイルを指定
+//   req.send(null); // HTTPリクエストの発行
+//   var result = [];
+//   // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+//   req.onload = function(){
+//     result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+//     drawColumnLineChart(result);
+//   }
+// }
+// function drawColumnLineChart( damage_data ){
+//   // console.log(damage_data);
+//   var dataPoints = [];
+//   for(var i = 0; i < damage_data.length; i++){
+//     console.log(damage_data.length);
+//     dataPoints.push({
+//       label: damage_data[i][0],
+//       y: Number(damage_data[i][1])
+//     });
+//   }
+//   var chart = new CanvasJS.Chart("columnChartContainer", {
+//     animationEnabled: true,
+//     exportEnabled: true,
+//     theme: "light1", // "light1", "light2", "dark1", "dark2"
+//     title:{
+//       text: "モーメントの分布"
+//     },
+//     axisX: {
+//       title:"モーメント（100kg×メートル）",
+//     },
+//     axisY :{
+//       title:"回数",
+//       includeZero:false
+//     },
+//     data: [{
+//       type: "column", //change type to bar, line, area, pie, etc
+//       //indexLabel: "{y}", //Shows y value on all Data Points
+//       indexLabelFontColor: "#5A5757",
+//       indexLabelPlacement: "outside",
+//       dataPoints: dataPoints
+//     }]
+//   });
+//   chart.render();
+// }
+// //CSVファイルを読み込む関数getCSV()の定義
 
 
 function getCSV(targetFile) {
@@ -538,7 +617,7 @@ function convertCSVtoArray(str) {
 !function (e, t) {
   "use strict";
 
-  "object" == (typeof module === "undefined" ? "undefined" : _typeof(module)) && "object" == _typeof(module.exports) ? module.exports = e.document ? t(e, !0) : function (e) {
+  "object" == typeof module && "object" == typeof module.exports ? module.exports = e.document ? t(e, !0) : function (e) {
     if (!e.document) throw new Error("jQuery requires a window with a document");
     return t(e);
   } : t(e);
@@ -573,18 +652,16 @@ function convertCSVtoArray(str) {
   function m(e, t, n) {
     var i,
         o = (t = t || r).createElement("script");
-    if (o.text = e, n) for (i in v) {
-      n[i] && (o[i] = n[i]);
-    }
+    if (o.text = e, n) for (i in v) n[i] && (o[i] = n[i]);
     t.head.appendChild(o).parentNode.removeChild(o);
   }
 
   function x(e) {
-    return null == e ? e + "" : "object" == _typeof(e) || "function" == typeof e ? l[c.call(e)] || "object" : _typeof(e);
+    return null == e ? e + "" : "object" == typeof e || "function" == typeof e ? l[c.call(e)] || "object" : typeof e;
   }
 
   var b = "3.3.1",
-      w = function w(e, t) {
+      w = function (e, t) {
     return new w.fn.init(e, t);
   },
       T = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
@@ -593,39 +670,39 @@ function convertCSVtoArray(str) {
     jquery: "3.3.1",
     constructor: w,
     length: 0,
-    toArray: function toArray() {
+    toArray: function () {
       return o.call(this);
     },
-    get: function get(e) {
+    get: function (e) {
       return null == e ? o.call(this) : e < 0 ? this[e + this.length] : this[e];
     },
-    pushStack: function pushStack(e) {
+    pushStack: function (e) {
       var t = w.merge(this.constructor(), e);
       return t.prevObject = this, t;
     },
-    each: function each(e) {
+    each: function (e) {
       return w.each(this, e);
     },
-    map: function map(e) {
+    map: function (e) {
       return this.pushStack(w.map(this, function (t, n) {
         return e.call(t, n, t);
       }));
     },
-    slice: function slice() {
+    slice: function () {
       return this.pushStack(o.apply(this, arguments));
     },
-    first: function first() {
+    first: function () {
       return this.eq(0);
     },
-    last: function last() {
+    last: function () {
       return this.eq(-1);
     },
-    eq: function eq(e) {
+    eq: function (e) {
       var t = this.length,
           n = +e + (e < 0 ? t : 0);
       return this.pushStack(n >= 0 && n < t ? [this[n]] : []);
     },
-    end: function end() {
+    end: function () {
       return this.prevObject || this.constructor();
     },
     push: s,
@@ -643,84 +720,66 @@ function convertCSVtoArray(str) {
         u = arguments.length,
         l = !1;
 
-    for ("boolean" == typeof a && (l = a, a = arguments[s] || {}, s++), "object" == _typeof(a) || g(a) || (a = {}), s === u && (a = this, s--); s < u; s++) {
-      if (null != (e = arguments[s])) for (t in e) {
-        n = a[t], a !== (r = e[t]) && (l && r && (w.isPlainObject(r) || (i = Array.isArray(r))) ? (i ? (i = !1, o = n && Array.isArray(n) ? n : []) : o = n && w.isPlainObject(n) ? n : {}, a[t] = w.extend(l, o, r)) : void 0 !== r && (a[t] = r));
-      }
-    }
+    for ("boolean" == typeof a && (l = a, a = arguments[s] || {}, s++), "object" == typeof a || g(a) || (a = {}), s === u && (a = this, s--); s < u; s++) if (null != (e = arguments[s])) for (t in e) n = a[t], a !== (r = e[t]) && (l && r && (w.isPlainObject(r) || (i = Array.isArray(r))) ? (i ? (i = !1, o = n && Array.isArray(n) ? n : []) : o = n && w.isPlainObject(n) ? n : {}, a[t] = w.extend(l, o, r)) : void 0 !== r && (a[t] = r));
 
     return a;
   }, w.extend({
     expando: "jQuery" + ("3.3.1" + Math.random()).replace(/\D/g, ""),
     isReady: !0,
-    error: function error(e) {
+    error: function (e) {
       throw new Error(e);
     },
-    noop: function noop() {},
-    isPlainObject: function isPlainObject(e) {
+    noop: function () {},
+    isPlainObject: function (e) {
       var t, n;
       return !(!e || "[object Object]" !== c.call(e)) && (!(t = i(e)) || "function" == typeof (n = f.call(t, "constructor") && t.constructor) && p.call(n) === d);
     },
-    isEmptyObject: function isEmptyObject(e) {
+    isEmptyObject: function (e) {
       var t;
 
-      for (t in e) {
-        return !1;
-      }
+      for (t in e) return !1;
 
       return !0;
     },
-    globalEval: function globalEval(e) {
+    globalEval: function (e) {
       m(e);
     },
-    each: function each(e, t) {
+    each: function (e, t) {
       var n,
           r = 0;
 
       if (C(e)) {
-        for (n = e.length; r < n; r++) {
-          if (!1 === t.call(e[r], r, e[r])) break;
-        }
-      } else for (r in e) {
-        if (!1 === t.call(e[r], r, e[r])) break;
-      }
+        for (n = e.length; r < n; r++) if (!1 === t.call(e[r], r, e[r])) break;
+      } else for (r in e) if (!1 === t.call(e[r], r, e[r])) break;
 
       return e;
     },
-    trim: function trim(e) {
+    trim: function (e) {
       return null == e ? "" : (e + "").replace(T, "");
     },
-    makeArray: function makeArray(e, t) {
+    makeArray: function (e, t) {
       var n = t || [];
       return null != e && (C(Object(e)) ? w.merge(n, "string" == typeof e ? [e] : e) : s.call(n, e)), n;
     },
-    inArray: function inArray(e, t, n) {
+    inArray: function (e, t, n) {
       return null == t ? -1 : u.call(t, e, n);
     },
-    merge: function merge(e, t) {
-      for (var n = +t.length, r = 0, i = e.length; r < n; r++) {
-        e[i++] = t[r];
-      }
+    merge: function (e, t) {
+      for (var n = +t.length, r = 0, i = e.length; r < n; r++) e[i++] = t[r];
 
       return e.length = i, e;
     },
-    grep: function grep(e, t, n) {
-      for (var r, i = [], o = 0, a = e.length, s = !n; o < a; o++) {
-        (r = !t(e[o], o)) !== s && i.push(e[o]);
-      }
+    grep: function (e, t, n) {
+      for (var r, i = [], o = 0, a = e.length, s = !n; o < a; o++) (r = !t(e[o], o)) !== s && i.push(e[o]);
 
       return i;
     },
-    map: function map(e, t, n) {
+    map: function (e, t, n) {
       var r,
           i,
           o = 0,
           s = [];
-      if (C(e)) for (r = e.length; o < r; o++) {
-        null != (i = t(e[o], o, n)) && s.push(i);
-      } else for (o in e) {
-        null != (i = t(e[o], o, n)) && s.push(i);
-      }
+      if (C(e)) for (r = e.length; o < r; o++) null != (i = t(e[o], o, n)) && s.push(i);else for (o in e) null != (i = t(e[o], o, n)) && s.push(i);
       return a.apply([], s);
     },
     guid: 1,
@@ -762,7 +821,7 @@ function convertCSVtoArray(str) {
         E = ae(),
         k = ae(),
         S = ae(),
-        D = function D(e, t) {
+        D = function (e, t) {
       return e === t && (f = !0), 0;
     },
         N = {}.hasOwnProperty,
@@ -771,10 +830,8 @@ function convertCSVtoArray(str) {
         q = A.push,
         L = A.push,
         H = A.slice,
-        O = function O(e, t) {
-      for (var n = 0, r = e.length; n < r; n++) {
-        if (e[n] === t) return n;
-      }
+        O = function (e, t) {
+      for (var n = 0, r = e.length; n < r; n++) if (e[n] === t) return n;
 
       return -1;
     },
@@ -806,15 +863,15 @@ function convertCSVtoArray(str) {
         J = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
         K = /[+~]/,
         Z = new RegExp("\\\\([\\da-f]{1,6}" + M + "?|(" + M + ")|.)", "ig"),
-        ee = function ee(e, t, n) {
+        ee = function (e, t, n) {
       var r = "0x" + t - 65536;
       return r !== r || n ? t : r < 0 ? String.fromCharCode(r + 65536) : String.fromCharCode(r >> 10 | 55296, 1023 & r | 56320);
     },
         te = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,
-        ne = function ne(e, t) {
-      return t ? "\0" === e ? "\uFFFD" : e.slice(0, -1) + "\\" + e.charCodeAt(e.length - 1).toString(16) + " " : "\\" + e;
+        ne = function (e, t) {
+      return t ? "\0" === e ? "\ufffd" : e.slice(0, -1) + "\\" + e.charCodeAt(e.length - 1).toString(16) + " " : "\\" + e;
     },
-        re = function re() {
+        re = function () {
       p();
     },
         ie = me(function (e) {
@@ -834,9 +891,7 @@ function convertCSVtoArray(str) {
           var n = e.length,
               r = 0;
 
-          while (e[n++] = t[r++]) {
-            ;
-          }
+          while (e[n++] = t[r++]);
 
           e.length = n - 1;
         }
@@ -870,9 +925,7 @@ function convertCSVtoArray(str) {
           if (1 !== T) m = t, v = e;else if ("object" !== t.nodeName.toLowerCase()) {
             (c = t.getAttribute("id")) ? c = c.replace(te, ne) : t.setAttribute("id", c = b), s = (h = a(e)).length;
 
-            while (s--) {
-              h[s] = "#" + c + " " + ve(h[s]);
-            }
+            while (s--) h[s] = "#" + c + " " + ve(h[s]);
 
             v = h.join(","), m = K.test(e) && ge(t.parentNode) || t;
           }
@@ -917,18 +970,14 @@ function convertCSVtoArray(str) {
       var n = e.split("|"),
           i = n.length;
 
-      while (i--) {
-        r.attrHandle[n[i]] = t;
-      }
+      while (i--) r.attrHandle[n[i]] = t;
     }
 
     function ce(e, t) {
       var n = t && e,
           r = n && 1 === e.nodeType && 1 === t.nodeType && e.sourceIndex - t.sourceIndex;
       if (r) return r;
-      if (n) while (n = n.nextSibling) {
-        if (n === t) return -1;
-      }
+      if (n) while (n = n.nextSibling) if (n === t) return -1;
       return e ? 1 : -1;
     }
 
@@ -958,9 +1007,7 @@ function convertCSVtoArray(str) {
               o = e([], n.length, t),
               a = o.length;
 
-          while (a--) {
-            n[i = o[a]] && (n[i] = !(r[i] = n[i]));
-          }
+          while (a--) n[i = o[a]] && (n[i] = !(r[i] = n[i]));
         });
       });
     }
@@ -1009,9 +1056,7 @@ function convertCSVtoArray(str) {
             if ((n = o.getAttributeNode("id")) && n.value === e) return [o];
             i = t.getElementsByName(e), r = 0;
 
-            while (o = i[r++]) {
-              if ((n = o.getAttributeNode("id")) && n.value === e) return [o];
-            }
+            while (o = i[r++]) if ((n = o.getAttributeNode("id")) && n.value === e) return [o];
           }
 
           return [];
@@ -1025,9 +1070,7 @@ function convertCSVtoArray(str) {
             o = t.getElementsByTagName(e);
 
         if ("*" === e) {
-          while (n = o[i++]) {
-            1 === n.nodeType && r.push(n);
-          }
+          while (n = o[i++]) 1 === n.nodeType && r.push(n);
 
           return r;
         }
@@ -1048,9 +1091,7 @@ function convertCSVtoArray(str) {
             r = t && t.parentNode;
         return e === r || !(!r || 1 !== r.nodeType || !(n.contains ? n.contains(r) : e.compareDocumentPosition && 16 & e.compareDocumentPosition(r)));
       } : function (e, t) {
-        if (t) while (t = t.parentNode) {
-          if (t === e) return !0;
-        }
+        if (t) while (t = t.parentNode) if (t === e) return !0;
         return !1;
       }, D = t ? function (e, t) {
         if (e === t) return f = !0, 0;
@@ -1068,19 +1109,13 @@ function convertCSVtoArray(str) {
         if (i === o) return ce(e, t);
         n = e;
 
-        while (n = n.parentNode) {
-          a.unshift(n);
-        }
+        while (n = n.parentNode) a.unshift(n);
 
         n = t;
 
-        while (n = n.parentNode) {
-          s.unshift(n);
-        }
+        while (n = n.parentNode) s.unshift(n);
 
-        while (a[r] === s[r]) {
-          r++;
-        }
+        while (a[r] === s[r]) r++;
 
         return r ? ce(a[r], s[r]) : a[r] === w ? -1 : s[r] === w ? 1 : 0;
       }, d) : d;
@@ -1110,13 +1145,9 @@ function convertCSVtoArray(str) {
           o = 0;
 
       if (f = !n.detectDuplicates, c = !n.sortStable && e.slice(0), e.sort(D), f) {
-        while (t = e[o++]) {
-          t === e[o] && (i = r.push(o));
-        }
+        while (t = e[o++]) t === e[o] && (i = r.push(o));
 
-        while (i--) {
-          e.splice(r[i], 1);
-        }
+        while (i--) e.splice(r[i], 1);
       }
 
       return c = null, e;
@@ -1130,13 +1161,9 @@ function convertCSVtoArray(str) {
         if (1 === o || 9 === o || 11 === o) {
           if ("string" == typeof e.textContent) return e.textContent;
 
-          for (e = e.firstChild; e; e = e.nextSibling) {
-            n += i(e);
-          }
+          for (e = e.firstChild; e; e = e.nextSibling) n += i(e);
         } else if (3 === o || 4 === o) return e.nodeValue;
-      } else while (t = e[r++]) {
-        n += i(t);
-      }
+      } else while (t = e[r++]) n += i(t);
 
       return n;
     }, (r = oe.selectors = {
@@ -1162,20 +1189,20 @@ function convertCSVtoArray(str) {
         }
       },
       preFilter: {
-        ATTR: function ATTR(e) {
+        ATTR: function (e) {
           return e[1] = e[1].replace(Z, ee), e[3] = (e[3] || e[4] || e[5] || "").replace(Z, ee), "~=" === e[2] && (e[3] = " " + e[3] + " "), e.slice(0, 4);
         },
-        CHILD: function CHILD(e) {
+        CHILD: function (e) {
           return e[1] = e[1].toLowerCase(), "nth" === e[1].slice(0, 3) ? (e[3] || oe.error(e[0]), e[4] = +(e[4] ? e[5] + (e[6] || 1) : 2 * ("even" === e[3] || "odd" === e[3])), e[5] = +(e[7] + e[8] || "odd" === e[3])) : e[3] && oe.error(e[0]), e;
         },
-        PSEUDO: function PSEUDO(e) {
+        PSEUDO: function (e) {
           var t,
               n = !e[6] && e[2];
           return V.CHILD.test(e[0]) ? null : (e[3] ? e[2] = e[4] || e[5] || "" : n && X.test(n) && (t = a(n, !0)) && (t = n.indexOf(")", n.length - t) - n.length) && (e[0] = e[0].slice(0, t), e[2] = n.slice(0, t)), e.slice(0, 3));
         }
       },
       filter: {
-        TAG: function TAG(e) {
+        TAG: function (e) {
           var t = e.replace(Z, ee).toLowerCase();
           return "*" === e ? function () {
             return !0;
@@ -1183,19 +1210,19 @@ function convertCSVtoArray(str) {
             return e.nodeName && e.nodeName.toLowerCase() === t;
           };
         },
-        CLASS: function CLASS(e) {
+        CLASS: function (e) {
           var t = E[e + " "];
           return t || (t = new RegExp("(^|" + M + ")" + e + "(" + M + "|$)")) && E(e, function (e) {
             return t.test("string" == typeof e.className && e.className || "undefined" != typeof e.getAttribute && e.getAttribute("class") || "");
           });
         },
-        ATTR: function ATTR(e, t, n) {
+        ATTR: function (e, t, n) {
           return function (r) {
             var i = oe.attr(r, e);
             return null == i ? "!=" === t : !t || (i += "", "=" === t ? i === n : "!=" === t ? i !== n : "^=" === t ? n && 0 === i.indexOf(n) : "*=" === t ? n && i.indexOf(n) > -1 : "$=" === t ? n && i.slice(-n.length) === n : "~=" === t ? (" " + i.replace($, " ") + " ").indexOf(n) > -1 : "|=" === t && (i === n || i.slice(0, n.length + 1) === n + "-"));
           };
         },
-        CHILD: function CHILD(e, t, n, r, i) {
+        CHILD: function (e, t, n, r, i) {
           var o = "nth" !== e.slice(0, 3),
               a = "last" !== e.slice(-4),
               s = "of-type" === t;
@@ -1219,9 +1246,7 @@ function convertCSVtoArray(str) {
                 while (g) {
                   p = t;
 
-                  while (p = p[g]) {
-                    if (s ? p.nodeName.toLowerCase() === v : 1 === p.nodeType) return !1;
-                  }
+                  while (p = p[g]) if (s ? p.nodeName.toLowerCase() === v : 1 === p.nodeType) return !1;
 
                   h = g = "only" === e && !h && "nextSibling";
                 }
@@ -1232,21 +1257,17 @@ function convertCSVtoArray(str) {
               if (h = [a ? y.firstChild : y.lastChild], a && m) {
                 x = (d = (l = (c = (f = (p = y)[b] || (p[b] = {}))[p.uniqueID] || (f[p.uniqueID] = {}))[e] || [])[0] === T && l[1]) && l[2], p = d && y.childNodes[d];
 
-                while (p = ++d && p && p[g] || (x = d = 0) || h.pop()) {
-                  if (1 === p.nodeType && ++x && p === t) {
-                    c[e] = [T, d, x];
-                    break;
-                  }
+                while (p = ++d && p && p[g] || (x = d = 0) || h.pop()) if (1 === p.nodeType && ++x && p === t) {
+                  c[e] = [T, d, x];
+                  break;
                 }
-              } else if (m && (x = d = (l = (c = (f = (p = t)[b] || (p[b] = {}))[p.uniqueID] || (f[p.uniqueID] = {}))[e] || [])[0] === T && l[1]), !1 === x) while (p = ++d && p && p[g] || (x = d = 0) || h.pop()) {
-                if ((s ? p.nodeName.toLowerCase() === v : 1 === p.nodeType) && ++x && (m && ((c = (f = p[b] || (p[b] = {}))[p.uniqueID] || (f[p.uniqueID] = {}))[e] = [T, x]), p === t)) break;
-              }
+              } else if (m && (x = d = (l = (c = (f = (p = t)[b] || (p[b] = {}))[p.uniqueID] || (f[p.uniqueID] = {}))[e] || [])[0] === T && l[1]), !1 === x) while (p = ++d && p && p[g] || (x = d = 0) || h.pop()) if ((s ? p.nodeName.toLowerCase() === v : 1 === p.nodeType) && ++x && (m && ((c = (f = p[b] || (p[b] = {}))[p.uniqueID] || (f[p.uniqueID] = {}))[e] = [T, x]), p === t)) break;
 
               return (x -= i) === r || x % r == 0 && x / r >= 0;
             }
           };
         },
-        PSEUDO: function PSEUDO(e, t) {
+        PSEUDO: function (e, t) {
           var n,
               i = r.pseudos[e] || r.setFilters[e.toLowerCase()] || oe.error("unsupported pseudo: " + e);
           return i[b] ? i(t) : i.length > 1 ? (n = [e, e, "", t], r.setFilters.hasOwnProperty(e.toLowerCase()) ? se(function (e, n) {
@@ -1254,9 +1275,7 @@ function convertCSVtoArray(str) {
                 o = i(e, t),
                 a = o.length;
 
-            while (a--) {
-              e[r = O(e, o[a])] = !(n[r] = o[a]);
-            }
+            while (a--) e[r = O(e, o[a])] = !(n[r] = o[a]);
           }) : function (e) {
             return i(e, 0, n);
           }) : i;
@@ -1272,9 +1291,7 @@ function convertCSVtoArray(str) {
                 a = r(e, null, i, []),
                 s = e.length;
 
-            while (s--) {
-              (o = a[s]) && (e[s] = !(t[s] = o));
-            }
+            while (s--) (o = a[s]) && (e[s] = !(t[s] = o));
           }) : function (e, i, o) {
             return t[0] = e, r(t, null, o, n), t[0] = null, !n.pop();
           };
@@ -1300,46 +1317,44 @@ function convertCSVtoArray(str) {
             return !1;
           };
         }),
-        target: function target(t) {
+        target: function (t) {
           var n = e.location && e.location.hash;
           return n && n.slice(1) === t.id;
         },
-        root: function root(e) {
+        root: function (e) {
           return e === h;
         },
-        focus: function focus(e) {
+        focus: function (e) {
           return e === d.activeElement && (!d.hasFocus || d.hasFocus()) && !!(e.type || e.href || ~e.tabIndex);
         },
         enabled: de(!1),
         disabled: de(!0),
-        checked: function checked(e) {
+        checked: function (e) {
           var t = e.nodeName.toLowerCase();
           return "input" === t && !!e.checked || "option" === t && !!e.selected;
         },
-        selected: function selected(e) {
+        selected: function (e) {
           return e.parentNode && e.parentNode.selectedIndex, !0 === e.selected;
         },
-        empty: function empty(e) {
-          for (e = e.firstChild; e; e = e.nextSibling) {
-            if (e.nodeType < 6) return !1;
-          }
+        empty: function (e) {
+          for (e = e.firstChild; e; e = e.nextSibling) if (e.nodeType < 6) return !1;
 
           return !0;
         },
-        parent: function parent(e) {
+        parent: function (e) {
           return !r.pseudos.empty(e);
         },
-        header: function header(e) {
+        header: function (e) {
           return Y.test(e.nodeName);
         },
-        input: function input(e) {
+        input: function (e) {
           return G.test(e.nodeName);
         },
-        button: function button(e) {
+        button: function (e) {
           var t = e.nodeName.toLowerCase();
           return "input" === t && "button" === e.type || "button" === t;
         },
-        text: function text(e) {
+        text: function (e) {
           var t;
           return "input" === e.nodeName.toLowerCase() && "text" === e.type && (null == (t = e.getAttribute("type")) || "text" === t.toLowerCase());
         },
@@ -1353,30 +1368,22 @@ function convertCSVtoArray(str) {
           return [n < 0 ? n + t : n];
         }),
         even: he(function (e, t) {
-          for (var n = 0; n < t; n += 2) {
-            e.push(n);
-          }
+          for (var n = 0; n < t; n += 2) e.push(n);
 
           return e;
         }),
         odd: he(function (e, t) {
-          for (var n = 1; n < t; n += 2) {
-            e.push(n);
-          }
+          for (var n = 1; n < t; n += 2) e.push(n);
 
           return e;
         }),
         lt: he(function (e, t, n) {
-          for (var r = n < 0 ? n + t : n; --r >= 0;) {
-            e.push(r);
-          }
+          for (var r = n < 0 ? n + t : n; --r >= 0;) e.push(r);
 
           return e;
         }),
         gt: he(function (e, t, n) {
-          for (var r = n < 0 ? n + t : n; ++r < t;) {
-            e.push(r);
-          }
+          for (var r = n < 0 ? n + t : n; ++r < t;) e.push(r);
 
           return e;
         })
@@ -1389,16 +1396,12 @@ function convertCSVtoArray(str) {
       file: !0,
       password: !0,
       image: !0
-    }) {
-      r.pseudos[t] = fe(t);
-    }
+    }) r.pseudos[t] = fe(t);
 
     for (t in {
       submit: !0,
       reset: !0
-    }) {
-      r.pseudos[t] = pe(t);
-    }
+    }) r.pseudos[t] = pe(t);
 
     function ye() {}
 
@@ -1420,13 +1423,11 @@ function convertCSVtoArray(str) {
           type: i[0].replace(B, " ")
         }), s = s.slice(n.length));
 
-        for (a in r.filter) {
-          !(i = V[a].exec(s)) || l[a] && !(i = l[a](i)) || (n = i.shift(), o.push({
-            value: n,
-            type: a,
-            matches: i
-          }), s = s.slice(n.length));
-        }
+        for (a in r.filter) !(i = V[a].exec(s)) || l[a] && !(i = l[a](i)) || (n = i.shift(), o.push({
+          value: n,
+          type: a,
+          matches: i
+        }), s = s.slice(n.length));
 
         if (!n) break;
       }
@@ -1435,9 +1436,7 @@ function convertCSVtoArray(str) {
     };
 
     function ve(e) {
-      for (var t = 0, n = e.length, r = ""; t < n; t++) {
-        r += e[t].value;
-      }
+      for (var t = 0, n = e.length, r = ""; t < n; t++) r += e[t].value;
 
       return r;
     }
@@ -1449,9 +1448,7 @@ function convertCSVtoArray(str) {
           a = n && "parentNode" === o,
           s = C++;
       return t.first ? function (t, n, i) {
-        while (t = t[r]) {
-          if (1 === t.nodeType || a) return e(t, n, i);
-        }
+        while (t = t[r]) if (1 === t.nodeType || a) return e(t, n, i);
 
         return !1;
       } : function (t, n, u) {
@@ -1461,14 +1458,10 @@ function convertCSVtoArray(str) {
             p = [T, s];
 
         if (u) {
-          while (t = t[r]) {
-            if ((1 === t.nodeType || a) && e(t, n, u)) return !0;
-          }
-        } else while (t = t[r]) {
-          if (1 === t.nodeType || a) if (f = t[b] || (t[b] = {}), c = f[t.uniqueID] || (f[t.uniqueID] = {}), i && i === t.nodeName.toLowerCase()) t = t[r] || t;else {
-            if ((l = c[o]) && l[0] === T && l[1] === s) return p[2] = l[2];
-            if (c[o] = p, p[2] = e(t, n, u)) return !0;
-          }
+          while (t = t[r]) if ((1 === t.nodeType || a) && e(t, n, u)) return !0;
+        } else while (t = t[r]) if (1 === t.nodeType || a) if (f = t[b] || (t[b] = {}), c = f[t.uniqueID] || (f[t.uniqueID] = {}), i && i === t.nodeName.toLowerCase()) t = t[r] || t;else {
+          if ((l = c[o]) && l[0] === T && l[1] === s) return p[2] = l[2];
+          if (c[o] = p, p[2] = e(t, n, u)) return !0;
         }
 
         return !1;
@@ -1479,26 +1472,20 @@ function convertCSVtoArray(str) {
       return e.length > 1 ? function (t, n, r) {
         var i = e.length;
 
-        while (i--) {
-          if (!e[i](t, n, r)) return !1;
-        }
+        while (i--) if (!e[i](t, n, r)) return !1;
 
         return !0;
       } : e[0];
     }
 
     function be(e, t, n) {
-      for (var r = 0, i = t.length; r < i; r++) {
-        oe(e, t[r], n);
-      }
+      for (var r = 0, i = t.length; r < i; r++) oe(e, t[r], n);
 
       return n;
     }
 
     function we(e, t, n, r, i) {
-      for (var o, a = [], s = 0, u = e.length, l = null != t; s < u; s++) {
-        (o = e[s]) && (n && !n(o, r, i) || (a.push(o), l && t.push(s)));
-      }
+      for (var o, a = [], s = 0, u = e.length, l = null != t; s < u; s++) (o = e[s]) && (n && !n(o, r, i) || (a.push(o), l && t.push(s)));
 
       return a;
     }
@@ -1518,9 +1505,7 @@ function convertCSVtoArray(str) {
         if (n && n(y, v, s, u), r) {
           l = we(v, d), r(l, [], s, u), c = l.length;
 
-          while (c--) {
-            (f = l[c]) && (v[d[c]] = !(y[d[c]] = f));
-          }
+          while (c--) (f = l[c]) && (v[d[c]] = !(y[d[c]] = f));
         }
 
         if (o) {
@@ -1528,18 +1513,14 @@ function convertCSVtoArray(str) {
             if (i) {
               l = [], c = v.length;
 
-              while (c--) {
-                (f = v[c]) && l.push(y[c] = f);
-              }
+              while (c--) (f = v[c]) && l.push(y[c] = f);
 
               i(null, v = [], l, u);
             }
 
             c = v.length;
 
-            while (c--) {
-              (f = v[c]) && (l = i ? O(o, f) : p[c]) > -1 && (o[l] = !(a[l] = f));
-            }
+            while (c--) (f = v[c]) && (l = i ? O(o, f) : p[c]) > -1 && (o[l] = !(a[l] = f));
           }
         } else v = we(v === a ? v.splice(h, v.length) : v), i ? i(null, a, v, u) : L.apply(a, v);
       });
@@ -1553,20 +1534,16 @@ function convertCSVtoArray(str) {
       }, s, !0), p = [function (e, n, r) {
         var i = !a && (r || n !== l) || ((t = n).nodeType ? c(e, n, r) : f(e, n, r));
         return t = null, i;
-      }]; u < o; u++) {
-        if (n = r.relative[e[u].type]) p = [me(xe(p), n)];else {
-          if ((n = r.filter[e[u].type].apply(null, e[u].matches))[b]) {
-            for (i = ++u; i < o; i++) {
-              if (r.relative[e[i].type]) break;
-            }
+      }]; u < o; u++) if (n = r.relative[e[u].type]) p = [me(xe(p), n)];else {
+        if ((n = r.filter[e[u].type].apply(null, e[u].matches))[b]) {
+          for (i = ++u; i < o; i++) if (r.relative[e[i].type]) break;
 
-            return Te(u > 1 && xe(p), u > 1 && ve(e.slice(0, u - 1).concat({
-              value: " " === e[u - 2].type ? "*" : ""
-            })).replace(B, "$1"), n, u < i && Ce(e.slice(u, i)), i < o && Ce(e = e.slice(i)), i < o && ve(e));
-          }
-
-          p.push(n);
+          return Te(u > 1 && xe(p), u > 1 && ve(e.slice(0, u - 1).concat({
+            value: " " === e[u - 2].type ? "*" : ""
+          })).replace(B, "$1"), n, u < i && Ce(e.slice(u, i)), i < o && Ce(e = e.slice(i)), i < o && ve(e));
         }
+
+        p.push(n);
       }
 
       return xe(p);
@@ -1575,16 +1552,16 @@ function convertCSVtoArray(str) {
     function Ee(e, t) {
       var n = t.length > 0,
           i = e.length > 0,
-          o = function o(_o, a, s, u, c) {
+          o = function (o, a, s, u, c) {
         var f,
             h,
             y,
             v = 0,
             m = "0",
-            x = _o && [],
+            x = o && [],
             b = [],
             w = l,
-            C = _o || i && r.find.TAG("*", c),
+            C = o || i && r.find.TAG("*", c),
             E = T += null == w ? 1 : Math.random() || .1,
             k = C.length;
 
@@ -1592,34 +1569,28 @@ function convertCSVtoArray(str) {
           if (i && f) {
             h = 0, a || f.ownerDocument === d || (p(f), s = !g);
 
-            while (y = e[h++]) {
-              if (y(f, a || d, s)) {
-                u.push(f);
-                break;
-              }
+            while (y = e[h++]) if (y(f, a || d, s)) {
+              u.push(f);
+              break;
             }
 
             c && (T = E);
           }
 
-          n && ((f = !y && f) && v--, _o && x.push(f));
+          n && ((f = !y && f) && v--, o && x.push(f));
         }
 
         if (v += m, n && m !== v) {
           h = 0;
 
-          while (y = t[h++]) {
-            y(x, b, a, s);
-          }
+          while (y = t[h++]) y(x, b, a, s);
 
-          if (_o) {
-            if (v > 0) while (m--) {
-              x[m] || b[m] || (b[m] = j.call(u));
-            }
+          if (o) {
+            if (v > 0) while (m--) x[m] || b[m] || (b[m] = j.call(u));
             b = we(b);
           }
 
-          L.apply(u, b), c && !_o && b.length > 0 && v + t.length > 1 && oe.uniqueSort(u);
+          L.apply(u, b), c && !o && b.length > 0 && v + t.length > 1 && oe.uniqueSort(u);
         }
 
         return c && (T = E, l = w), x;
@@ -1637,9 +1608,7 @@ function convertCSVtoArray(str) {
       if (!o) {
         t || (t = a(e)), n = t.length;
 
-        while (n--) {
-          (o = Ce(t[n]))[b] ? r.push(o) : i.push(o);
-        }
+        while (n--) (o = Ce(t[n]))[b] ? r.push(o) : i.push(o);
 
         (o = S(e, Ee(i, r))).selector = e;
       }
@@ -1693,23 +1662,19 @@ function convertCSVtoArray(str) {
 
   w.find = E, w.expr = E.selectors, w.expr[":"] = w.expr.pseudos, w.uniqueSort = w.unique = E.uniqueSort, w.text = E.getText, w.isXMLDoc = E.isXML, w.contains = E.contains, w.escapeSelector = E.escape;
 
-  var k = function k(e, t, n) {
+  var k = function (e, t, n) {
     var r = [],
         i = void 0 !== n;
 
-    while ((e = e[t]) && 9 !== e.nodeType) {
-      if (1 === e.nodeType) {
-        if (i && w(e).is(n)) break;
-        r.push(e);
-      }
+    while ((e = e[t]) && 9 !== e.nodeType) if (1 === e.nodeType) {
+      if (i && w(e).is(n)) break;
+      r.push(e);
     }
 
     return r;
   },
-      S = function S(e, t) {
-    for (var n = []; e; e = e.nextSibling) {
-      1 === e.nodeType && e !== t && n.push(e);
-    }
+      S = function (e, t) {
+    for (var n = []; e; e = e.nextSibling) 1 === e.nodeType && e !== t && n.push(e);
 
     return n;
   },
@@ -1737,30 +1702,26 @@ function convertCSVtoArray(str) {
       return 1 === e.nodeType;
     }));
   }, w.fn.extend({
-    find: function find(e) {
+    find: function (e) {
       var t,
           n,
           r = this.length,
           i = this;
       if ("string" != typeof e) return this.pushStack(w(e).filter(function () {
-        for (t = 0; t < r; t++) {
-          if (w.contains(i[t], this)) return !0;
-        }
+        for (t = 0; t < r; t++) if (w.contains(i[t], this)) return !0;
       }));
 
-      for (n = this.pushStack([]), t = 0; t < r; t++) {
-        w.find(e, i[t], n);
-      }
+      for (n = this.pushStack([]), t = 0; t < r; t++) w.find(e, i[t], n);
 
       return r > 1 ? w.uniqueSort(n) : n;
     },
-    filter: function filter(e) {
+    filter: function (e) {
       return this.pushStack(j(this, e || [], !1));
     },
-    not: function not(e) {
+    not: function (e) {
       return this.pushStack(j(this, e || [], !0));
     },
-    is: function is(e) {
+    is: function (e) {
       return !!j(this, "string" == typeof e && D.test(e) ? w(e) : e || [], !1).length;
     }
   });
@@ -1774,9 +1735,7 @@ function convertCSVtoArray(str) {
       if (!(i = "<" === e[0] && ">" === e[e.length - 1] && e.length >= 3 ? [null, e, null] : L.exec(e)) || !i[1] && t) return !t || t.jquery ? (t || n).find(e) : this.constructor(t).find(e);
 
       if (i[1]) {
-        if (t = t instanceof w ? t[0] : t, w.merge(this, w.parseHTML(i[1], t && t.nodeType ? t.ownerDocument || t : r, !0)), A.test(i[1]) && w.isPlainObject(t)) for (i in t) {
-          g(this[i]) ? this[i](t[i]) : this.attr(i, t[i]);
-        }
+        if (t = t instanceof w ? t[0] : t, w.merge(this, w.parseHTML(i[1], t && t.nodeType ? t.ownerDocument || t : r, !0)), A.test(i[1]) && w.isPlainObject(t)) for (i in t) g(this[i]) ? this[i](t[i]) : this.attr(i, t[i]);
         return this;
       }
 
@@ -1793,86 +1752,78 @@ function convertCSVtoArray(str) {
     prev: !0
   };
   w.fn.extend({
-    has: function has(e) {
+    has: function (e) {
       var t = w(e, this),
           n = t.length;
       return this.filter(function () {
-        for (var e = 0; e < n; e++) {
-          if (w.contains(this, t[e])) return !0;
-        }
+        for (var e = 0; e < n; e++) if (w.contains(this, t[e])) return !0;
       });
     },
-    closest: function closest(e, t) {
+    closest: function (e, t) {
       var n,
           r = 0,
           i = this.length,
           o = [],
           a = "string" != typeof e && w(e);
-      if (!D.test(e)) for (; r < i; r++) {
-        for (n = this[r]; n && n !== t; n = n.parentNode) {
-          if (n.nodeType < 11 && (a ? a.index(n) > -1 : 1 === n.nodeType && w.find.matchesSelector(n, e))) {
-            o.push(n);
-            break;
-          }
-        }
+      if (!D.test(e)) for (; r < i; r++) for (n = this[r]; n && n !== t; n = n.parentNode) if (n.nodeType < 11 && (a ? a.index(n) > -1 : 1 === n.nodeType && w.find.matchesSelector(n, e))) {
+        o.push(n);
+        break;
       }
       return this.pushStack(o.length > 1 ? w.uniqueSort(o) : o);
     },
-    index: function index(e) {
+    index: function (e) {
       return e ? "string" == typeof e ? u.call(w(e), this[0]) : u.call(this, e.jquery ? e[0] : e) : this[0] && this[0].parentNode ? this.first().prevAll().length : -1;
     },
-    add: function add(e, t) {
+    add: function (e, t) {
       return this.pushStack(w.uniqueSort(w.merge(this.get(), w(e, t))));
     },
-    addBack: function addBack(e) {
+    addBack: function (e) {
       return this.add(null == e ? this.prevObject : this.prevObject.filter(e));
     }
   });
 
   function P(e, t) {
-    while ((e = e[t]) && 1 !== e.nodeType) {
-      ;
-    }
+    while ((e = e[t]) && 1 !== e.nodeType);
 
     return e;
   }
 
   w.each({
-    parent: function parent(e) {
+    parent: function (e) {
       var t = e.parentNode;
       return t && 11 !== t.nodeType ? t : null;
     },
-    parents: function parents(e) {
+    parents: function (e) {
       return k(e, "parentNode");
     },
-    parentsUntil: function parentsUntil(e, t, n) {
+    parentsUntil: function (e, t, n) {
       return k(e, "parentNode", n);
     },
-    next: function next(e) {
+    next: function (e) {
       return P(e, "nextSibling");
     },
-    prev: function prev(e) {
+    prev: function (e) {
       return P(e, "previousSibling");
     },
-    nextAll: function nextAll(e) {
+    nextAll: function (e) {
       return k(e, "nextSibling");
     },
-    prevAll: function prevAll(e) {
+    prevAll: function (e) {
       return k(e, "previousSibling");
     },
-    nextUntil: function nextUntil(e, t, n) {
+    nextUntil: function (e, t, n) {
       return k(e, "nextSibling", n);
     },
-    prevUntil: function prevUntil(e, t, n) {
+    prevUntil: function (e, t, n) {
       return k(e, "previousSibling", n);
     },
-    siblings: function siblings(e) {
+    siblings: function (e) {
       return S((e.parentNode || {}).firstChild, e);
     },
-    children: function children(e) {
+    children: function (e) {
       return S(e.firstChild);
     },
-    contents: function contents(e) {
+    contents: function (e) {
       return N(e, "iframe") ? e.contentDocument : (N(e, "template") && (e = e.content || e), w.merge([], e.childNodes));
     }
   }, function (e, t) {
@@ -1900,59 +1851,55 @@ function convertCSVtoArray(str) {
         o = [],
         a = [],
         s = -1,
-        u = function u() {
+        u = function () {
       for (i = i || e.once, r = t = !0; a.length; s = -1) {
         n = a.shift();
 
-        while (++s < o.length) {
-          !1 === o[s].apply(n[0], n[1]) && e.stopOnFalse && (s = o.length, n = !1);
-        }
+        while (++s < o.length) !1 === o[s].apply(n[0], n[1]) && e.stopOnFalse && (s = o.length, n = !1);
       }
 
       e.memory || (n = !1), t = !1, i && (o = n ? [] : "");
     },
         l = {
-      add: function add() {
+      add: function () {
         return o && (n && !t && (s = o.length - 1, a.push(n)), function t(n) {
           w.each(n, function (n, r) {
             g(r) ? e.unique && l.has(r) || o.push(r) : r && r.length && "string" !== x(r) && t(r);
           });
         }(arguments), n && !t && u()), this;
       },
-      remove: function remove() {
+      remove: function () {
         return w.each(arguments, function (e, t) {
           var n;
 
-          while ((n = w.inArray(t, o, n)) > -1) {
-            o.splice(n, 1), n <= s && s--;
-          }
+          while ((n = w.inArray(t, o, n)) > -1) o.splice(n, 1), n <= s && s--;
         }), this;
       },
-      has: function has(e) {
+      has: function (e) {
         return e ? w.inArray(e, o) > -1 : o.length > 0;
       },
-      empty: function empty() {
+      empty: function () {
         return o && (o = []), this;
       },
-      disable: function disable() {
+      disable: function () {
         return i = a = [], o = n = "", this;
       },
-      disabled: function disabled() {
+      disabled: function () {
         return !o;
       },
-      lock: function lock() {
+      lock: function () {
         return i = a = [], n || t || (o = n = ""), this;
       },
-      locked: function locked() {
+      locked: function () {
         return !!i;
       },
-      fireWith: function fireWith(e, n) {
+      fireWith: function (e, n) {
         return i || (n = [e, (n = n || []).slice ? n.slice() : n], a.push(n), t || u()), this;
       },
-      fire: function fire() {
+      fire: function () {
         return l.fireWith(this, arguments), this;
       },
-      fired: function fired() {
+      fired: function () {
         return !!r;
       }
     };
@@ -1979,20 +1926,20 @@ function convertCSVtoArray(str) {
   }
 
   w.extend({
-    Deferred: function Deferred(t) {
+    Deferred: function (t) {
       var n = [["notify", "progress", w.Callbacks("memory"), w.Callbacks("memory"), 2], ["resolve", "done", w.Callbacks("once memory"), w.Callbacks("once memory"), 0, "resolved"], ["reject", "fail", w.Callbacks("once memory"), w.Callbacks("once memory"), 1, "rejected"]],
           r = "pending",
           i = {
-        state: function state() {
+        state: function () {
           return r;
         },
-        always: function always() {
+        always: function () {
           return o.done(arguments).fail(arguments), this;
         },
-        "catch": function _catch(e) {
+        "catch": function (e) {
           return i.then(null, e);
         },
-        pipe: function pipe() {
+        pipe: function () {
           var e = arguments;
           return w.Deferred(function (t) {
             w.each(n, function (n, r) {
@@ -2004,19 +1951,19 @@ function convertCSVtoArray(str) {
             }), e = null;
           }).promise();
         },
-        then: function then(t, r, i) {
+        then: function (t, r, i) {
           var o = 0;
 
           function a(t, n, r, i) {
             return function () {
               var s = this,
                   u = arguments,
-                  l = function l() {
+                  l = function () {
                 var e, l;
 
                 if (!(t < o)) {
                   if ((e = r.apply(s, u)) === n.promise()) throw new TypeError("Thenable self-resolution");
-                  l = e && ("object" == _typeof(e) || "function" == typeof e) && e.then, g(l) ? i ? l.call(e, a(o, n, I, i), a(o, n, W, i)) : (o++, l.call(e, a(o, n, I, i), a(o, n, W, i), a(o, n, I, n.notifyWith))) : (r !== I && (s = void 0, u = [e]), (i || n.resolveWith)(s, u));
+                  l = e && ("object" == typeof e || "function" == typeof e) && e.then, g(l) ? i ? l.call(e, a(o, n, I, i), a(o, n, W, i)) : (o++, l.call(e, a(o, n, I, i), a(o, n, W, i), a(o, n, I, n.notifyWith))) : (r !== I && (s = void 0, u = [e]), (i || n.resolveWith)(s, u));
                 }
               },
                   c = i ? l : function () {
@@ -2035,7 +1982,7 @@ function convertCSVtoArray(str) {
             n[0][3].add(a(0, e, g(i) ? i : I, e.notifyWith)), n[1][3].add(a(0, e, g(t) ? t : I)), n[2][3].add(a(0, e, g(r) ? r : W));
           }).promise();
         },
-        promise: function promise(e) {
+        promise: function (e) {
           return null != e ? w.extend(e, i) : i;
         }
       },
@@ -2050,13 +1997,13 @@ function convertCSVtoArray(str) {
         }, o[t[0] + "With"] = a.fireWith;
       }), i.promise(o), t && t.call(o, o), o;
     },
-    when: function when(e) {
+    when: function (e) {
       var t = arguments.length,
           n = t,
           r = Array(n),
           i = o.call(arguments),
           a = w.Deferred(),
-          s = function s(e) {
+          s = function (e) {
         return function (n) {
           r[e] = this, i[e] = arguments.length > 1 ? o.call(arguments) : n, --t || a.resolveWith(r, i);
         };
@@ -2064,9 +2011,7 @@ function convertCSVtoArray(str) {
 
       if (t <= 1 && ($(e, a.done(s(n)).resolve, a.reject, !t), "pending" === a.state() || g(i[n] && i[n].then))) return a.then();
 
-      while (n--) {
-        $(i[n], s(n), a.reject);
-      }
+      while (n--) $(i[n], s(n), a.reject);
 
       return a.promise();
     }
@@ -2087,7 +2032,7 @@ function convertCSVtoArray(str) {
   }, w.extend({
     isReady: !1,
     readyWait: 1,
-    ready: function ready(e) {
+    ready: function (e) {
       (!0 === e ? --w.readyWait : w.isReady) || (w.isReady = !0, !0 !== e && --w.readyWait > 0 || F.resolveWith(r, [w]));
     }
   }), w.ready.then = F.then;
@@ -2098,7 +2043,7 @@ function convertCSVtoArray(str) {
 
   "complete" === r.readyState || "loading" !== r.readyState && !r.documentElement.doScroll ? e.setTimeout(w.ready) : (r.addEventListener("DOMContentLoaded", _), e.addEventListener("load", _));
 
-  var z = function z(e, t, n, r, i, o, a) {
+  var z = function (e, t, n, r, i, o, a) {
     var s = 0,
         u = e.length,
         l = null == n;
@@ -2106,14 +2051,10 @@ function convertCSVtoArray(str) {
     if ("object" === x(n)) {
       i = !0;
 
-      for (s in n) {
-        z(e, t, s, n[s], !0, o, a);
-      }
-    } else if (void 0 !== r && (i = !0, g(r) || (a = !0), l && (a ? (t.call(e, r), t = null) : (l = t, t = function t(e, _t2, n) {
+      for (s in n) z(e, t, s, n[s], !0, o, a);
+    } else if (void 0 !== r && (i = !0, g(r) || (a = !0), l && (a ? (t.call(e, r), t = null) : (l = t, t = function (e, t, n) {
       return l.call(w(e), n);
-    })), t)) for (; s < u; s++) {
-      t(e[s], n, a ? r : r.call(e[s], s, t(e[s], n)));
-    }
+    })), t)) for (; s < u; s++) t(e[s], n, a ? r : r.call(e[s], s, t(e[s], n)));
 
     return i ? e : l ? t.call(e) : u ? t(e[0], n) : o;
   },
@@ -2128,7 +2069,7 @@ function convertCSVtoArray(str) {
     return e.replace(X, "ms-").replace(U, V);
   }
 
-  var Y = function Y(e) {
+  var Y = function (e) {
     return 1 === e.nodeType || 9 === e.nodeType || !+e.nodeType;
   };
 
@@ -2137,28 +2078,26 @@ function convertCSVtoArray(str) {
   }
 
   Q.uid = 1, Q.prototype = {
-    cache: function cache(e) {
+    cache: function (e) {
       var t = e[this.expando];
       return t || (t = {}, Y(e) && (e.nodeType ? e[this.expando] = t : Object.defineProperty(e, this.expando, {
         value: t,
         configurable: !0
       }))), t;
     },
-    set: function set(e, t, n) {
+    set: function (e, t, n) {
       var r,
           i = this.cache(e);
-      if ("string" == typeof t) i[G(t)] = n;else for (r in t) {
-        i[G(r)] = t[r];
-      }
+      if ("string" == typeof t) i[G(t)] = n;else for (r in t) i[G(r)] = t[r];
       return i;
     },
-    get: function get(e, t) {
+    get: function (e, t) {
       return void 0 === t ? this.cache(e) : e[this.expando] && e[this.expando][G(t)];
     },
-    access: function access(e, t, n) {
+    access: function (e, t, n) {
       return void 0 === t || t && "string" == typeof t && void 0 === n ? this.get(e, t) : (this.set(e, t, n), void 0 !== n ? n : t);
     },
-    remove: function remove(e, t) {
+    remove: function (e, t) {
       var n,
           r = e[this.expando];
 
@@ -2166,15 +2105,13 @@ function convertCSVtoArray(str) {
         if (void 0 !== t) {
           n = (t = Array.isArray(t) ? t.map(G) : (t = G(t)) in r ? [t] : t.match(M) || []).length;
 
-          while (n--) {
-            delete r[t[n]];
-          }
+          while (n--) delete r[t[n]];
         }
 
         (void 0 === t || w.isEmptyObject(r)) && (e.nodeType ? e[this.expando] = void 0 : delete e[this.expando]);
       }
     },
-    hasData: function hasData(e) {
+    hasData: function (e) {
       var t = e[this.expando];
       return void 0 !== t && !w.isEmptyObject(t);
     }
@@ -2201,23 +2138,23 @@ function convertCSVtoArray(str) {
   }
 
   w.extend({
-    hasData: function hasData(e) {
+    hasData: function (e) {
       return K.hasData(e) || J.hasData(e);
     },
-    data: function data(e, t, n) {
+    data: function (e, t, n) {
       return K.access(e, t, n);
     },
-    removeData: function removeData(e, t) {
+    removeData: function (e, t) {
       K.remove(e, t);
     },
-    _data: function _data(e, t, n) {
+    _data: function (e, t, n) {
       return J.access(e, t, n);
     },
-    _removeData: function _removeData(e, t) {
+    _removeData: function (e, t) {
       J.remove(e, t);
     }
   }), w.fn.extend({
-    data: function data(e, t) {
+    data: function (e, t) {
       var n,
           r,
           i,
@@ -2228,9 +2165,7 @@ function convertCSVtoArray(str) {
         if (this.length && (i = K.get(o), 1 === o.nodeType && !J.get(o, "hasDataAttrs"))) {
           n = a.length;
 
-          while (n--) {
-            a[n] && 0 === (r = a[n].name).indexOf("data-") && (r = G(r.slice(5)), ne(o, r, i[r]));
-          }
+          while (n--) a[n] && 0 === (r = a[n].name).indexOf("data-") && (r = G(r.slice(5)), ne(o, r, i[r]));
 
           J.set(o, "hasDataAttrs", !0);
         }
@@ -2238,7 +2173,7 @@ function convertCSVtoArray(str) {
         return i;
       }
 
-      return "object" == _typeof(e) ? this.each(function () {
+      return "object" == typeof e ? this.each(function () {
         K.set(this, e);
       }) : z(this, function (t) {
         var n;
@@ -2251,30 +2186,30 @@ function convertCSVtoArray(str) {
         });
       }, null, t, arguments.length > 1, null, !0);
     },
-    removeData: function removeData(e) {
+    removeData: function (e) {
       return this.each(function () {
         K.remove(this, e);
       });
     }
   }), w.extend({
-    queue: function queue(e, t, n) {
+    queue: function (e, t, n) {
       var r;
       if (e) return t = (t || "fx") + "queue", r = J.get(e, t), n && (!r || Array.isArray(n) ? r = J.access(e, t, w.makeArray(n)) : r.push(n)), r || [];
     },
-    dequeue: function dequeue(e, t) {
+    dequeue: function (e, t) {
       t = t || "fx";
 
       var n = w.queue(e, t),
           r = n.length,
           i = n.shift(),
           o = w._queueHooks(e, t),
-          a = function a() {
+          a = function () {
         w.dequeue(e, t);
       };
 
       "inprogress" === i && (i = n.shift(), r--), i && ("fx" === t && n.unshift("inprogress"), delete o.stop, i.call(e, a, o)), !r && o && o.empty.fire();
     },
-    _queueHooks: function _queueHooks(e, t) {
+    _queueHooks: function (e, t) {
       var n = t + "queueHooks";
       return J.get(e, n) || J.access(e, n, {
         empty: w.Callbacks("once memory").add(function () {
@@ -2283,36 +2218,34 @@ function convertCSVtoArray(str) {
       });
     }
   }), w.fn.extend({
-    queue: function queue(e, t) {
+    queue: function (e, t) {
       var n = 2;
       return "string" != typeof e && (t = e, e = "fx", n--), arguments.length < n ? w.queue(this[0], e) : void 0 === t ? this : this.each(function () {
         var n = w.queue(this, e, t);
         w._queueHooks(this, e), "fx" === e && "inprogress" !== n[0] && w.dequeue(this, e);
       });
     },
-    dequeue: function dequeue(e) {
+    dequeue: function (e) {
       return this.each(function () {
         w.dequeue(this, e);
       });
     },
-    clearQueue: function clearQueue(e) {
+    clearQueue: function (e) {
       return this.queue(e || "fx", []);
     },
-    promise: function promise(e, t) {
+    promise: function (e, t) {
       var n,
           r = 1,
           i = w.Deferred(),
           o = this,
           a = this.length,
-          s = function s() {
+          s = function () {
         --r || i.resolveWith(o, [o]);
       };
 
       "string" != typeof e && (t = e, e = void 0), e = e || "fx";
 
-      while (a--) {
-        (n = J.get(o[a], e + "queueHooks")) && n.empty && (r++, n.empty.add(s));
-      }
+      while (a--) (n = J.get(o[a], e + "queueHooks")) && n.empty && (r++, n.empty.add(s));
 
       return s(), i.promise(t);
     }
@@ -2321,23 +2254,19 @@ function convertCSVtoArray(str) {
   var re = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source,
       ie = new RegExp("^(?:([+-])=|)(" + re + ")([a-z%]*)$", "i"),
       oe = ["Top", "Right", "Bottom", "Left"],
-      ae = function ae(e, t) {
+      ae = function (e, t) {
     return "none" === (e = t || e).style.display || "" === e.style.display && w.contains(e.ownerDocument, e) && "none" === w.css(e, "display");
   },
-      se = function se(e, t, n, r) {
+      se = function (e, t, n, r) {
     var i,
         o,
         a = {};
 
-    for (o in t) {
-      a[o] = e.style[o], e.style[o] = t[o];
-    }
+    for (o in t) a[o] = e.style[o], e.style[o] = t[o];
 
     i = n.apply(e, r || []);
 
-    for (o in t) {
-      e.style[o] = a[o];
-    }
+    for (o in t) e.style[o] = a[o];
 
     return i;
   };
@@ -2358,9 +2287,7 @@ function convertCSVtoArray(str) {
     if (c && c[3] !== l) {
       u /= 2, l = l || c[3], c = +u || 1;
 
-      while (a--) {
-        w.style(e, t, c + l), (1 - o) * (1 - (o = s() / u || .5)) <= 0 && (a = 0), c /= o;
-      }
+      while (a--) w.style(e, t, c + l), (1 - o) * (1 - (o = s() / u || .5)) <= 0 && (a = 0), c /= o;
 
       c *= 2, w.style(e, t, c + l), n = n || [];
     }
@@ -2379,25 +2306,21 @@ function convertCSVtoArray(str) {
   }
 
   function fe(e, t) {
-    for (var n, r, i = [], o = 0, a = e.length; o < a; o++) {
-      (r = e[o]).style && (n = r.style.display, t ? ("none" === n && (i[o] = J.get(r, "display") || null, i[o] || (r.style.display = "")), "" === r.style.display && ae(r) && (i[o] = ce(r))) : "none" !== n && (i[o] = "none", J.set(r, "display", n)));
-    }
+    for (var n, r, i = [], o = 0, a = e.length; o < a; o++) (r = e[o]).style && (n = r.style.display, t ? ("none" === n && (i[o] = J.get(r, "display") || null, i[o] || (r.style.display = "")), "" === r.style.display && ae(r) && (i[o] = ce(r))) : "none" !== n && (i[o] = "none", J.set(r, "display", n)));
 
-    for (o = 0; o < a; o++) {
-      null != i[o] && (e[o].style.display = i[o]);
-    }
+    for (o = 0; o < a; o++) null != i[o] && (e[o].style.display = i[o]);
 
     return e;
   }
 
   w.fn.extend({
-    show: function show() {
+    show: function () {
       return fe(this, !0);
     },
-    hide: function hide() {
+    hide: function () {
       return fe(this);
     },
-    toggle: function toggle(e) {
+    toggle: function (e) {
       return "boolean" == typeof e ? e ? this.show() : this.hide() : this.each(function () {
         ae(this) ? w(this).show() : w(this).hide();
       });
@@ -2422,36 +2345,26 @@ function convertCSVtoArray(str) {
   }
 
   function ve(e, t) {
-    for (var n = 0, r = e.length; n < r; n++) {
-      J.set(e[n], "globalEval", !t || J.get(t[n], "globalEval"));
-    }
+    for (var n = 0, r = e.length; n < r; n++) J.set(e[n], "globalEval", !t || J.get(t[n], "globalEval"));
   }
 
   var me = /<|&#?\w+;/;
 
   function xe(e, t, n, r, i) {
-    for (var o, a, s, u, l, c, f = t.createDocumentFragment(), p = [], d = 0, h = e.length; d < h; d++) {
-      if ((o = e[d]) || 0 === o) if ("object" === x(o)) w.merge(p, o.nodeType ? [o] : o);else if (me.test(o)) {
-        a = a || f.appendChild(t.createElement("div")), s = (de.exec(o) || ["", ""])[1].toLowerCase(), u = ge[s] || ge._default, a.innerHTML = u[1] + w.htmlPrefilter(o) + u[2], c = u[0];
+    for (var o, a, s, u, l, c, f = t.createDocumentFragment(), p = [], d = 0, h = e.length; d < h; d++) if ((o = e[d]) || 0 === o) if ("object" === x(o)) w.merge(p, o.nodeType ? [o] : o);else if (me.test(o)) {
+      a = a || f.appendChild(t.createElement("div")), s = (de.exec(o) || ["", ""])[1].toLowerCase(), u = ge[s] || ge._default, a.innerHTML = u[1] + w.htmlPrefilter(o) + u[2], c = u[0];
 
-        while (c--) {
-          a = a.lastChild;
-        }
+      while (c--) a = a.lastChild;
 
-        w.merge(p, a.childNodes), (a = f.firstChild).textContent = "";
-      } else p.push(t.createTextNode(o));
-    }
+      w.merge(p, a.childNodes), (a = f.firstChild).textContent = "";
+    } else p.push(t.createTextNode(o));
 
     f.textContent = "", d = 0;
 
-    while (o = p[d++]) {
-      if (r && w.inArray(o, r) > -1) i && i.push(o);else if (l = w.contains(o.ownerDocument, o), a = ye(f.appendChild(o), "script"), l && ve(a), n) {
-        c = 0;
+    while (o = p[d++]) if (r && w.inArray(o, r) > -1) i && i.push(o);else if (l = w.contains(o.ownerDocument, o), a = ye(f.appendChild(o), "script"), l && ve(a), n) {
+      c = 0;
 
-        while (o = a[c++]) {
-          he.test(o.type || "") && n.push(o);
-        }
-      }
+      while (o = a[c++]) he.test(o.type || "") && n.push(o);
     }
 
     return f;
@@ -2484,18 +2397,16 @@ function convertCSVtoArray(str) {
   function De(e, t, n, r, i, o) {
     var a, s;
 
-    if ("object" == _typeof(t)) {
+    if ("object" == typeof t) {
       "string" != typeof n && (r = r || n, n = void 0);
 
-      for (s in t) {
-        De(e, s, n, r, t[s], o);
-      }
+      for (s in t) De(e, s, n, r, t[s], o);
 
       return e;
     }
 
     if (null == r && null == i ? (i = n, r = n = void 0) : null == i && ("string" == typeof n ? (i = r, r = void 0) : (i = r, r = n, n = void 0)), !1 === i) i = ke;else if (!i) return e;
-    return 1 === o && (a = i, (i = function i(e) {
+    return 1 === o && (a = i, (i = function (e) {
       return w().off(e), a.apply(this, arguments);
     }).guid = a.guid || (a.guid = w.guid++)), e.each(function () {
       w.event.add(this, t, i, r, n);
@@ -2504,7 +2415,7 @@ function convertCSVtoArray(str) {
 
   w.event = {
     global: {},
-    add: function add(e, t, n, r, i) {
+    add: function (e, t, n, r, i) {
       var o,
           a,
           s,
@@ -2523,21 +2434,19 @@ function convertCSVtoArray(str) {
           return "undefined" != typeof w && w.event.triggered !== t.type ? w.event.dispatch.apply(e, arguments) : void 0;
         }), l = (t = (t || "").match(M) || [""]).length;
 
-        while (l--) {
-          d = g = (s = Ce.exec(t[l]) || [])[1], h = (s[2] || "").split(".").sort(), d && (f = w.event.special[d] || {}, d = (i ? f.delegateType : f.bindType) || d, f = w.event.special[d] || {}, c = w.extend({
-            type: d,
-            origType: g,
-            data: r,
-            handler: n,
-            guid: n.guid,
-            selector: i,
-            needsContext: i && w.expr.match.needsContext.test(i),
-            namespace: h.join(".")
-          }, o), (p = u[d]) || ((p = u[d] = []).delegateCount = 0, f.setup && !1 !== f.setup.call(e, r, h, a) || e.addEventListener && e.addEventListener(d, a)), f.add && (f.add.call(e, c), c.handler.guid || (c.handler.guid = n.guid)), i ? p.splice(p.delegateCount++, 0, c) : p.push(c), w.event.global[d] = !0);
-        }
+        while (l--) d = g = (s = Ce.exec(t[l]) || [])[1], h = (s[2] || "").split(".").sort(), d && (f = w.event.special[d] || {}, d = (i ? f.delegateType : f.bindType) || d, f = w.event.special[d] || {}, c = w.extend({
+          type: d,
+          origType: g,
+          data: r,
+          handler: n,
+          guid: n.guid,
+          selector: i,
+          needsContext: i && w.expr.match.needsContext.test(i),
+          namespace: h.join(".")
+        }, o), (p = u[d]) || ((p = u[d] = []).delegateCount = 0, f.setup && !1 !== f.setup.call(e, r, h, a) || e.addEventListener && e.addEventListener(d, a)), f.add && (f.add.call(e, c), c.handler.guid || (c.handler.guid = n.guid)), i ? p.splice(p.delegateCount++, 0, c) : p.push(c), w.event.global[d] = !0);
       }
     },
-    remove: function remove(e, t, n, r, i) {
+    remove: function (e, t, n, r, i) {
       var o,
           a,
           s,
@@ -2554,24 +2463,18 @@ function convertCSVtoArray(str) {
       if (y && (u = y.events)) {
         l = (t = (t || "").match(M) || [""]).length;
 
-        while (l--) {
-          if (s = Ce.exec(t[l]) || [], d = g = s[1], h = (s[2] || "").split(".").sort(), d) {
-            f = w.event.special[d] || {}, p = u[d = (r ? f.delegateType : f.bindType) || d] || [], s = s[2] && new RegExp("(^|\\.)" + h.join("\\.(?:.*\\.|)") + "(\\.|$)"), a = o = p.length;
+        while (l--) if (s = Ce.exec(t[l]) || [], d = g = s[1], h = (s[2] || "").split(".").sort(), d) {
+          f = w.event.special[d] || {}, p = u[d = (r ? f.delegateType : f.bindType) || d] || [], s = s[2] && new RegExp("(^|\\.)" + h.join("\\.(?:.*\\.|)") + "(\\.|$)"), a = o = p.length;
 
-            while (o--) {
-              c = p[o], !i && g !== c.origType || n && n.guid !== c.guid || s && !s.test(c.namespace) || r && r !== c.selector && ("**" !== r || !c.selector) || (p.splice(o, 1), c.selector && p.delegateCount--, f.remove && f.remove.call(e, c));
-            }
+          while (o--) c = p[o], !i && g !== c.origType || n && n.guid !== c.guid || s && !s.test(c.namespace) || r && r !== c.selector && ("**" !== r || !c.selector) || (p.splice(o, 1), c.selector && p.delegateCount--, f.remove && f.remove.call(e, c));
 
-            a && !p.length && (f.teardown && !1 !== f.teardown.call(e, h, y.handle) || w.removeEvent(e, d, y.handle), delete u[d]);
-          } else for (d in u) {
-            w.event.remove(e, d + t[l], n, r, !0);
-          }
-        }
+          a && !p.length && (f.teardown && !1 !== f.teardown.call(e, h, y.handle) || w.removeEvent(e, d, y.handle), delete u[d]);
+        } else for (d in u) w.event.remove(e, d + t[l], n, r, !0);
 
         w.isEmptyObject(u) && J.remove(e, "handle events");
       }
     },
-    dispatch: function dispatch(e) {
+    dispatch: function (e) {
       var t = w.event.fix(e),
           n,
           r,
@@ -2583,9 +2486,7 @@ function convertCSVtoArray(str) {
           l = (J.get(this, "events") || {})[t.type] || [],
           c = w.event.special[t.type] || {};
 
-      for (u[0] = t, n = 1; n < arguments.length; n++) {
-        u[n] = arguments[n];
-      }
+      for (u[0] = t, n = 1; n < arguments.length; n++) u[n] = arguments[n];
 
       if (t.delegateTarget = this, !c.preDispatch || !1 !== c.preDispatch.call(this, t)) {
         s = w.event.handlers.call(this, t, l), n = 0;
@@ -2593,15 +2494,13 @@ function convertCSVtoArray(str) {
         while ((o = s[n++]) && !t.isPropagationStopped()) {
           t.currentTarget = o.elem, r = 0;
 
-          while ((a = o.handlers[r++]) && !t.isImmediatePropagationStopped()) {
-            t.rnamespace && !t.rnamespace.test(a.namespace) || (t.handleObj = a, t.data = a.data, void 0 !== (i = ((w.event.special[a.origType] || {}).handle || a.handler).apply(o.elem, u)) && !1 === (t.result = i) && (t.preventDefault(), t.stopPropagation()));
-          }
+          while ((a = o.handlers[r++]) && !t.isImmediatePropagationStopped()) t.rnamespace && !t.rnamespace.test(a.namespace) || (t.handleObj = a, t.data = a.data, void 0 !== (i = ((w.event.special[a.origType] || {}).handle || a.handler).apply(o.elem, u)) && !1 === (t.result = i) && (t.preventDefault(), t.stopPropagation()));
         }
 
         return c.postDispatch && c.postDispatch.call(this, t), t.result;
       }
     },
-    handlers: function handlers(e, t) {
+    handlers: function (e, t) {
       var n,
           r,
           i,
@@ -2610,24 +2509,20 @@ function convertCSVtoArray(str) {
           s = [],
           u = t.delegateCount,
           l = e.target;
-      if (u && l.nodeType && !("click" === e.type && e.button >= 1)) for (; l !== this; l = l.parentNode || this) {
-        if (1 === l.nodeType && ("click" !== e.type || !0 !== l.disabled)) {
-          for (o = [], a = {}, n = 0; n < u; n++) {
-            void 0 === a[i = (r = t[n]).selector + " "] && (a[i] = r.needsContext ? w(i, this).index(l) > -1 : w.find(i, this, null, [l]).length), a[i] && o.push(r);
-          }
+      if (u && l.nodeType && !("click" === e.type && e.button >= 1)) for (; l !== this; l = l.parentNode || this) if (1 === l.nodeType && ("click" !== e.type || !0 !== l.disabled)) {
+        for (o = [], a = {}, n = 0; n < u; n++) void 0 === a[i = (r = t[n]).selector + " "] && (a[i] = r.needsContext ? w(i, this).index(l) > -1 : w.find(i, this, null, [l]).length), a[i] && o.push(r);
 
-          o.length && s.push({
-            elem: l,
-            handlers: o
-          });
-        }
+        o.length && s.push({
+          elem: l,
+          handlers: o
+        });
       }
       return l = this, u < t.length && s.push({
         elem: l,
         handlers: t.slice(u)
       }), s;
     },
-    addProp: function addProp(e, t) {
+    addProp: function (e, t) {
       Object.defineProperty(w.Event.prototype, e, {
         enumerable: !0,
         configurable: !0,
@@ -2636,7 +2531,7 @@ function convertCSVtoArray(str) {
         } : function () {
           if (this.originalEvent) return this.originalEvent[e];
         },
-        set: function set(t) {
+        set: function (t) {
           Object.defineProperty(this, e, {
             enumerable: !0,
             configurable: !0,
@@ -2646,7 +2541,7 @@ function convertCSVtoArray(str) {
         }
       });
     },
-    fix: function fix(e) {
+    fix: function (e) {
       return e[w.expando] ? e : new w.Event(e);
     },
     special: {
@@ -2654,27 +2549,27 @@ function convertCSVtoArray(str) {
         noBubble: !0
       },
       focus: {
-        trigger: function trigger() {
+        trigger: function () {
           if (this !== Se() && this.focus) return this.focus(), !1;
         },
         delegateType: "focusin"
       },
       blur: {
-        trigger: function trigger() {
+        trigger: function () {
           if (this === Se() && this.blur) return this.blur(), !1;
         },
         delegateType: "focusout"
       },
       click: {
-        trigger: function trigger() {
+        trigger: function () {
           if ("checkbox" === this.type && this.click && N(this, "input")) return this.click(), !1;
         },
-        _default: function _default(e) {
+        _default: function (e) {
           return N(e.target, "a");
         }
       },
       beforeunload: {
-        postDispatch: function postDispatch(e) {
+        postDispatch: function (e) {
           void 0 !== e.result && e.originalEvent && (e.originalEvent.returnValue = e.result);
         }
       }
@@ -2690,15 +2585,15 @@ function convertCSVtoArray(str) {
     isPropagationStopped: ke,
     isImmediatePropagationStopped: ke,
     isSimulated: !1,
-    preventDefault: function preventDefault() {
+    preventDefault: function () {
       var e = this.originalEvent;
       this.isDefaultPrevented = Ee, e && !this.isSimulated && e.preventDefault();
     },
-    stopPropagation: function stopPropagation() {
+    stopPropagation: function () {
       var e = this.originalEvent;
       this.isPropagationStopped = Ee, e && !this.isSimulated && e.stopPropagation();
     },
-    stopImmediatePropagation: function stopImmediatePropagation() {
+    stopImmediatePropagation: function () {
       var e = this.originalEvent;
       this.isImmediatePropagationStopped = Ee, e && !this.isSimulated && e.stopImmediatePropagation(), this.stopPropagation();
     }
@@ -2732,7 +2627,7 @@ function convertCSVtoArray(str) {
     targetTouches: !0,
     toElement: !0,
     touches: !0,
-    which: function which(e) {
+    which: function (e) {
       var t = e.button;
       return null == e.which && we.test(e.type) ? null != e.charCode ? e.charCode : e.keyCode : !e.which && void 0 !== t && Te.test(e.type) ? 1 & t ? 1 : 2 & t ? 3 : 4 & t ? 2 : 0 : e.which;
     }
@@ -2745,7 +2640,7 @@ function convertCSVtoArray(str) {
     w.event.special[e] = {
       delegateType: t,
       bindType: t,
-      handle: function handle(e) {
+      handle: function (e) {
         var n,
             r = this,
             i = e.relatedTarget,
@@ -2754,20 +2649,18 @@ function convertCSVtoArray(str) {
       }
     };
   }), w.fn.extend({
-    on: function on(e, t, n, r) {
+    on: function (e, t, n, r) {
       return De(this, e, t, n, r);
     },
-    one: function one(e, t, n, r) {
+    one: function (e, t, n, r) {
       return De(this, e, t, n, r, 1);
     },
-    off: function off(e, t, n) {
+    off: function (e, t, n) {
       var r, i;
       if (e && e.preventDefault && e.handleObj) return r = e.handleObj, w(e.delegateTarget).off(r.namespace ? r.origType + "." + r.namespace : r.origType, r.selector, r.handler), this;
 
-      if ("object" == _typeof(e)) {
-        for (i in e) {
-          this.off(i, t, e[i]);
-        }
+      if ("object" == typeof e) {
+        for (i in e) this.off(i, t, e[i]);
 
         return this;
       }
@@ -2801,11 +2694,7 @@ function convertCSVtoArray(str) {
       if (J.hasData(e) && (o = J.access(e), a = J.set(t, o), l = o.events)) {
         delete a.handle, a.events = {};
 
-        for (i in l) {
-          for (n = 0, r = l[i].length; n < r; n++) {
-            w.event.add(t, i, l[i][n]);
-          }
-        }
+        for (i in l) for (n = 0, r = l[i].length; n < r; n++) w.event.add(t, i, l[i][n]);
       }
 
       K.hasData(e) && (s = K.access(e), u = w.extend({}, s), K.set(t, u));
@@ -2836,79 +2725,65 @@ function convertCSVtoArray(str) {
     });
 
     if (p && (i = xe(t, e[0].ownerDocument, !1, e, r), o = i.firstChild, 1 === i.childNodes.length && (i = o), o || r)) {
-      for (u = (s = w.map(ye(i, "script"), He)).length; f < p; f++) {
-        l = i, f !== d && (l = w.clone(l, !0, !0), u && w.merge(s, ye(l, "script"))), n.call(e[f], l, f);
-      }
+      for (u = (s = w.map(ye(i, "script"), He)).length; f < p; f++) l = i, f !== d && (l = w.clone(l, !0, !0), u && w.merge(s, ye(l, "script"))), n.call(e[f], l, f);
 
-      if (u) for (c = s[s.length - 1].ownerDocument, w.map(s, Oe), f = 0; f < u; f++) {
-        l = s[f], he.test(l.type || "") && !J.access(l, "globalEval") && w.contains(c, l) && (l.src && "module" !== (l.type || "").toLowerCase() ? w._evalUrl && w._evalUrl(l.src) : m(l.textContent.replace(qe, ""), c, l));
-      }
+      if (u) for (c = s[s.length - 1].ownerDocument, w.map(s, Oe), f = 0; f < u; f++) l = s[f], he.test(l.type || "") && !J.access(l, "globalEval") && w.contains(c, l) && (l.src && "module" !== (l.type || "").toLowerCase() ? w._evalUrl && w._evalUrl(l.src) : m(l.textContent.replace(qe, ""), c, l));
     }
 
     return e;
   }
 
   function Ie(e, t, n) {
-    for (var r, i = t ? w.filter(t, e) : e, o = 0; null != (r = i[o]); o++) {
-      n || 1 !== r.nodeType || w.cleanData(ye(r)), r.parentNode && (n && w.contains(r.ownerDocument, r) && ve(ye(r, "script")), r.parentNode.removeChild(r));
-    }
+    for (var r, i = t ? w.filter(t, e) : e, o = 0; null != (r = i[o]); o++) n || 1 !== r.nodeType || w.cleanData(ye(r)), r.parentNode && (n && w.contains(r.ownerDocument, r) && ve(ye(r, "script")), r.parentNode.removeChild(r));
 
     return e;
   }
 
   w.extend({
-    htmlPrefilter: function htmlPrefilter(e) {
+    htmlPrefilter: function (e) {
       return e.replace(Ne, "<$1></$2>");
     },
-    clone: function clone(e, t, n) {
+    clone: function (e, t, n) {
       var r,
           i,
           o,
           a,
           s = e.cloneNode(!0),
           u = w.contains(e.ownerDocument, e);
-      if (!(h.noCloneChecked || 1 !== e.nodeType && 11 !== e.nodeType || w.isXMLDoc(e))) for (a = ye(s), r = 0, i = (o = ye(e)).length; r < i; r++) {
-        Me(o[r], a[r]);
-      }
-      if (t) if (n) for (o = o || ye(e), a = a || ye(s), r = 0, i = o.length; r < i; r++) {
-        Pe(o[r], a[r]);
-      } else Pe(e, s);
+      if (!(h.noCloneChecked || 1 !== e.nodeType && 11 !== e.nodeType || w.isXMLDoc(e))) for (a = ye(s), r = 0, i = (o = ye(e)).length; r < i; r++) Me(o[r], a[r]);
+      if (t) if (n) for (o = o || ye(e), a = a || ye(s), r = 0, i = o.length; r < i; r++) Pe(o[r], a[r]);else Pe(e, s);
       return (a = ye(s, "script")).length > 0 && ve(a, !u && ye(e, "script")), s;
     },
-    cleanData: function cleanData(e) {
-      for (var t, n, r, i = w.event.special, o = 0; void 0 !== (n = e[o]); o++) {
-        if (Y(n)) {
-          if (t = n[J.expando]) {
-            if (t.events) for (r in t.events) {
-              i[r] ? w.event.remove(n, r) : w.removeEvent(n, r, t.handle);
-            }
-            n[J.expando] = void 0;
-          }
-
-          n[K.expando] && (n[K.expando] = void 0);
+    cleanData: function (e) {
+      for (var t, n, r, i = w.event.special, o = 0; void 0 !== (n = e[o]); o++) if (Y(n)) {
+        if (t = n[J.expando]) {
+          if (t.events) for (r in t.events) i[r] ? w.event.remove(n, r) : w.removeEvent(n, r, t.handle);
+          n[J.expando] = void 0;
         }
+
+        n[K.expando] && (n[K.expando] = void 0);
       }
     }
   }), w.fn.extend({
-    detach: function detach(e) {
+    detach: function (e) {
       return Ie(this, e, !0);
     },
-    remove: function remove(e) {
+    remove: function (e) {
       return Ie(this, e);
     },
-    text: function text(e) {
+    text: function (e) {
       return z(this, function (e) {
         return void 0 === e ? w.text(this) : this.empty().each(function () {
           1 !== this.nodeType && 11 !== this.nodeType && 9 !== this.nodeType || (this.textContent = e);
         });
       }, null, e, arguments.length);
     },
-    append: function append() {
+    append: function () {
       return Re(this, arguments, function (e) {
         1 !== this.nodeType && 11 !== this.nodeType && 9 !== this.nodeType || Le(this, e).appendChild(e);
       });
     },
-    prepend: function prepend() {
+    prepend: function () {
       return Re(this, arguments, function (e) {
         if (1 === this.nodeType || 11 === this.nodeType || 9 === this.nodeType) {
           var t = Le(this, e);
@@ -2916,29 +2791,27 @@ function convertCSVtoArray(str) {
         }
       });
     },
-    before: function before() {
+    before: function () {
       return Re(this, arguments, function (e) {
         this.parentNode && this.parentNode.insertBefore(e, this);
       });
     },
-    after: function after() {
+    after: function () {
       return Re(this, arguments, function (e) {
         this.parentNode && this.parentNode.insertBefore(e, this.nextSibling);
       });
     },
-    empty: function empty() {
-      for (var e, t = 0; null != (e = this[t]); t++) {
-        1 === e.nodeType && (w.cleanData(ye(e, !1)), e.textContent = "");
-      }
+    empty: function () {
+      for (var e, t = 0; null != (e = this[t]); t++) 1 === e.nodeType && (w.cleanData(ye(e, !1)), e.textContent = "");
 
       return this;
     },
-    clone: function clone(e, t) {
+    clone: function (e, t) {
       return e = null != e && e, t = null == t ? e : t, this.map(function () {
         return w.clone(this, e, t);
       });
     },
-    html: function html(e) {
+    html: function (e) {
       return z(this, function (e) {
         var t = this[0] || {},
             n = 0,
@@ -2949,9 +2822,7 @@ function convertCSVtoArray(str) {
           e = w.htmlPrefilter(e);
 
           try {
-            for (; n < r; n++) {
-              1 === (t = this[n] || {}).nodeType && (w.cleanData(ye(t, !1)), t.innerHTML = e);
-            }
+            for (; n < r; n++) 1 === (t = this[n] || {}).nodeType && (w.cleanData(ye(t, !1)), t.innerHTML = e);
 
             t = 0;
           } catch (e) {}
@@ -2960,7 +2831,7 @@ function convertCSVtoArray(str) {
         t && this.empty().append(e);
       }, null, e, arguments.length);
     },
-    replaceWith: function replaceWith() {
+    replaceWith: function () {
       var e = [];
       return Re(this, arguments, function (t) {
         var n = this.parentNode;
@@ -2975,16 +2846,14 @@ function convertCSVtoArray(str) {
     replaceAll: "replaceWith"
   }, function (e, t) {
     w.fn[e] = function (e) {
-      for (var n, r = [], i = w(e), o = i.length - 1, a = 0; a <= o; a++) {
-        n = a === o ? this : this.clone(!0), w(i[a])[t](n), s.apply(r, n.get());
-      }
+      for (var n, r = [], i = w(e), o = i.length - 1, a = 0; a <= o; a++) n = a === o ? this : this.clone(!0), w(i[a])[t](n), s.apply(r, n.get());
 
       return this.pushStack(r);
     };
   });
 
   var We = new RegExp("^(" + re + ")(?!px)[a-z%]+$", "i"),
-      $e = function $e(t) {
+      $e = function (t) {
     var n = t.ownerDocument.defaultView;
     return n && n.opener || (n = e), n.getComputedStyle(t);
   },
@@ -3011,19 +2880,19 @@ function convertCSVtoArray(str) {
         l = r.createElement("div"),
         c = r.createElement("div");
     c.style && (c.style.backgroundClip = "content-box", c.cloneNode(!0).style.backgroundClip = "", h.clearCloneStyle = "content-box" === c.style.backgroundClip, w.extend(h, {
-      boxSizingReliable: function boxSizingReliable() {
+      boxSizingReliable: function () {
         return t(), o;
       },
-      pixelBoxStyles: function pixelBoxStyles() {
+      pixelBoxStyles: function () {
         return t(), s;
       },
-      pixelPosition: function pixelPosition() {
+      pixelPosition: function () {
         return t(), i;
       },
-      reliableMarginLeft: function reliableMarginLeft() {
+      reliableMarginLeft: function () {
         return t(), u;
       },
-      scrollboxSize: function scrollboxSize() {
+      scrollboxSize: function () {
         return t(), a;
       }
     }));
@@ -3040,7 +2909,7 @@ function convertCSVtoArray(str) {
 
   function _e(e, t) {
     return {
-      get: function get() {
+      get: function () {
         if (!e()) return (this.get = t).apply(this, arguments);
         delete this.get;
       }
@@ -3066,9 +2935,7 @@ function convertCSVtoArray(str) {
     var t = e[0].toUpperCase() + e.slice(1),
         n = Ge.length;
 
-    while (n--) {
-      if ((e = Ge[n] + t) in Ye) return e;
-    }
+    while (n--) if ((e = Ge[n] + t) in Ye) return e;
   }
 
   function Je(e) {
@@ -3087,9 +2954,7 @@ function convertCSVtoArray(str) {
         u = 0;
     if (n === (r ? "border" : "content")) return 0;
 
-    for (; a < 4; a += 2) {
-      "margin" === n && (u += w.css(e, n + oe[a], !0, i)), r ? ("content" === n && (u -= w.css(e, "padding" + oe[a], !0, i)), "margin" !== n && (u -= w.css(e, "border" + oe[a] + "Width", !0, i))) : (u += w.css(e, "padding" + oe[a], !0, i), "padding" !== n ? u += w.css(e, "border" + oe[a] + "Width", !0, i) : s += w.css(e, "border" + oe[a] + "Width", !0, i));
-    }
+    for (; a < 4; a += 2) "margin" === n && (u += w.css(e, n + oe[a], !0, i)), r ? ("content" === n && (u -= w.css(e, "padding" + oe[a], !0, i)), "margin" !== n && (u -= w.css(e, "border" + oe[a] + "Width", !0, i))) : (u += w.css(e, "padding" + oe[a], !0, i), "padding" !== n ? u += w.css(e, "border" + oe[a] + "Width", !0, i) : s += w.css(e, "border" + oe[a] + "Width", !0, i));
 
     return !r && o >= 0 && (u += Math.max(0, Math.ceil(e["offset" + t[0].toUpperCase() + t.slice(1)] - o - u - s - .5))), u;
   }
@@ -3111,7 +2976,7 @@ function convertCSVtoArray(str) {
   w.extend({
     cssHooks: {
       opacity: {
-        get: function get(e, t) {
+        get: function (e, t) {
           if (t) {
             var n = Fe(e, "opacity");
             return "" === n ? "1" : n;
@@ -3135,7 +3000,7 @@ function convertCSVtoArray(str) {
       zoom: !0
     },
     cssProps: {},
-    style: function style(e, t, n, r) {
+    style: function (e, t, n, r) {
       if (e && 3 !== e.nodeType && 8 !== e.nodeType && e.style) {
         var i,
             o,
@@ -3144,10 +3009,10 @@ function convertCSVtoArray(str) {
             u = Xe.test(t),
             l = e.style;
         if (u || (t = Je(s)), a = w.cssHooks[t] || w.cssHooks[s], void 0 === n) return a && "get" in a && void 0 !== (i = a.get(e, !1, r)) ? i : l[t];
-        "string" == (o = _typeof(n)) && (i = ie.exec(n)) && i[1] && (n = ue(e, t, i), o = "number"), null != n && n === n && ("number" === o && (n += i && i[3] || (w.cssNumber[s] ? "" : "px")), h.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (l[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (u ? l.setProperty(t, n) : l[t] = n));
+        "string" == (o = typeof n) && (i = ie.exec(n)) && i[1] && (n = ue(e, t, i), o = "number"), null != n && n === n && ("number" === o && (n += i && i[3] || (w.cssNumber[s] ? "" : "px")), h.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (l[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (u ? l.setProperty(t, n) : l[t] = n));
       }
     },
-    css: function css(e, t, n, r) {
+    css: function (e, t, n, r) {
       var i,
           o,
           a,
@@ -3156,12 +3021,12 @@ function convertCSVtoArray(str) {
     }
   }), w.each(["height", "width"], function (e, t) {
     w.cssHooks[t] = {
-      get: function get(e, n, r) {
+      get: function (e, n, r) {
         if (n) return !ze.test(w.css(e, "display")) || e.getClientRects().length && e.getBoundingClientRect().width ? et(e, t, r) : se(e, Ue, function () {
           return et(e, t, r);
         });
       },
-      set: function set(e, n, r) {
+      set: function (e, n, r) {
         var i,
             o = $e(e),
             a = "border-box" === w.css(e, "boxSizing", !1, o),
@@ -3181,16 +3046,14 @@ function convertCSVtoArray(str) {
     border: "Width"
   }, function (e, t) {
     w.cssHooks[e + t] = {
-      expand: function expand(n) {
-        for (var r = 0, i = {}, o = "string" == typeof n ? n.split(" ") : [n]; r < 4; r++) {
-          i[e + oe[r] + t] = o[r] || o[r - 2] || o[0];
-        }
+      expand: function (n) {
+        for (var r = 0, i = {}, o = "string" == typeof n ? n.split(" ") : [n]; r < 4; r++) i[e + oe[r] + t] = o[r] || o[r - 2] || o[0];
 
         return i;
       }
     }, "margin" !== e && (w.cssHooks[e + t].set = Ke);
   }), w.fn.extend({
-    css: function css(e, t) {
+    css: function (e, t) {
       return z(this, function (e, t, n) {
         var r,
             i,
@@ -3198,9 +3061,7 @@ function convertCSVtoArray(str) {
             a = 0;
 
         if (Array.isArray(t)) {
-          for (r = $e(e), i = t.length; a < i; a++) {
-            o[t[a]] = w.css(e, t[a], !1, r);
-          }
+          for (r = $e(e), i = t.length; a < i; a++) o[t[a]] = w.css(e, t[a], !1, r);
 
           return o;
         }
@@ -3216,37 +3077,37 @@ function convertCSVtoArray(str) {
 
   w.Tween = tt, tt.prototype = {
     constructor: tt,
-    init: function init(e, t, n, r, i, o) {
+    init: function (e, t, n, r, i, o) {
       this.elem = e, this.prop = n, this.easing = i || w.easing._default, this.options = t, this.start = this.now = this.cur(), this.end = r, this.unit = o || (w.cssNumber[n] ? "" : "px");
     },
-    cur: function cur() {
+    cur: function () {
       var e = tt.propHooks[this.prop];
       return e && e.get ? e.get(this) : tt.propHooks._default.get(this);
     },
-    run: function run(e) {
+    run: function (e) {
       var t,
           n = tt.propHooks[this.prop];
       return this.options.duration ? this.pos = t = w.easing[this.easing](e, this.options.duration * e, 0, 1, this.options.duration) : this.pos = t = e, this.now = (this.end - this.start) * t + this.start, this.options.step && this.options.step.call(this.elem, this.now, this), n && n.set ? n.set(this) : tt.propHooks._default.set(this), this;
     }
   }, tt.prototype.init.prototype = tt.prototype, tt.propHooks = {
     _default: {
-      get: function get(e) {
+      get: function (e) {
         var t;
         return 1 !== e.elem.nodeType || null != e.elem[e.prop] && null == e.elem.style[e.prop] ? e.elem[e.prop] : (t = w.css(e.elem, e.prop, "")) && "auto" !== t ? t : 0;
       },
-      set: function set(e) {
+      set: function (e) {
         w.fx.step[e.prop] ? w.fx.step[e.prop](e) : 1 !== e.elem.nodeType || null == e.elem.style[w.cssProps[e.prop]] && !w.cssHooks[e.prop] ? e.elem[e.prop] = e.now : w.style(e.elem, e.prop, e.now + e.unit);
       }
     }
   }, tt.propHooks.scrollTop = tt.propHooks.scrollLeft = {
-    set: function set(e) {
+    set: function (e) {
       e.elem.nodeType && e.elem.parentNode && (e.elem[e.prop] = e.now);
     }
   }, w.easing = {
-    linear: function linear(e) {
+    linear: function (e) {
       return e;
     },
-    swing: function swing(e) {
+    swing: function (e) {
       return .5 - Math.cos(e * Math.PI) / 2;
     },
     _default: "swing"
@@ -3273,17 +3134,13 @@ function convertCSVtoArray(str) {
       height: e
     };
 
-    for (t = t ? 1 : 0; r < 4; r += 2 - t) {
-      i["margin" + (n = oe[r])] = i["padding" + n] = e;
-    }
+    for (t = t ? 1 : 0; r < 4; r += 2 - t) i["margin" + (n = oe[r])] = i["padding" + n] = e;
 
     return t && (i.opacity = i.width = e), i;
   }
 
   function lt(e, t, n) {
-    for (var r, i = (pt.tweeners[t] || []).concat(pt.tweeners["*"]), o = 0, a = i.length; o < a; o++) {
-      if (r = i[o].call(n, t, e)) return r;
-    }
+    for (var r, i = (pt.tweeners[t] || []).concat(pt.tweeners["*"]), o = 0, a = i.length; o < a; o++) if (r = i[o].call(n, t, e)) return r;
   }
 
   function ct(e, t, n) {
@@ -3309,15 +3166,13 @@ function convertCSVtoArray(str) {
       });
     }));
 
-    for (r in t) {
-      if (i = t[r], it.test(i)) {
-        if (delete t[r], o = o || "toggle" === i, i === (g ? "hide" : "show")) {
-          if ("show" !== i || !y || void 0 === y[r]) continue;
-          g = !0;
-        }
-
-        d[r] = y && y[r] || w.style(e, r);
+    for (r in t) if (i = t[r], it.test(i)) {
+      if (delete t[r], o = o || "toggle" === i, i === (g ? "hide" : "show")) {
+        if ("show" !== i || !y || void 0 === y[r]) continue;
+        g = !0;
       }
+
+      d[r] = y && y[r] || w.style(e, r);
     }
 
     if ((u = !w.isEmptyObject(t)) || !w.isEmptyObject(d)) {
@@ -3327,32 +3182,24 @@ function convertCSVtoArray(str) {
         h.overflow = n.overflow[0], h.overflowX = n.overflow[1], h.overflowY = n.overflow[2];
       })), u = !1;
 
-      for (r in d) {
-        u || (y ? "hidden" in y && (g = y.hidden) : y = J.access(e, "fxshow", {
-          display: l
-        }), o && (y.hidden = !g), g && fe([e], !0), p.done(function () {
-          g || fe([e]), J.remove(e, "fxshow");
+      for (r in d) u || (y ? "hidden" in y && (g = y.hidden) : y = J.access(e, "fxshow", {
+        display: l
+      }), o && (y.hidden = !g), g && fe([e], !0), p.done(function () {
+        g || fe([e]), J.remove(e, "fxshow");
 
-          for (r in d) {
-            w.style(e, r, d[r]);
-          }
-        })), u = lt(g ? y[r] : 0, r, p), r in y || (y[r] = u.start, g && (u.end = u.start, u.start = 0));
-      }
+        for (r in d) w.style(e, r, d[r]);
+      })), u = lt(g ? y[r] : 0, r, p), r in y || (y[r] = u.start, g && (u.end = u.start, u.start = 0));
     }
   }
 
   function ft(e, t) {
     var n, r, i, o, a;
 
-    for (n in e) {
-      if (r = G(n), i = t[r], o = e[n], Array.isArray(o) && (i = o[1], o = e[n] = o[0]), n !== r && (e[r] = o, delete e[n]), (a = w.cssHooks[r]) && "expand" in a) {
-        o = a.expand(o), delete e[r];
+    for (n in e) if (r = G(n), i = t[r], o = e[n], Array.isArray(o) && (i = o[1], o = e[n] = o[0]), n !== r && (e[r] = o, delete e[n]), (a = w.cssHooks[r]) && "expand" in a) {
+      o = a.expand(o), delete e[r];
 
-        for (n in o) {
-          n in e || (e[n] = o[n], t[n] = i);
-        }
-      } else t[r] = i;
-    }
+      for (n in o) n in e || (e[n] = o[n], t[n] = i);
+    } else t[r] = i;
   }
 
   function pt(e, t, n) {
@@ -3363,12 +3210,10 @@ function convertCSVtoArray(str) {
         s = w.Deferred().always(function () {
       delete u.elem;
     }),
-        u = function u() {
+        u = function () {
       if (i) return !1;
 
-      for (var t = nt || st(), n = Math.max(0, l.startTime + l.duration - t), r = 1 - (n / l.duration || 0), o = 0, a = l.tweens.length; o < a; o++) {
-        l.tweens[o].run(r);
-      }
+      for (var t = nt || st(), n = Math.max(0, l.startTime + l.duration - t), r = 1 - (n / l.duration || 0), o = 0, a = l.tweens.length; o < a; o++) l.tweens[o].run(r);
 
       return s.notifyWith(e, [l, r, n]), r < 1 && a ? n : (a || s.notifyWith(e, [l, 1, 0]), s.resolveWith(e, [l]), !1);
     },
@@ -3384,27 +3229,23 @@ function convertCSVtoArray(str) {
       startTime: nt || st(),
       duration: n.duration,
       tweens: [],
-      createTween: function createTween(t, n) {
+      createTween: function (t, n) {
         var r = w.Tween(e, l.opts, t, n, l.opts.specialEasing[t] || l.opts.easing);
         return l.tweens.push(r), r;
       },
-      stop: function stop(t) {
+      stop: function (t) {
         var n = 0,
             r = t ? l.tweens.length : 0;
         if (i) return this;
 
-        for (i = !0; n < r; n++) {
-          l.tweens[n].run(1);
-        }
+        for (i = !0; n < r; n++) l.tweens[n].run(1);
 
         return t ? (s.notifyWith(e, [l, 1, 0]), s.resolveWith(e, [l, t])) : s.rejectWith(e, [l, t]), this;
       }
     }),
         c = l.props;
 
-    for (ft(c, l.opts.specialEasing); o < a; o++) {
-      if (r = pt.prefilters[o].call(l, e, c, l.opts)) return g(r.stop) && (w._queueHooks(l.elem, l.opts.queue).stop = r.stop.bind(r)), r;
-    }
+    for (ft(c, l.opts.specialEasing); o < a; o++) if (r = pt.prefilters[o].call(l, e, c, l.opts)) return g(r.stop) && (w._queueHooks(l.elem, l.opts.queue).stop = r.stop.bind(r)), r;
 
     return w.map(c, lt, l), g(l.opts.start) && l.opts.start.call(e, l), l.progress(l.opts.progress).done(l.opts.done, l.opts.complete).fail(l.opts.fail).always(l.opts.always), w.fx.timer(w.extend(u, {
       elem: e,
@@ -3420,19 +3261,17 @@ function convertCSVtoArray(str) {
         return ue(n.elem, e, ie.exec(t), n), n;
       }]
     },
-    tweener: function tweener(e, t) {
+    tweener: function (e, t) {
       g(e) ? (t = e, e = ["*"]) : e = e.match(M);
 
-      for (var n, r = 0, i = e.length; r < i; r++) {
-        n = e[r], pt.tweeners[n] = pt.tweeners[n] || [], pt.tweeners[n].unshift(t);
-      }
+      for (var n, r = 0, i = e.length; r < i; r++) n = e[r], pt.tweeners[n] = pt.tweeners[n] || [], pt.tweeners[n].unshift(t);
     },
     prefilters: [ct],
-    prefilter: function prefilter(e, t) {
+    prefilter: function (e, t) {
       t ? pt.prefilters.unshift(e) : pt.prefilters.push(e);
     }
   }), w.speed = function (e, t, n) {
-    var r = e && "object" == _typeof(e) ? w.extend({}, e) : {
+    var r = e && "object" == typeof e ? w.extend({}, e) : {
       complete: n || !n && t || g(e) && e,
       duration: e,
       easing: n && t || t && !g(t) && t
@@ -3441,23 +3280,23 @@ function convertCSVtoArray(str) {
       g(r.old) && r.old.call(this), r.queue && w.dequeue(this, r.queue);
     }, r;
   }, w.fn.extend({
-    fadeTo: function fadeTo(e, t, n, r) {
+    fadeTo: function (e, t, n, r) {
       return this.filter(ae).css("opacity", 0).show().end().animate({
         opacity: t
       }, e, n, r);
     },
-    animate: function animate(e, t, n, r) {
+    animate: function (e, t, n, r) {
       var i = w.isEmptyObject(e),
           o = w.speed(t, n, r),
-          a = function a() {
+          a = function () {
         var t = pt(this, w.extend({}, e), o);
         (i || J.get(this, "finish")) && t.stop(!0);
       };
 
       return a.finish = a, i || !1 === o.queue ? this.each(a) : this.queue(o.queue, a);
     },
-    stop: function stop(e, t, n) {
-      var r = function r(e) {
+    stop: function (e, t, n) {
+      var r = function (e) {
         var t = e.stop;
         delete e.stop, t(n);
       };
@@ -3467,18 +3306,14 @@ function convertCSVtoArray(str) {
             i = null != e && e + "queueHooks",
             o = w.timers,
             a = J.get(this);
-        if (i) a[i] && a[i].stop && r(a[i]);else for (i in a) {
-          a[i] && a[i].stop && ot.test(i) && r(a[i]);
-        }
+        if (i) a[i] && a[i].stop && r(a[i]);else for (i in a) a[i] && a[i].stop && ot.test(i) && r(a[i]);
 
-        for (i = o.length; i--;) {
-          o[i].elem !== this || null != e && o[i].queue !== e || (o[i].anim.stop(n), t = !1, o.splice(i, 1));
-        }
+        for (i = o.length; i--;) o[i].elem !== this || null != e && o[i].queue !== e || (o[i].anim.stop(n), t = !1, o.splice(i, 1));
 
         !t && n || w.dequeue(this, e);
       });
     },
-    finish: function finish(e) {
+    finish: function (e) {
       return !1 !== e && (e = e || "fx"), this.each(function () {
         var t,
             n = J.get(this),
@@ -3487,13 +3322,9 @@ function convertCSVtoArray(str) {
             o = w.timers,
             a = r ? r.length : 0;
 
-        for (n.finish = !0, w.queue(this, e, []), i && i.stop && i.stop.call(this, !0), t = o.length; t--;) {
-          o[t].elem === this && o[t].queue === e && (o[t].anim.stop(!0), o.splice(t, 1));
-        }
+        for (n.finish = !0, w.queue(this, e, []), i && i.stop && i.stop.call(this, !0), t = o.length; t--;) o[t].elem === this && o[t].queue === e && (o[t].anim.stop(!0), o.splice(t, 1));
 
-        for (t = 0; t < a; t++) {
-          r[t] && r[t].finish && r[t].finish.call(this);
-        }
+        for (t = 0; t < a; t++) r[t] && r[t].finish && r[t].finish.call(this);
 
         delete n.finish;
       });
@@ -3526,9 +3357,7 @@ function convertCSVtoArray(str) {
         t = 0,
         n = w.timers;
 
-    for (nt = Date.now(); t < n.length; t++) {
-      (e = n[t])() || n[t] !== e || n.splice(t--, 1);
-    }
+    for (nt = Date.now(); t < n.length; t++) (e = n[t])() || n[t] !== e || n.splice(t--, 1);
 
     n.length || w.fx.stop(), nt = void 0;
   }, w.fx.timer = function (e) {
@@ -3557,16 +3386,16 @@ function convertCSVtoArray(str) {
   var dt,
       ht = w.expr.attrHandle;
   w.fn.extend({
-    attr: function attr(e, t) {
+    attr: function (e, t) {
       return z(this, w.attr, e, t, arguments.length > 1);
     },
-    removeAttr: function removeAttr(e) {
+    removeAttr: function (e) {
       return this.each(function () {
         w.removeAttr(this, e);
       });
     }
   }), w.extend({
-    attr: function attr(e, t, n) {
+    attr: function (e, t, n) {
       var r,
           i,
           o = e.nodeType;
@@ -3574,7 +3403,7 @@ function convertCSVtoArray(str) {
     },
     attrHooks: {
       type: {
-        set: function set(e, t) {
+        set: function (e, t) {
           if (!h.radioValue && "radio" === t && N(e, "input")) {
             var n = e.value;
             return e.setAttribute("type", t), n && (e.value = n), t;
@@ -3582,16 +3411,14 @@ function convertCSVtoArray(str) {
         }
       }
     },
-    removeAttr: function removeAttr(e, t) {
+    removeAttr: function (e, t) {
       var n,
           r = 0,
           i = t && t.match(M);
-      if (i && 1 === e.nodeType) while (n = i[r++]) {
-        e.removeAttribute(n);
-      }
+      if (i && 1 === e.nodeType) while (n = i[r++]) e.removeAttribute(n);
     }
   }), dt = {
-    set: function set(e, t, n) {
+    set: function (e, t, n) {
       return !1 === t ? w.removeAttr(e, n) : e.setAttribute(n, n), n;
     }
   }, w.each(w.expr.match.bool.source.match(/\w+/g), function (e, t) {
@@ -3607,16 +3434,16 @@ function convertCSVtoArray(str) {
   var gt = /^(?:input|select|textarea|button)$/i,
       yt = /^(?:a|area)$/i;
   w.fn.extend({
-    prop: function prop(e, t) {
+    prop: function (e, t) {
       return z(this, w.prop, e, t, arguments.length > 1);
     },
-    removeProp: function removeProp(e) {
+    removeProp: function (e) {
       return this.each(function () {
         delete this[w.propFix[e] || e];
       });
     }
   }), w.extend({
-    prop: function prop(e, t, n) {
+    prop: function (e, t, n) {
       var r,
           i,
           o = e.nodeType;
@@ -3624,7 +3451,7 @@ function convertCSVtoArray(str) {
     },
     propHooks: {
       tabIndex: {
-        get: function get(e) {
+        get: function (e) {
           var t = w.find.attr(e, "tabindex");
           return t ? parseInt(t, 10) : gt.test(e.nodeName) || yt.test(e.nodeName) && e.href ? 0 : -1;
         }
@@ -3635,11 +3462,11 @@ function convertCSVtoArray(str) {
       "class": "className"
     }
   }), h.optSelected || (w.propHooks.selected = {
-    get: function get(e) {
+    get: function (e) {
       var t = e.parentNode;
       return t && t.parentNode && t.parentNode.selectedIndex, null;
     },
-    set: function set(e) {
+    set: function (e) {
       var t = e.parentNode;
       t && (t.selectedIndex, t.parentNode && t.parentNode.selectedIndex);
     }
@@ -3660,7 +3487,7 @@ function convertCSVtoArray(str) {
   }
 
   w.fn.extend({
-    addClass: function addClass(e) {
+    addClass: function (e) {
       var t,
           n,
           r,
@@ -3672,20 +3499,16 @@ function convertCSVtoArray(str) {
       if (g(e)) return this.each(function (t) {
         w(this).addClass(e.call(this, t, mt(this)));
       });
-      if ((t = xt(e)).length) while (n = this[u++]) {
-        if (i = mt(n), r = 1 === n.nodeType && " " + vt(i) + " ") {
-          a = 0;
+      if ((t = xt(e)).length) while (n = this[u++]) if (i = mt(n), r = 1 === n.nodeType && " " + vt(i) + " ") {
+        a = 0;
 
-          while (o = t[a++]) {
-            r.indexOf(" " + o + " ") < 0 && (r += o + " ");
-          }
+        while (o = t[a++]) r.indexOf(" " + o + " ") < 0 && (r += o + " ");
 
-          i !== (s = vt(r)) && n.setAttribute("class", s);
-        }
+        i !== (s = vt(r)) && n.setAttribute("class", s);
       }
       return this;
     },
-    removeClass: function removeClass(e) {
+    removeClass: function (e) {
       var t,
           n,
           r,
@@ -3698,25 +3521,18 @@ function convertCSVtoArray(str) {
         w(this).removeClass(e.call(this, t, mt(this)));
       });
       if (!arguments.length) return this.attr("class", "");
-      if ((t = xt(e)).length) while (n = this[u++]) {
-        if (i = mt(n), r = 1 === n.nodeType && " " + vt(i) + " ") {
-          a = 0;
+      if ((t = xt(e)).length) while (n = this[u++]) if (i = mt(n), r = 1 === n.nodeType && " " + vt(i) + " ") {
+        a = 0;
 
-          while (o = t[a++]) {
-            while (r.indexOf(" " + o + " ") > -1) {
-              r = r.replace(" " + o + " ", " ");
-            }
-          }
+        while (o = t[a++]) while (r.indexOf(" " + o + " ") > -1) r = r.replace(" " + o + " ", " ");
 
-          i !== (s = vt(r)) && n.setAttribute("class", s);
-        }
+        i !== (s = vt(r)) && n.setAttribute("class", s);
       }
       return this;
     },
-    toggleClass: function toggleClass(e, t) {
-      var n = _typeof(e),
+    toggleClass: function (e, t) {
+      var n = typeof e,
           r = "string" === n || Array.isArray(e);
-
       return "boolean" == typeof t && r ? t ? this.addClass(e) : this.removeClass(e) : g(e) ? this.each(function (n) {
         w(this).toggleClass(e.call(this, n, mt(this), t), t);
       }) : this.each(function () {
@@ -3725,28 +3541,24 @@ function convertCSVtoArray(str) {
         if (r) {
           i = 0, o = w(this), a = xt(e);
 
-          while (t = a[i++]) {
-            o.hasClass(t) ? o.removeClass(t) : o.addClass(t);
-          }
+          while (t = a[i++]) o.hasClass(t) ? o.removeClass(t) : o.addClass(t);
         } else void 0 !== e && "boolean" !== n || ((t = mt(this)) && J.set(this, "__className__", t), this.setAttribute && this.setAttribute("class", t || !1 === e ? "" : J.get(this, "__className__") || ""));
       });
     },
-    hasClass: function hasClass(e) {
+    hasClass: function (e) {
       var t,
           n,
           r = 0;
       t = " " + e + " ";
 
-      while (n = this[r++]) {
-        if (1 === n.nodeType && (" " + vt(mt(n)) + " ").indexOf(t) > -1) return !0;
-      }
+      while (n = this[r++]) if (1 === n.nodeType && (" " + vt(mt(n)) + " ").indexOf(t) > -1) return !0;
 
       return !1;
     }
   });
   var bt = /\r/g;
   w.fn.extend({
-    val: function val(e) {
+    val: function (e) {
       var t,
           n,
           r,
@@ -3764,13 +3576,13 @@ function convertCSVtoArray(str) {
   }), w.extend({
     valHooks: {
       option: {
-        get: function get(e) {
+        get: function (e) {
           var t = w.find.attr(e, "value");
           return null != t ? t : vt(w.text(e));
         }
       },
       select: {
-        get: function get(e) {
+        get: function (e) {
           var t,
               n,
               r,
@@ -3780,25 +3592,21 @@ function convertCSVtoArray(str) {
               s = a ? null : [],
               u = a ? o + 1 : i.length;
 
-          for (r = o < 0 ? u : a ? o : 0; r < u; r++) {
-            if (((n = i[r]).selected || r === o) && !n.disabled && (!n.parentNode.disabled || !N(n.parentNode, "optgroup"))) {
-              if (t = w(n).val(), a) return t;
-              s.push(t);
-            }
+          for (r = o < 0 ? u : a ? o : 0; r < u; r++) if (((n = i[r]).selected || r === o) && !n.disabled && (!n.parentNode.disabled || !N(n.parentNode, "optgroup"))) {
+            if (t = w(n).val(), a) return t;
+            s.push(t);
           }
 
           return s;
         },
-        set: function set(e, t) {
+        set: function (e, t) {
           var n,
               r,
               i = e.options,
               o = w.makeArray(t),
               a = i.length;
 
-          while (a--) {
-            ((r = i[a]).selected = w.inArray(w.valHooks.option.get(r), o) > -1) && (n = !0);
-          }
+          while (a--) ((r = i[a]).selected = w.inArray(w.valHooks.option.get(r), o) > -1) && (n = !0);
 
           return n || (e.selectedIndex = -1), o;
         }
@@ -3806,7 +3614,7 @@ function convertCSVtoArray(str) {
     }
   }), w.each(["radio", "checkbox"], function () {
     w.valHooks[this] = {
-      set: function set(e, t) {
+      set: function (e, t) {
         if (Array.isArray(t)) return e.checked = w.inArray(w(e).val(), t) > -1;
       }
     }, h.checkOn || (w.valHooks[this].get = function (e) {
@@ -3815,12 +3623,12 @@ function convertCSVtoArray(str) {
   }), h.focusin = "onfocusin" in e;
 
   var wt = /^(?:focusinfocus|focusoutblur)$/,
-      Tt = function Tt(e) {
+      Tt = function (e) {
     e.stopPropagation();
   };
 
   w.extend(w.event, {
-    trigger: function trigger(t, n, i, o) {
+    trigger: function (t, n, i, o) {
       var a,
           s,
           u,
@@ -3833,25 +3641,21 @@ function convertCSVtoArray(str) {
           m = f.call(t, "type") ? t.type : t,
           x = f.call(t, "namespace") ? t.namespace.split(".") : [];
 
-      if (s = h = u = i = i || r, 3 !== i.nodeType && 8 !== i.nodeType && !wt.test(m + w.event.triggered) && (m.indexOf(".") > -1 && (m = (x = m.split(".")).shift(), x.sort()), c = m.indexOf(":") < 0 && "on" + m, t = t[w.expando] ? t : new w.Event(m, "object" == _typeof(t) && t), t.isTrigger = o ? 2 : 3, t.namespace = x.join("."), t.rnamespace = t.namespace ? new RegExp("(^|\\.)" + x.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, t.result = void 0, t.target || (t.target = i), n = null == n ? [t] : w.makeArray(n, [t]), d = w.event.special[m] || {}, o || !d.trigger || !1 !== d.trigger.apply(i, n))) {
+      if (s = h = u = i = i || r, 3 !== i.nodeType && 8 !== i.nodeType && !wt.test(m + w.event.triggered) && (m.indexOf(".") > -1 && (m = (x = m.split(".")).shift(), x.sort()), c = m.indexOf(":") < 0 && "on" + m, t = t[w.expando] ? t : new w.Event(m, "object" == typeof t && t), t.isTrigger = o ? 2 : 3, t.namespace = x.join("."), t.rnamespace = t.namespace ? new RegExp("(^|\\.)" + x.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, t.result = void 0, t.target || (t.target = i), n = null == n ? [t] : w.makeArray(n, [t]), d = w.event.special[m] || {}, o || !d.trigger || !1 !== d.trigger.apply(i, n))) {
         if (!o && !d.noBubble && !y(i)) {
-          for (l = d.delegateType || m, wt.test(l + m) || (s = s.parentNode); s; s = s.parentNode) {
-            v.push(s), u = s;
-          }
+          for (l = d.delegateType || m, wt.test(l + m) || (s = s.parentNode); s; s = s.parentNode) v.push(s), u = s;
 
           u === (i.ownerDocument || r) && v.push(u.defaultView || u.parentWindow || e);
         }
 
         a = 0;
 
-        while ((s = v[a++]) && !t.isPropagationStopped()) {
-          h = s, t.type = a > 1 ? l : d.bindType || m, (p = (J.get(s, "events") || {})[t.type] && J.get(s, "handle")) && p.apply(s, n), (p = c && s[c]) && p.apply && Y(s) && (t.result = p.apply(s, n), !1 === t.result && t.preventDefault());
-        }
+        while ((s = v[a++]) && !t.isPropagationStopped()) h = s, t.type = a > 1 ? l : d.bindType || m, (p = (J.get(s, "events") || {})[t.type] && J.get(s, "handle")) && p.apply(s, n), (p = c && s[c]) && p.apply && Y(s) && (t.result = p.apply(s, n), !1 === t.result && t.preventDefault());
 
         return t.type = m, o || t.isDefaultPrevented() || d._default && !1 !== d._default.apply(v.pop(), n) || !Y(i) || c && g(i[m]) && !y(i) && ((u = i[c]) && (i[c] = null), w.event.triggered = m, t.isPropagationStopped() && h.addEventListener(m, Tt), i[m](), t.isPropagationStopped() && h.removeEventListener(m, Tt), w.event.triggered = void 0, u && (i[c] = u)), t.result;
       }
     },
-    simulate: function simulate(e, t, n) {
+    simulate: function (e, t, n) {
       var r = w.extend(new w.Event(), n, {
         type: e,
         isSimulated: !0
@@ -3859,12 +3663,12 @@ function convertCSVtoArray(str) {
       w.event.trigger(r, null, t);
     }
   }), w.fn.extend({
-    trigger: function trigger(e, t) {
+    trigger: function (e, t) {
       return this.each(function () {
         w.event.trigger(e, t, this);
       });
     },
-    triggerHandler: function triggerHandler(e, t) {
+    triggerHandler: function (e, t) {
       var n = this[0];
       if (n) return w.event.trigger(e, t, n, !0);
     }
@@ -3872,17 +3676,17 @@ function convertCSVtoArray(str) {
     focus: "focusin",
     blur: "focusout"
   }, function (e, t) {
-    var n = function n(e) {
+    var n = function (e) {
       w.event.simulate(t, e.target, w.event.fix(e));
     };
 
     w.event.special[t] = {
-      setup: function setup() {
+      setup: function () {
         var r = this.ownerDocument || this,
             i = J.access(r, t);
         i || r.addEventListener(e, n, !0), J.access(r, t, (i || 0) + 1);
       },
-      teardown: function teardown() {
+      teardown: function () {
         var r = this.ownerDocument || this,
             i = J.access(r, t) - 1;
         i ? J.access(r, t, i) : (r.removeEventListener(e, n, !0), J.remove(r, t));
@@ -3914,31 +3718,27 @@ function convertCSVtoArray(str) {
   function jt(e, t, n, r) {
     var i;
     if (Array.isArray(t)) w.each(t, function (t, i) {
-      n || St.test(e) ? r(e, i) : jt(e + "[" + ("object" == _typeof(i) && null != i ? t : "") + "]", i, n, r);
-    });else if (n || "object" !== x(t)) r(e, t);else for (i in t) {
-      jt(e + "[" + i + "]", t[i], n, r);
-    }
+      n || St.test(e) ? r(e, i) : jt(e + "[" + ("object" == typeof i && null != i ? t : "") + "]", i, n, r);
+    });else if (n || "object" !== x(t)) r(e, t);else for (i in t) jt(e + "[" + i + "]", t[i], n, r);
   }
 
   w.param = function (e, t) {
     var n,
         r = [],
-        i = function i(e, t) {
+        i = function (e, t) {
       var n = g(t) ? t() : t;
       r[r.length] = encodeURIComponent(e) + "=" + encodeURIComponent(null == n ? "" : n);
     };
 
     if (Array.isArray(e) || e.jquery && !w.isPlainObject(e)) w.each(e, function () {
       i(this.name, this.value);
-    });else for (n in e) {
-      jt(n, e[n], t, i);
-    }
+    });else for (n in e) jt(n, e[n], t, i);
     return r.join("&");
   }, w.fn.extend({
-    serialize: function serialize() {
+    serialize: function () {
       return w.param(this.serializeArray());
     },
-    serializeArray: function serializeArray() {
+    serializeArray: function () {
       return this.map(function () {
         var e = w.prop(this, "elements");
         return e ? w.makeArray(e) : this;
@@ -3978,9 +3778,7 @@ function convertCSVtoArray(str) {
       var r,
           i = 0,
           o = t.toLowerCase().match(M) || [];
-      if (g(n)) while (r = o[i++]) {
-        "+" === r[0] ? (r = r.slice(1) || "*", (e[r] = e[r] || []).unshift(n)) : (e[r] = e[r] || []).push(n);
-      }
+      if (g(n)) while (r = o[i++]) "+" === r[0] ? (r = r.slice(1) || "*", (e[r] = e[r] || []).unshift(n)) : (e[r] = e[r] || []).push(n);
     };
   }
 
@@ -4004,9 +3802,7 @@ function convertCSVtoArray(str) {
         r,
         i = w.ajaxSettings.flatOptions || {};
 
-    for (n in t) {
-      void 0 !== t[n] && ((i[n] ? e : r || (r = {}))[n] = t[n]);
-    }
+    for (n in t) void 0 !== t[n] && ((i[n] ? e : r || (r = {}))[n] = t[n]);
 
     return r && w.extend(!0, e, r), e;
   }
@@ -4019,15 +3815,11 @@ function convertCSVtoArray(str) {
         s = e.contents,
         u = e.dataTypes;
 
-    while ("*" === u[0]) {
-      u.shift(), void 0 === r && (r = e.mimeType || t.getResponseHeader("Content-Type"));
-    }
+    while ("*" === u[0]) u.shift(), void 0 === r && (r = e.mimeType || t.getResponseHeader("Content-Type"));
 
-    if (r) for (i in s) {
-      if (s[i] && s[i].test(r)) {
-        u.unshift(i);
-        break;
-      }
+    if (r) for (i in s) if (s[i] && s[i].test(r)) {
+      u.unshift(i);
+      break;
     }
     if (u[0] in n) o = u[0];else {
       for (i in n) {
@@ -4052,27 +3844,21 @@ function convertCSVtoArray(str) {
         u,
         l = {},
         c = e.dataTypes.slice();
-    if (c[1]) for (a in e.converters) {
-      l[a.toLowerCase()] = e.converters[a];
-    }
+    if (c[1]) for (a in e.converters) l[a.toLowerCase()] = e.converters[a];
     o = c.shift();
 
-    while (o) {
-      if (e.responseFields[o] && (n[e.responseFields[o]] = t), !u && r && e.dataFilter && (t = e.dataFilter(t, e.dataType)), u = o, o = c.shift()) if ("*" === o) o = u;else if ("*" !== u && u !== o) {
-        if (!(a = l[u + " " + o] || l["* " + o])) for (i in l) {
-          if ((s = i.split(" "))[1] === o && (a = l[u + " " + s[0]] || l["* " + s[0]])) {
-            !0 === a ? a = l[i] : !0 !== l[i] && (o = s[0], c.unshift(s[1]));
-            break;
-          }
-        }
-        if (!0 !== a) if (a && e["throws"]) t = a(t);else try {
-          t = a(t);
-        } catch (e) {
-          return {
-            state: "parsererror",
-            error: a ? e : "No conversion from " + u + " to " + o
-          };
-        }
+    while (o) if (e.responseFields[o] && (n[e.responseFields[o]] = t), !u && r && e.dataFilter && (t = e.dataFilter(t, e.dataType)), u = o, o = c.shift()) if ("*" === o) o = u;else if ("*" !== u && u !== o) {
+      if (!(a = l[u + " " + o] || l["* " + o])) for (i in l) if ((s = i.split(" "))[1] === o && (a = l[u + " " + s[0]] || l["* " + s[0]])) {
+        !0 === a ? a = l[i] : !0 !== l[i] && (o = s[0], c.unshift(s[1]));
+        break;
+      }
+      if (!0 !== a) if (a && e["throws"]) t = a(t);else try {
+        t = a(t);
+      } catch (e) {
+        return {
+          state: "parsererror",
+          error: a ? e : "No conversion from " + u + " to " + o
+        };
       }
     }
 
@@ -4122,13 +3908,13 @@ function convertCSVtoArray(str) {
         context: !0
       }
     },
-    ajaxSetup: function ajaxSetup(e, t) {
+    ajaxSetup: function (e, t) {
       return t ? zt(zt(e, w.ajaxSettings), t) : zt(w.ajaxSettings, e);
     },
     ajaxPrefilter: Ft(It),
     ajaxTransport: Ft(Wt),
-    ajax: function ajax(t, n) {
-      "object" == _typeof(t) && (n = t, t = void 0), n = n || {};
+    ajax: function (t, n) {
+      "object" == typeof t && (n = t, t = void 0), n = n || {};
       var i,
           o,
           a,
@@ -4150,16 +3936,14 @@ function convertCSVtoArray(str) {
           C = "canceled",
           E = {
         readyState: 0,
-        getResponseHeader: function getResponseHeader(e) {
+        getResponseHeader: function (e) {
           var t;
 
           if (c) {
             if (!s) {
               s = {};
 
-              while (t = Ot.exec(a)) {
-                s[t[1].toLowerCase()] = t[2];
-              }
+              while (t = Ot.exec(a)) s[t[1].toLowerCase()] = t[2];
             }
 
             t = s[e.toLowerCase()];
@@ -4167,23 +3951,21 @@ function convertCSVtoArray(str) {
 
           return null == t ? null : t;
         },
-        getAllResponseHeaders: function getAllResponseHeaders() {
+        getAllResponseHeaders: function () {
           return c ? a : null;
         },
-        setRequestHeader: function setRequestHeader(e, t) {
+        setRequestHeader: function (e, t) {
           return null == c && (e = T[e.toLowerCase()] = T[e.toLowerCase()] || e, b[e] = t), this;
         },
-        overrideMimeType: function overrideMimeType(e) {
+        overrideMimeType: function (e) {
           return null == c && (h.mimeType = e), this;
         },
-        statusCode: function statusCode(e) {
+        statusCode: function (e) {
           var t;
-          if (e) if (c) E.always(e[E.status]);else for (t in e) {
-            x[t] = [x[t], e[t]];
-          }
+          if (e) if (c) E.always(e[E.status]);else for (t in e) x[t] = [x[t], e[t]];
           return this;
         },
-        abort: function abort(e) {
+        abort: function (e) {
           var t = e || C;
           return i && i.abort(t), k(0, t), this;
         }
@@ -4202,9 +3984,7 @@ function convertCSVtoArray(str) {
       if (h.data && h.processData && "string" != typeof h.data && (h.data = w.param(h.data, h.traditional)), _t(It, h, n, E), c) return E;
       (f = w.event && h.global) && 0 == w.active++ && w.event.trigger("ajaxStart"), h.type = h.type.toUpperCase(), h.hasContent = !Mt.test(h.type), o = h.url.replace(Lt, ""), h.hasContent ? h.data && h.processData && 0 === (h.contentType || "").indexOf("application/x-www-form-urlencoded") && (h.data = h.data.replace(qt, "+")) : (d = h.url.slice(o.length), h.data && (h.processData || "string" == typeof h.data) && (o += (kt.test(o) ? "&" : "?") + h.data, delete h.data), !1 === h.cache && (o = o.replace(Ht, "$1"), d = (kt.test(o) ? "&" : "?") + "_=" + Et++ + d), h.url = o + d), h.ifModified && (w.lastModified[o] && E.setRequestHeader("If-Modified-Since", w.lastModified[o]), w.etag[o] && E.setRequestHeader("If-None-Match", w.etag[o])), (h.data && h.hasContent && !1 !== h.contentType || n.contentType) && E.setRequestHeader("Content-Type", h.contentType), E.setRequestHeader("Accept", h.dataTypes[0] && h.accepts[h.dataTypes[0]] ? h.accepts[h.dataTypes[0]] + ("*" !== h.dataTypes[0] ? ", " + $t + "; q=0.01" : "") : h.accepts["*"]);
 
-      for (p in h.headers) {
-        E.setRequestHeader(p, h.headers[p]);
-      }
+      for (p in h.headers) E.setRequestHeader(p, h.headers[p]);
 
       if (h.beforeSend && (!1 === h.beforeSend.call(g, E, h) || c)) return E.abort();
 
@@ -4234,10 +4014,10 @@ function convertCSVtoArray(str) {
 
       return E;
     },
-    getJSON: function getJSON(e, t, n) {
+    getJSON: function (e, t, n) {
       return w.get(e, t, n, "json");
     },
-    getScript: function getScript(e, t) {
+    getScript: function (e, t) {
       return w.get(e, void 0, t, "script");
     }
   }), w.each(["get", "post"], function (e, t) {
@@ -4261,19 +4041,17 @@ function convertCSVtoArray(str) {
       "throws": !0
     });
   }, w.fn.extend({
-    wrapAll: function wrapAll(e) {
+    wrapAll: function (e) {
       var t;
       return this[0] && (g(e) && (e = e.call(this[0])), t = w(e, this[0].ownerDocument).eq(0).clone(!0), this[0].parentNode && t.insertBefore(this[0]), t.map(function () {
         var e = this;
 
-        while (e.firstElementChild) {
-          e = e.firstElementChild;
-        }
+        while (e.firstElementChild) e = e.firstElementChild;
 
         return e;
       }).append(this)), this;
     },
-    wrapInner: function wrapInner(e) {
+    wrapInner: function (e) {
       return g(e) ? this.each(function (t) {
         w(this).wrapInner(e.call(this, t));
       }) : this.each(function () {
@@ -4282,13 +4060,13 @@ function convertCSVtoArray(str) {
         n.length ? n.wrapAll(e) : t.append(e);
       });
     },
-    wrap: function wrap(e) {
+    wrap: function (e) {
       var t = g(e);
       return this.each(function (n) {
         w(this).wrapAll(t ? e.call(this, n) : e);
       });
     },
-    unwrap: function unwrap(e) {
+    unwrap: function (e) {
       return this.parent(e).not("body").each(function () {
         w(this).replaceWith(this.childNodes);
       }), this;
@@ -4308,43 +4086,38 @@ function convertCSVtoArray(str) {
   },
       Gt = w.ajaxSettings.xhr();
   h.cors = !!Gt && "withCredentials" in Gt, h.ajax = Gt = !!Gt, w.ajaxTransport(function (t) {
-    var _n, r;
-
+    var n, r;
     if (h.cors || Gt && !t.crossDomain) return {
-      send: function send(i, o) {
+      send: function (i, o) {
         var a,
             s = t.xhr();
-        if (s.open(t.type, t.url, t.async, t.username, t.password), t.xhrFields) for (a in t.xhrFields) {
-          s[a] = t.xhrFields[a];
-        }
+        if (s.open(t.type, t.url, t.async, t.username, t.password), t.xhrFields) for (a in t.xhrFields) s[a] = t.xhrFields[a];
         t.mimeType && s.overrideMimeType && s.overrideMimeType(t.mimeType), t.crossDomain || i["X-Requested-With"] || (i["X-Requested-With"] = "XMLHttpRequest");
 
-        for (a in i) {
-          s.setRequestHeader(a, i[a]);
-        }
+        for (a in i) s.setRequestHeader(a, i[a]);
 
-        _n = function n(e) {
+        n = function (e) {
           return function () {
-            _n && (_n = r = s.onload = s.onerror = s.onabort = s.ontimeout = s.onreadystatechange = null, "abort" === e ? s.abort() : "error" === e ? "number" != typeof s.status ? o(0, "error") : o(s.status, s.statusText) : o(Vt[s.status] || s.status, s.statusText, "text" !== (s.responseType || "text") || "string" != typeof s.responseText ? {
+            n && (n = r = s.onload = s.onerror = s.onabort = s.ontimeout = s.onreadystatechange = null, "abort" === e ? s.abort() : "error" === e ? "number" != typeof s.status ? o(0, "error") : o(s.status, s.statusText) : o(Vt[s.status] || s.status, s.statusText, "text" !== (s.responseType || "text") || "string" != typeof s.responseText ? {
               binary: s.response
             } : {
               text: s.responseText
             }, s.getAllResponseHeaders()));
           };
-        }, s.onload = _n(), r = s.onerror = s.ontimeout = _n("error"), void 0 !== s.onabort ? s.onabort = r : s.onreadystatechange = function () {
+        }, s.onload = n(), r = s.onerror = s.ontimeout = n("error"), void 0 !== s.onabort ? s.onabort = r : s.onreadystatechange = function () {
           4 === s.readyState && e.setTimeout(function () {
-            _n && r();
+            n && r();
           });
-        }, _n = _n("abort");
+        }, n = n("abort");
 
         try {
           s.send(t.hasContent && t.data || null);
         } catch (e) {
-          if (_n) throw e;
+          if (n) throw e;
         }
       },
-      abort: function abort() {
-        _n && _n();
+      abort: function () {
+        n && n();
       }
     };
   }), w.ajaxPrefilter(function (e) {
@@ -4357,7 +4130,7 @@ function convertCSVtoArray(str) {
       script: /\b(?:java|ecma)script\b/
     },
     converters: {
-      "text script": function textScript(e) {
+      "text script": function (e) {
         return w.globalEval(e), e;
       }
     }
@@ -4365,19 +4138,18 @@ function convertCSVtoArray(str) {
     void 0 === e.cache && (e.cache = !1), e.crossDomain && (e.type = "GET");
   }), w.ajaxTransport("script", function (e) {
     if (e.crossDomain) {
-      var t, _n2;
-
+      var t, n;
       return {
-        send: function send(i, o) {
+        send: function (i, o) {
           t = w("<script>").prop({
             charset: e.scriptCharset,
             src: e.url
-          }).on("load error", _n2 = function n(e) {
-            t.remove(), _n2 = null, e && o("error" === e.type ? 404 : 200, e.type);
+          }).on("load error", n = function (e) {
+            t.remove(), n = null, e && o("error" === e.type ? 404 : 200, e.type);
           }), r.head.appendChild(t[0]);
         },
-        abort: function abort() {
-          _n2 && _n2();
+        abort: function () {
+          n && n();
         }
       };
     }
@@ -4386,7 +4158,7 @@ function convertCSVtoArray(str) {
       Qt = /(=)\?(?=&|$)|\?\?/;
   w.ajaxSetup({
     jsonp: "callback",
-    jsonpCallback: function jsonpCallback() {
+    jsonpCallback: function () {
       var e = Yt.pop() || w.expando + "_" + Et++;
       return this[e] = !0, e;
     }
@@ -4416,7 +4188,7 @@ function convertCSVtoArray(str) {
         o,
         a = this,
         s = e.indexOf(" ");
-    return s > -1 && (r = vt(e.slice(s)), e = e.slice(0, s)), g(t) ? (n = t, t = void 0) : t && "object" == _typeof(t) && (i = "POST"), a.length > 0 && w.ajax({
+    return s > -1 && (r = vt(e.slice(s)), e = e.slice(0, s)), g(t) ? (n = t, t = void 0) : t && "object" == typeof t && (i = "POST"), a.length > 0 && w.ajax({
       url: e,
       type: i || "GET",
       dataType: "html",
@@ -4437,7 +4209,7 @@ function convertCSVtoArray(str) {
       return e === t.elem;
     }).length;
   }, w.offset = {
-    setOffset: function setOffset(e, t, n) {
+    setOffset: function (e, t, n) {
       var r,
           i,
           o,
@@ -4451,7 +4223,7 @@ function convertCSVtoArray(str) {
       "static" === c && (e.style.position = "relative"), s = f.offset(), o = w.css(e, "top"), u = w.css(e, "left"), (l = ("absolute" === c || "fixed" === c) && (o + u).indexOf("auto") > -1) ? (a = (r = f.position()).top, i = r.left) : (a = parseFloat(o) || 0, i = parseFloat(u) || 0), g(t) && (t = t.call(e, n, w.extend({}, s))), null != t.top && (p.top = t.top - s.top + a), null != t.left && (p.left = t.left - s.left + i), "using" in t ? t.using.call(e, p) : f.css(p);
     }
   }, w.fn.extend({
-    offset: function offset(e) {
+    offset: function (e) {
       if (arguments.length) return void 0 === e ? this : this.each(function (t) {
         w.offset.setOffset(this, e, t);
       });
@@ -4466,7 +4238,7 @@ function convertCSVtoArray(str) {
         left: 0
       };
     },
-    position: function position() {
+    position: function () {
       if (this[0]) {
         var e,
             t,
@@ -4479,9 +4251,7 @@ function convertCSVtoArray(str) {
         if ("fixed" === w.css(r, "position")) t = r.getBoundingClientRect();else {
           t = this.offset(), n = r.ownerDocument, e = r.offsetParent || n.documentElement;
 
-          while (e && (e === n.body || e === n.documentElement) && "static" === w.css(e, "position")) {
-            e = e.parentNode;
-          }
+          while (e && (e === n.body || e === n.documentElement) && "static" === w.css(e, "position")) e = e.parentNode;
 
           e && e !== r && 1 === e.nodeType && ((i = w(e).offset()).top += w.css(e, "borderTopWidth", !0), i.left += w.css(e, "borderLeftWidth", !0));
         }
@@ -4491,13 +4261,11 @@ function convertCSVtoArray(str) {
         };
       }
     },
-    offsetParent: function offsetParent() {
+    offsetParent: function () {
       return this.map(function () {
         var e = this.offsetParent;
 
-        while (e && "static" === w.css(e, "position")) {
-          e = e.offsetParent;
-        }
+        while (e && "static" === w.css(e, "position")) e = e.offsetParent;
 
         return e || be;
       });
@@ -4542,25 +4310,25 @@ function convertCSVtoArray(str) {
       return arguments.length > 0 ? this.on(t, null, e, n) : this.trigger(t);
     };
   }), w.fn.extend({
-    hover: function hover(e, t) {
+    hover: function (e, t) {
       return this.mouseenter(e).mouseleave(t || e);
     }
   }), w.fn.extend({
-    bind: function bind(e, t, n) {
+    bind: function (e, t, n) {
       return this.on(e, null, t, n);
     },
-    unbind: function unbind(e, t) {
+    unbind: function (e, t) {
       return this.off(e, null, t);
     },
-    delegate: function delegate(e, t, n, r) {
+    delegate: function (e, t, n, r) {
       return this.on(t, e, n, r);
     },
-    undelegate: function undelegate(e, t, n) {
+    undelegate: function (e, t, n) {
       return 1 === arguments.length ? this.off(e, "**") : this.off(t, e || "**", n);
     }
   }), w.proxy = function (e, t) {
     var n, r, i;
-    if ("string" == typeof t && (n = e[t], t = e, e = n), g(e)) return r = o.call(arguments, 2), i = function i() {
+    if ("string" == typeof t && (n = e[t], t = e, e = n), g(e)) return r = o.call(arguments, 2), i = function () {
       return e.apply(t || this, r.concat(o.call(arguments)));
     }, i.guid = e.guid = e.guid || w.guid++, i;
   }, w.holdReady = function (e) {
@@ -4576,33 +4344,7 @@ function convertCSVtoArray(str) {
   return w.noConflict = function (t) {
     return e.$ === w && (e.$ = Kt), t && e.jQuery === w && (e.jQuery = Jt), w;
   }, t || (e.jQuery = e.$ = w), w;
-}); // var limit = 1000;
-// var y = 0;
-// var data = [];
-// var dataSeries = { type: "line" };
-// var dataPoints = [];
-// for (var i = 0; i < limit; i += 1) {
-//     y += (Math.random() * 10 - 5);
-//     dataPoints.push({
-//         x: i - limit / 2,
-//         y: y
-//     });
-// }
-// dataSeries.dataPoints = dataPoints;
-// data.push(dataSeries);
-// var chart = new CanvasJS.Chart("lineChartContainer", {
-//     animationEnabled: true,
-//     zoomEnabled: true,
-//     title:{
-//         text: "クレーンの使用頻度" 
-//     },
-//     axisY :{
-//         includeZero:false
-//     },
-//     data: data  // random generator below
-// });
-// chart.render();
-// ページの読み込みを待つ
+}); // ページの読み込みを待つ
 
 window.addEventListener('load', getCSV_init("assets/data/demo.csv")); //CSVファイルを読み込む関数getCSV()の定義
 
@@ -4630,14 +4372,14 @@ function init(damage_data) {
   // console.log(damage_data[0][1]);
   // console.log(damage_data);
   // サイズを指定
-  var width = 600;
-  var height = 350; // 刻み幅
+  const width = 600;
+  const height = 350; // 刻み幅
 
-  var stride = 0.2; // 円の半径
+  const stride = 0.2; // 円の半径
 
-  var radius = 100; // piechartの1sectorの角度
+  const radius = 100; // piechartの1sectorの角度
 
-  var sectorAngle = 45;
+  const sectorAngle = 45;
 
   function abs(val) {
     return val < 0 ? -val : val;
@@ -4645,7 +4387,7 @@ function init(damage_data) {
 
   ; // レンダラーを作成
 
-  var renderer = new THREE.WebGLRenderer({
+  const renderer = new THREE.WebGLRenderer({
     antialias: true,
     canvas: document.querySelector('#myCanvas')
   });
@@ -4654,18 +4396,18 @@ function init(damage_data) {
 
   renderer.setClearColor(0xf8f8f8); // シーンを作成
 
-  var scene = new THREE.Scene(); // 座標軸を表示
+  const scene = new THREE.Scene(); // 座標軸を表示
 
   var axis = new THREE.AxisHelper(300);
   scene.add(axis); // カメラを作成
 
-  var camera = new THREE.PerspectiveCamera(45, width / height); // カメラの初期座標を設定
+  const camera = new THREE.PerspectiveCamera(45, width / height); // カメラの初期座標を設定
 
   camera.position.set(0, 350, 0);
   camera.rotation.set(0, -Math.PI / 2, 0); // カメラコントローラーを作成
 
-  var canvas = document.getElementById('myCanvas');
-  var controls = new THREE.OrbitControls(camera, canvas); // controls.minDistance = radius*2;
+  let canvas = document.getElementById('myCanvas');
+  const controls = new THREE.OrbitControls(camera, canvas); // controls.minDistance = radius*2;
   // controls.maxDistance = Infinity;
 
   controls.maxPolarAngle = Math.PI / 2; // to disable zoom 
@@ -4679,11 +4421,11 @@ function init(damage_data) {
   scene.add(new THREE.GridHelper(600));
   scene.add(new THREE.AxesHelper(100)); // 平行光源
 
-  var directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+  const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
   directionalLight.position.set(1, 1, 1);
   scene.add(directionalLight); // 環境光源
 
-  var ambientLight = new THREE.AmbientLight(0x333333);
+  const ambientLight = new THREE.AmbientLight(0x333333);
   scene.add(ambientLight);
   /*
     *
@@ -4708,7 +4450,7 @@ function init(damage_data) {
 
   var color_list = [0x42bcf4, 0x41f447, 0xf4f441, 0xf47941, 0xf4424b, 0xf441eb, 0xc1f441, 0x4167f4]; // グループを作る
 
-  var sectorlist = [];
+  const sectorlist = [];
   var sectorNum = 0;
 
   for (var i = 0; i < 360; i += sectorAngle) {
@@ -4755,218 +4497,51 @@ function init(damage_data) {
   //   requestAnimationFrame(tick);
   // }
 
-} // var chart = new CanvasJS.Chart("mixChartContainer", {
-// 	animationEnabled: true,
-// 	theme: "light2",
-// 	title: {
-// 		text: "月別xxxデータ"
-// 	},
-// 	axisX: {
-// 		valueFormatString: "MMM"
-// 	},
-// 	axisY: {
-// 		prefix: "",
-// 		labelFormatter: addSymbols
-// 	},
-// 	toolTip: {
-// 		shared: true
-// 	},
-// 	legend: {
-// 		cursor: "pointer",
-// 		itemclick: toggleDataSeries
-// 	},
-// 	data: [
-// 	{
-// 		type: "column",
-// 		name: "実際の量",
-// 		showInLegend: true,
-// 		xValueFormatString: "MMMM YYYY",
-// 		yValueFormatString: "#,##0",
-// 		dataPoints: [
-// 			{ x: new Date(2018, 0), y: 20000 },
-// 			{ x: new Date(2018, 1), y: 30000 },
-// 			{ x: new Date(2018, 2), y: 25000 },
-// 			{ x: new Date(2018, 3), y: 70000, indexLabel: "High Renewals" },
-// 			{ x: new Date(2018, 4), y: 50000 },
-// 			{ x: new Date(2018, 5), y: 35000 },
-// 			{ x: new Date(2018, 6), y: 30000 },
-// 			{ x: new Date(2018, 7), y: 43000 },
-// 			{ x: new Date(2018, 8), y: 35000 },
-// 			{ x: new Date(2018, 9), y:  30000},
-// 			{ x: new Date(2018, 10), y: 40000 },
-// 			{ x: new Date(2018, 11), y: 50000 }
-// 		]
-// 	}, 
-// 	{
-// 		type: "line",
-// 		name: "予想量",
-// 		showInLegend: true,
-// 		yValueFormatString: "#,##0",
-// 		dataPoints: [
-// 			{ x: new Date(2018, 0), y: 40000 },
-// 			{ x: new Date(2018, 1), y: 42000 },
-// 			{ x: new Date(2018, 2), y: 45000 },
-// 			{ x: new Date(2018, 3), y: 45000 },
-// 			{ x: new Date(2018, 4), y: 47000 },
-// 			{ x: new Date(2018, 5), y: 43000 },
-// 			{ x: new Date(2018, 6), y: 42000 },
-// 			{ x: new Date(2018, 7), y: 43000 },
-// 			{ x: new Date(2018, 8), y: 41000 },
-// 			{ x: new Date(2018, 9), y: 45000 },
-// 			{ x: new Date(2018, 10), y: 42000 },
-// 			{ x: new Date(2018, 11), y: 50000 }
-// 		]
-// 	},
-// 	{
-// 		type: "area",
-// 		name: "xxxx",
-// 		markerBorderColor: "white",
-// 		markerBorderThickness: 2,
-// 		showInLegend: true,
-// 		yValueFormatString: "#,##0",
-// 		dataPoints: [
-// 			{ x: new Date(2018, 0), y: 5000 },
-// 			{ x: new Date(2018, 1), y: 7000 },
-// 			{ x: new Date(2018, 2), y: 6000},
-// 			{ x: new Date(2018, 3), y: 30000 },
-// 			{ x: new Date(2018, 4), y: 20000 },
-// 			{ x: new Date(2018, 5), y: 15000 },
-// 			{ x: new Date(2018, 6), y: 13000 },
-// 			{ x: new Date(2018, 7), y: 20000 },
-// 			{ x: new Date(2018, 8), y: 15000 },
-// 			{ x: new Date(2018, 9), y:  10000},
-// 			{ x: new Date(2018, 10), y: 19000 },
-// 			{ x: new Date(2018, 11), y: 22000 }
-// 		]
-// 	}]
-// });
-// chart.render();
-// function addSymbols(e) {
-// 	var suffixes = ["", "K", "M", "B"];
-// 	var order = Math.max(Math.floor(Math.log(e.value) / Math.log(1000)), 0);
-// 	if(order > suffixes.length - 1)                	
-// 		order = suffixes.length - 1;
-// 	var suffix = suffixes[order];      
-// 	return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+} // window.addEventListener('load', getCSV_drawStartLineChart("assets/data/start.csv"));
+// //CSVファイルを読み込む関数getCSV()の定義
+// function getCSV_drawStartLineChart(targetFile){
+//   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+//   req.open("get", targetFile, true); // アクセスするファイルを指定
+//   req.send(null); // HTTPリクエストの発行
+//   var result = [];
+//   // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+//   req.onload = function(){
+//     result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+//     // console.log(result);
+//     // return result;
+//     drawStartLineChart(result);
+//   }
 // }
-// function toggleDataSeries(e) {
-// 	if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-// 		e.dataSeries.visible = false;
-// 	} else {
-// 		e.dataSeries.visible = true;
-// 	}
-// 	e.chart.render();
+// function drawStartLineChart( damage_data ){
+//   // console.log(damage_data);
+//   var y = 0;
+//   var data = [];
+//   var dataSeries = { type: "line" };
+//   var dataPoints = [];
+//   for (var i = 0; i < damage_data.length; i += 1) {
+//       dataPoints.push({
+//           x: i,
+//           y: Number(damage_data[i][1])
+//       });
+//   }
+//   dataSeries.dataPoints = dataPoints;
+//   data.push(dataSeries);
+//   var chart = new CanvasJS.Chart("startLineChartContainer", {
+//       animationEnabled: true,
+//       zoomEnabled: true,
+//       title:{
+//           text: "吊り上げ地点" 
+//       },
+//       axisX:{
+//         title:"角度",
+//         interval: 45,
+//         gridThickness: 1,
+//       },
+//       axisY:{
+//         title:"回数",
+//         includeZero:false
+//       },
+//       data: data  // random generator below
+//   });
+//   chart.render();
 // }
-
-
-window.addEventListener('load', getCSV_drawScatterChart("assets/data/weight_distance.csv")); //CSVファイルを読み込む関数getCSV()の定義
-
-function getCSV_drawScatterChart(targetFile) {
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-
-  req.open("get", targetFile, true); // アクセスするファイルを指定
-
-  req.send(null); // HTTPリクエストの発行
-
-  var result = []; // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-
-  req.onload = function () {
-    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-
-    drawScatterChart(result);
-  };
-}
-
-function drawScatterChart(damage_data) {
-  // console.log(damage_data);
-  var dataPoints = [];
-
-  for (var i = 0; i < damage_data.length; i++) {
-    // console.log(Number(damage_data[i][1]));
-    dataPoints.push({
-      x: Number(damage_data[i][0]),
-      y: Number(damage_data[i][1]),
-      color: "blue"
-    });
-  }
-
-  var chart = new CanvasJS.Chart("scatterChartContainer", {
-    animationEnabled: true,
-    title: {
-      text: "クレーンの吊り荷の分布"
-    },
-    axisX: {
-      title: "吊り荷の重さ(100kg)"
-    },
-    axisY: {
-      title: "中心から吊り荷の距離(m)"
-    },
-    data: [{
-      type: "scatter",
-      toolTipContent: "<span style=\"color:#4F81BC \"><b>{name}</b></span><br/><b> 吊り荷の重さ(100kg):</b> {x} <br/><b> 中心から吊り荷の距離(m):</b></span> {y} ",
-      name: "クレーン１",
-      showInLegend: true,
-      dataPoints: dataPoints
-    }]
-  });
-  chart.render();
-}
-
-window.addEventListener('load', getCSV_drawStartLineChart("assets/data/start.csv")); //CSVファイルを読み込む関数getCSV()の定義
-
-function getCSV_drawStartLineChart(targetFile) {
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-
-  req.open("get", targetFile, true); // アクセスするファイルを指定
-
-  req.send(null); // HTTPリクエストの発行
-
-  var result = []; // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-
-  req.onload = function () {
-    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-    // console.log(result);
-    // return result;
-
-    drawStartLineChart(result);
-  };
-}
-
-function drawStartLineChart(damage_data) {
-  // console.log(damage_data);
-  var y = 0;
-  var data = [];
-  var dataSeries = {
-    type: "line"
-  };
-  var dataPoints = [];
-
-  for (var i = 0; i < damage_data.length; i += 1) {
-    dataPoints.push({
-      x: i,
-      y: Number(damage_data[i][1])
-    });
-  }
-
-  dataSeries.dataPoints = dataPoints;
-  data.push(dataSeries);
-  var chart = new CanvasJS.Chart("startLineChartContainer", {
-    animationEnabled: true,
-    zoomEnabled: true,
-    title: {
-      text: "吊り上げ地点"
-    },
-    axisX: {
-      title: "角度",
-      interval: 45,
-      gridThickness: 1
-    },
-    axisY: {
-      title: "回数",
-      includeZero: false
-    },
-    data: data // random generator below
-
-  });
-  chart.render();
-}

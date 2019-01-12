@@ -68,7 +68,13 @@ gulp.task('js.es5', function() {
     return gulp.src('public/assets/main-js/bundle.js')
         .pipe(babel({
             "presets": [
-                "@babel/preset-env"
+              [
+                "@babel/preset-env", {
+                  "targets": {
+                    "node": "current"
+                  }
+                }
+              ]
             ]
         }))
         .pipe(gulp.dest('public/assets/main-js/'));

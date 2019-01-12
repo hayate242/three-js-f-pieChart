@@ -1,4 +1,4 @@
-//CSVファイルを読み込む関数getCSV()の定義
+// //CSVファイルを読み込む関数getCSV()の定義
 function getCSV(targetFile){
   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
   req.open("get", targetFile, true); // アクセスするファイルを指定
