@@ -1,3 +1,4 @@
+$border_color: #bbb;
 
 #maps {
   width: 500px;
@@ -22,6 +23,7 @@
 .list_style_none {
   list-style: none;
 }
+
 
 // セレクトボックス
 .cp_ipselect {
@@ -49,7 +51,7 @@
 }
 .cp_ipselect.cp_sl01 {
 	position: relative;
-	border: 1px solid #bbbbbb;
+	border: 1px solid $border_color;
 	// border-radius: 2px;
 	background: #ffffff;
 }
@@ -75,24 +77,49 @@
 .crane_data_label_li {
   margin-bottom: -25px;
   li {
-    width: 140px;
+    width: 150px;
     height: 30px;
     text-align: center;
   }
 }
 .crane_data_li {
   li {
-    border: solid 1px #bbbbbb;
-    width: 140px;
+    border: solid 1px $border_color;
+    width: 150px;
     height: 30px;
     text-align: right;
     line-height: 30px;
+    span {
+      margin-right: 5px;
+    }
   }
 }
 
 .display_period {
   .setting :nth-child(1) {
       border: none;
+  }
+}
+
+.summary_sheet {
+  .units{
+    p {
+      width: 50%;
+      text-align: right;
+      max-width: 500px;
+    }
+  }
+  .tables {
+    table {
+      width: 50%;
+      text-align: right;
+      max-width: 500px;
+      border: solid 1px $border_color;
+      border-collapse: collapse;
+      th {
+        text-align: center;
+      }
+    }
   }
 }
 
