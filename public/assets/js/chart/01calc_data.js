@@ -65,6 +65,8 @@ function save_log_data( log_data ){
       else if(data[7] > 1)                        { classify_data(data,5); }
     }
   });
+
+  // 最後に出力
   console.log(crane_data);
 
 }
@@ -83,18 +85,15 @@ function classify_data(data, range_id) {
   const start = data[0] - 1 + get_segment_num(data[8]);
   // end
   const end = data[0] - 1 + get_segment_num(data[9]);
+  const pass_time = calc_pass_time(data[4], data[5]);
+  console.log(pass_time);
   add_damage_data(start, end, range_id);
-  // if(range_id == 0){ crane_data[index1]._0_10 += 1; crane_data[index2]._0_10 += 1;}
-  // if(range_id == 1){ crane_data[index1]._10_50 += 1; crane_data[index2]._10_50 += 1;}
-  // if(range_id == 2){ crane_data[index1]._50_63 += 1; crane_data[index2]._50_63 += 1;}
-  // if(range_id == 3){ crane_data[index1]._63_80 += 1; crane_data[index2]._63_80 += 1;}
-  // if(range_id == 4){ crane_data[index1]._80_100 += 1; crane_data[index2]._80_100 += 1;}
-  // if(range_id == 5){ crane_data[index1]._100_over += 1; crane_data[index2]._100_over += 1;}
 }
 
+// 通過回数のデータ
 function add_damage_data(start, end, range_id){
-  console.log("start", start,"end", end);
-  console.log("diff abs", abs(start-end));
+  // console.log("start", start,"end", end);
+  // console.log("diff abs", abs(start-end));
   // 差の絶対値が4以下なら普通に通過 (segmentが8つに分割されているので)
   if( abs(start-end) <= 4){
     if( start < end ) {
@@ -111,7 +110,7 @@ function add_damage_data(start, end, range_id){
     }
   }else { //4より大きいなら逆回り
     const itr_length = 8 - abs(start-end);
-    console.log("itter_length", itr_length);
+    // console.log("itter_length", itr_length);
     if( start < end ) {
       var j = end;
       for(var i = 0; i <= itr_length; i++){
@@ -126,21 +125,40 @@ function add_damage_data(start, end, range_id){
       }
     }
   }
-  cnt = 1;
+  // cnt = 1;
 }
-var cnt = 1;
+// var cnt = 1;
+// 通過回数を加算
 function add_passes_num(index, range_id){
-  console.log("index", index);
-  console.log("range_id", range_id);
-  console.log("cnt", cnt);
-  cnt++;
-
+  // console.log("index", index);
+  // console.log("range_id", range_id);
+  // console.log("cnt", cnt);
+  // cnt++;
   if(range_id == 0){ crane_data[index]._0_10 += 1; }
   if(range_id == 1){ crane_data[index]._10_50 += 1;}
   if(range_id == 2){ crane_data[index]._50_63 += 1;}
   if(range_id == 3){ crane_data[index]._63_80 += 1;}
   if(range_id == 4){ crane_data[index]._80_100 += 1;}
   if(range_id == 5){ crane_data[index]._100_over += 1;}
+}
+
+function calc_pass_time( start_time, end_time ){
+  const start_h_m = start_time.split(':');
+  const end_h_m = end_time.split(':');
+  console.log(start_h_m, end_h_m);
+
+  var hour = Number(end_h_m[0] - start_h_m[0]);
+  var min = Number(end_h_m[1] - start_h_m[1])/60.0;
+  if( min < 0 ){
+    hour -= 1;
+    min = Number( (60 - Number(start_h_m[1])) + Number(end_h_m[1]) )/60.0;
+  }
+  // console.log("hour", hour, "min", min);
+  return hour + min;
+}
+// 通過時間のデータ
+function add_passes_time(start, end, range_id){
+
 }
 
 
