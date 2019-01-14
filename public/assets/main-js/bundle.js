@@ -1,6 +1,12 @@
 "use strict";
 
-// csvファイル読み込み関数(同期)
+// 絶対値計算
+function abs(val) {
+  return val < 0 ? -val : val;
+}
+
+; // csvファイル読み込み関数(同期)
+
 function openFile(url) {
   const xhr = new XMLHttpRequest();
   const p = new Promise((resolve, reject) => {
@@ -118,37 +124,90 @@ function get_segment_num(segment) {
 }
 
 function classify_data(data, range_id) {
-  const index1 = data[0] - 1 + get_segment_num(data[8]);
-  const index2 = data[0] - 1 + get_segment_num(data[9]);
+  // start
+  const start = data[0] - 1 + get_segment_num(data[8]); // end
+
+  const end = data[0] - 1 + get_segment_num(data[9]);
+  add_damage_data(start, end, range_id); // if(range_id == 0){ crane_data[index1]._0_10 += 1; crane_data[index2]._0_10 += 1;}
+  // if(range_id == 1){ crane_data[index1]._10_50 += 1; crane_data[index2]._10_50 += 1;}
+  // if(range_id == 2){ crane_data[index1]._50_63 += 1; crane_data[index2]._50_63 += 1;}
+  // if(range_id == 3){ crane_data[index1]._63_80 += 1; crane_data[index2]._63_80 += 1;}
+  // if(range_id == 4){ crane_data[index1]._80_100 += 1; crane_data[index2]._80_100 += 1;}
+  // if(range_id == 5){ crane_data[index1]._100_over += 1; crane_data[index2]._100_over += 1;}
+}
+
+function add_damage_data(start, end, range_id) {
+  console.log("start", start, "end", end);
+  console.log("diff abs", abs(start - end)); // 差の絶対値が4以下なら普通に通過 (segmentが8つに分割されているので)
+
+  if (abs(start - end) <= 4) {
+    if (start < end) {
+      for (var i = start; i <= end; i++) {
+        add_passes_num(i, range_id);
+      }
+    } else if (start > end) {
+      for (var i = start; i >= end; i--) {
+        add_passes_num(i, range_id);
+      }
+    } else {
+      // startとendが同じ時
+      add_passes_num(start, range_id);
+    }
+  } else {
+    //4より大きいなら逆回り
+    const itr_length = 8 - abs(start - end);
+    console.log("itter_length", itr_length);
+
+    if (start < end) {
+      var j = end;
+
+      for (var i = 0; i <= itr_length; i++) {
+        add_passes_num(j % 8, range_id);
+        j++;
+      }
+    } else if (start > end) {
+      var j = start;
+
+      for (var i = 0; i <= itr_length; i++) {
+        add_passes_num(j % 8, range_id);
+        j++;
+      }
+    }
+  }
+
+  cnt = 1;
+}
+
+var cnt = 1;
+
+function add_passes_num(index, range_id) {
+  console.log("index", index);
+  console.log("range_id", range_id);
+  console.log("cnt", cnt);
+  cnt++;
 
   if (range_id == 0) {
-    crane_data[index1]._0_10 += 1;
-    crane_data[index2]._0_10 += 1;
+    crane_data[index]._0_10 += 1;
   }
 
   if (range_id == 1) {
-    crane_data[index1]._10_50 += 1;
-    crane_data[index2]._10_50 += 1;
+    crane_data[index]._10_50 += 1;
   }
 
   if (range_id == 2) {
-    crane_data[index1]._50_63 += 1;
-    crane_data[index2]._50_63 += 1;
+    crane_data[index]._50_63 += 1;
   }
 
   if (range_id == 3) {
-    crane_data[index1]._63_80 += 1;
-    crane_data[index2]._63_80 += 1;
+    crane_data[index]._63_80 += 1;
   }
 
   if (range_id == 4) {
-    crane_data[index1]._80_100 += 1;
-    crane_data[index2]._80_100 += 1;
+    crane_data[index]._80_100 += 1;
   }
 
   if (range_id == 5) {
-    crane_data[index1]._100_over += 1;
-    crane_data[index2]._100_over += 1;
+    crane_data[index]._100_over += 1;
   }
 }
 /* ----------------------------
