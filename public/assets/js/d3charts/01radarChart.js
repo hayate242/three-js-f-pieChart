@@ -33,9 +33,9 @@ var RadarChart = {
 	
 	if('undefined' !== typeof options){
 	  for(var i in options){
-		if('undefined' !== typeof options[i]){
-		  cfg[i] = options[i];
-		}
+			if('undefined' !== typeof options[i]){
+				cfg[i] = options[i];
+			}
 	  }
 	}
 	cfg.maxValue = Math.max(cfg.maxValue, d3.max(d, function(i){return d3.max(i.map(function(o){return o.value;}))}));
@@ -87,7 +87,7 @@ var RadarChart = {
 	   .style("font-size", "10px")
 	   .attr("transform", "translate(" + (cfg.w/2-levelFactor + cfg.ToRight) + ", " + (cfg.h/2-levelFactor) + ")")
 	   .attr("fill", "#737373")
-	   .text(Format((j+1)*cfg.maxValue/cfg.levels));
+	   .text(((j+1)*cfg.maxValue/cfg.levels).toFixed(1));
 	}
 	
 	var series = 0;
@@ -190,7 +190,7 @@ var RadarChart = {
 					tooltip
 						.attr('x', newX)
 						.attr('y', newY)
-						.text(Format(d.value))
+						.text(d.value)
 						.transition(200)
 						.style('opacity', 1);
 						

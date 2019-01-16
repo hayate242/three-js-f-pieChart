@@ -74,7 +74,7 @@ function save_log_data( log_data ){
 
   // 最後に出力
   console.log(crane_data);
-
+  
 }
 function get_segment_num(segment){
   if(segment == "A"){ return 0;}
@@ -183,6 +183,31 @@ function calc_index( crane_id ){
   return (crane_id - 1) * segment_num;
 }
 
+function calc_max_val( crane_id ){
+  console.log("calc_mac_val_!");
+  const index = calc_index(crane_id);
+  // 最大値を求める
+  var max = [0,0];
+  for(var i = 0, len = segment_num; i < len; i++){
+    if      (crane_data[index+i]._0_10 > max[0]) { max[0] = crane_data[index+i]._0_10 }
+    else if (crane_data[index+i]._10_50 > max[0]) { max[0] = crane_data[index+i]._10_50 }
+    else if (crane_data[index+i]._50_63 > max[0]) { max[0] = crane_data[index+i]._50_63 }
+    else if (crane_data[index+i]._63_80 > max[0]) { max[0] = crane_data[index+i]._63_80 }
+    else if (crane_data[index+i]._80_100 > max[0]) { max[0] = crane_data[index+i]._80_100 }
+    else if (crane_data[index+i]._100_over > max[0]) { max[0] = crane_data[index+i]._100_over }
+  }
+  for(var i = 0, len = segment_num; i < len; i++){
+    if      (crane_data[index+i]._0_10_time > max[1]) { max[1] = crane_data[index+i]._0_10_time }
+    else if (crane_data[index+i]._10_50_time > max[1]) { max[1] = crane_data[index+i]._10_50_time }
+    else if (crane_data[index+i]._50_63_time > max[1]) { max[1] = crane_data[index+i]._50_63_time }
+    else if (crane_data[index+i]._63_80_time > max[1]) { max[1] = crane_data[index+i]._63_80_time }
+    else if (crane_data[index+i]._80_100_time > max[1]) { max[1] = crane_data[index+i]._80_100_time }
+    else if (crane_data[index+i]._100_over_time > max[1]) { max[1] = crane_data[index+i]._100_over_time }
+  }
+  max_val_list = max;
+  console.log("max_val_list",max_val_list);
+}
+
 /* ----------------------------
 変数定義
  ----------------------------*/
@@ -190,6 +215,7 @@ function calc_index( crane_id ){
 const segment_num = 8;
 var spec_data_list = [];
 var log_data_list = [];
+var max_val_list = [];
 
 var crane_data = [];
 function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
