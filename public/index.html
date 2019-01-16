@@ -281,10 +281,18 @@
       <!-- <div class="chart" id="startLineChartContainer" style="height: 370px;"></div> -->
       <!-- <div class="chart" id="endLineChartContainer" style="height: 370px;"></div> -->
     <!-- </div> -->
+    <!-- <div id="body">
+      <div id="radar_chart" class="chart"></div>
+    </div> -->
+    <!-- テスト用 -->
+    <div id="body">
+      <div id="chart"></div>
+    </div>
+
     <div class="flex">
-      <!-- <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
-       -->
-       <div id="radar_chart" class="chart"></div>
+      <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
+      
+       
       <div class="pieChartContainer chart">
         <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
         <!-- 親のタグの基準点をリセット -->
@@ -318,6 +326,8 @@
   <!-- <script src="./assets/js/chart/pieChart.js"></script> -->
   <!-- d3js読み込み -->
   <script src="./assets/js/01.d3.v5.min.js"></script>
+  <script type="text/javascript" src="./assets/js/d3charts/radarChart.js"></script>
+  <script type="text/javascript" src="./assets/js/d3charts/draw_radarChart.js"></script>
   <!-- グラフの読み込み -->
   <script src="./assets/main-js/bundle.js"></script>
 </body>

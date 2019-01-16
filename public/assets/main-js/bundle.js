@@ -28,6 +28,8 @@ async function loadAllFiles() {
   display_table_data(1);
   display_spec_data(1);
   display_crane_selection(); // chart描画
+
+  draw_radar_chart();
 }
 
 function save_spec_data(spec_data) {
@@ -4835,7 +4837,7 @@ var RadarChart = {
       }).attr("class", "legend").style("font-family", "sans-serif").style("font-size", "10px").attr("transform", "translate(" + (cfg.w / 2 - levelFactor + cfg.ToRight) + ", " + (cfg.h / 2 - levelFactor) + ")").attr("fill", "#737373").text(Format((j + 1) * cfg.maxValue / cfg.levels));
     }
 
-    series = 0;
+    var series = 0;
     var axis = g.selectAll(".axis").data(allAxis).enter().append("g").attr("class", "axis");
     axis.append("line").attr("x1", cfg.w / 2).attr("y1", cfg.h / 2).attr("x2", function (d, i) {
       return cfg.w / 2 * (1 - cfg.factor * Math.sin(i * cfg.radians / total));
@@ -4852,7 +4854,7 @@ var RadarChart = {
       return cfg.h / 2 * (1 - Math.cos(i * cfg.radians / total)) - 20 * Math.cos(i * cfg.radians / total);
     });
     d.forEach(function (y, x) {
-      dataValues = [];
+      var dataValues = [];
       g.selectAll(".nodes").data(y, function (j, i) {
         dataValues.push([cfg.w / 2 * (1 - parseFloat(Math.max(j.value, 0)) / cfg.maxValue * cfg.factor * Math.sin(i * cfg.radians / total)), cfg.h / 2 * (1 - parseFloat(Math.max(j.value, 0)) / cfg.maxValue * cfg.factor * Math.cos(i * cfg.radians / total))]);
       });
@@ -4904,7 +4906,8 @@ var RadarChart = {
     }); //Tooltip
 
     tooltip = g.append('text').style('opacity', 0).style('font-family', 'sans-serif').style('font-size', '13px');
-  }
+  } //   script.js
+
 };
 var w = 400,
     h = 500;

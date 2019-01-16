@@ -350,6 +350,10 @@ template {
   display: flex;
 }
 
+#chart {
+  width: 100%;
+}
+
 .chart {
   border: solid 2px #000;
   margin: 3px;
@@ -487,7 +491,7 @@ template {
   /* IE6-9 */
 }
 
-.graphs #rader_chart {
+.graphs #radar_chart {
   width: 50%;
-  height: 370px;
+  height: 500px;
 }

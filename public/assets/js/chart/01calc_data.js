@@ -26,7 +26,7 @@ async function loadAllFiles() {
   display_spec_data(1);
   display_crane_selection();
   // chart描画
-  
+  draw_radar_chart();
 }
 
 
