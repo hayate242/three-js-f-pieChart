@@ -126,16 +126,16 @@ function get_segment_num(segment) {
 
 function classify_data(data, range_id) {
   // start
-  const start = data[0] - 1 + get_segment_num(data[8]); // end
+  const start = (data[0] - 1) * segment_num + get_segment_num(data[8]); // end
 
-  const end = data[0] - 1 + get_segment_num(data[9]);
+  const end = (data[0] - 1) * segment_num + get_segment_num(data[9]);
   const pass_time = calc_pass_time(data[4], data[5]);
   console.log(pass_time);
-  add_damage_data(start, end, range_id);
+  add_damage_data(start, end, range_id, pass_time);
 } // 通過回数のデータ
 
 
-function add_damage_data(start, end, range_id) {
+function add_damage_data(start, end, range_id, pass_time) {
   // console.log("start", start,"end", end);
   // console.log("diff abs", abs(start-end));
   // 差の絶対値が4以下なら普通に通過 (segmentが8つに分割されているので)
@@ -143,31 +143,36 @@ function add_damage_data(start, end, range_id) {
     if (start < end) {
       for (var i = start; i <= end; i++) {
         add_passes_num(i, range_id);
+        add_passes_time(i, range_id, pass_time);
       }
     } else if (start > end) {
       for (var i = start; i >= end; i--) {
+        add_passes_time(i, range_id, pass_time);
         add_passes_num(i, range_id);
       }
     } else {
       // startとendが同じ時
+      add_passes_time(start, range_id, pass_time);
       add_passes_num(start, range_id);
     }
   } else {
     //4より大きいなら逆回り
-    const itr_length = 8 - abs(start - end); // console.log("itter_length", itr_length);
+    const itr_length = segment_num - abs(start - end); // console.log("itter_length", itr_length);
 
     if (start < end) {
       var j = end;
 
       for (var i = 0; i <= itr_length; i++) {
-        add_passes_num(j % 8, range_id);
+        add_passes_time(j % segment_num, range_id, pass_time);
+        add_passes_num(j % segment_num, range_id);
         j++;
       }
     } else if (start > end) {
       var j = start;
 
       for (var i = 0; i <= itr_length; i++) {
-        add_passes_num(j % 8, range_id);
+        add_passes_time(j % segment_num, range_id, pass_time);
+        add_passes_num(j % segment_num, range_id);
         j++;
       }
     }
@@ -224,12 +229,40 @@ function calc_pass_time(start_time, end_time) {
 } // 通過時間のデータ
 
 
-function add_passes_time(start, end, range_id) {}
+function add_passes_time(index, range_id, pass_time) {
+  console.log(pass_time);
+  pass_time = Number(pass_time);
+
+  if (range_id == 0) {
+    crane_data[index]._0_10_time += pass_time;
+  }
+
+  if (range_id == 1) {
+    crane_data[index]._10_50_time += pass_time;
+  }
+
+  if (range_id == 2) {
+    crane_data[index]._50_63_time += pass_time;
+  }
+
+  if (range_id == 3) {
+    crane_data[index]._63_80_time += pass_time;
+  }
+
+  if (range_id == 4) {
+    crane_data[index]._80_100_time += pass_time;
+  }
+
+  if (range_id == 5) {
+    crane_data[index]._100_over_time += pass_time;
+  }
+}
 /* ----------------------------
 変数定義
  ----------------------------*/
 
 
+const segment_num = 8;
 var spec_data_list = [];
 var log_data_list = [];
 var crane_data = [];
@@ -242,12 +275,12 @@ function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, 
   this._63_80 = _63_80;
   this._80_100 = _80_100;
   this._100_over = _100_over;
-  this._0_10 = _0_10_time;
-  this._10_50 = _10_50_time;
-  this._50_63 = _50_63_time;
-  this._63_80 = _63_80_time;
-  this._80_100 = _80_100_time;
-  this._100_over = _100_over_time;
+  this._0_10_time = _0_10_time;
+  this._10_50_time = _10_50_time;
+  this._50_63_time = _50_63_time;
+  this._63_80_time = _63_80_time;
+  this._80_100_time = _80_100_time;
+  this._100_over_time = _100_over_time;
 }
 
 loadAllFiles();
