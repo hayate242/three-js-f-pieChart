@@ -20,6 +20,8 @@ async function loadAllFiles() {
   console.log('load_done!');
   save_spec_data(xhr1);
   save_log_data(xhr2);
+  // id=1のクレーンのデータを表示
+  display_table_data(1);
 }
 
 
@@ -86,7 +88,7 @@ function classify_data(data, range_id) {
   // end
   const end = (data[0] - 1) * segment_num + get_segment_num(data[9]);
   const pass_time = calc_pass_time(data[4], data[5]);
-  console.log(pass_time);
+  // console.log(pass_time);
   add_damage_data(start, end, range_id, pass_time);
 }
 
@@ -150,7 +152,7 @@ function add_passes_num(index, range_id){
 function calc_pass_time( start_time, end_time ){
   const start_h_m = start_time.split(':');
   const end_h_m = end_time.split(':');
-  console.log(start_h_m, end_h_m);
+  // console.log(start_h_m, end_h_m);
 
   var hour = Number(end_h_m[0] - start_h_m[0]);
   var min = Number(end_h_m[1] - start_h_m[1])/60.0;
@@ -163,7 +165,7 @@ function calc_pass_time( start_time, end_time ){
 }
 // 通過時間のデータ
 function add_passes_time(index, range_id, pass_time){
-  console.log(pass_time);
+  // console.log(pass_time);
   pass_time = Number(pass_time);
   if(range_id == 0){ crane_data[index]._0_10_time += pass_time; }
   if(range_id == 1){ crane_data[index]._10_50_time += pass_time;}
