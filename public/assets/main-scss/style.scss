@@ -499,9 +499,7 @@ $border_color: #bbb;
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39ef2f', endColorstr='#ff0000',GradientType=1 ); /* IE6-9 */
   }
   
-  #startLineChartContainer,#scatterChartContainer,
-  #columnChartContainer, #endLineChartContainer,
-  #allLineChartContainer {
+  #rader_chart {
     width: 50%;
     height: 370px;
   }
