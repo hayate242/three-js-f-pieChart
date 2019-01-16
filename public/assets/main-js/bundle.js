@@ -25,11 +25,9 @@ async function loadAllFiles() {
   save_spec_data(xhr1);
   save_log_data(xhr2); // id=1のクレーンのデータを表示
 
-  display_table_data(1);
-  display_spec_data(1);
   display_crane_selection(); // chart描画
 
-  draw_radar_chart();
+  update_data(1);
 }
 
 function save_spec_data(spec_data) {
@@ -263,9 +261,14 @@ function add_passes_time(index, range_id, pass_time) {
     crane_data[index]._100_over_time += pass_time;
   }
 }
+
+function calc_index(crane_id) {
+  return (crane_id - 1) * segment_num;
+}
 /* ----------------------------
 変数定義
  ----------------------------*/
+//  グローバル変数　後で絶対名前空間に変換
 
 
 const segment_num = 8;
@@ -4028,15 +4031,22 @@ var sum = function (arr) {
   return arr.reduce(function (prev, current, i, arr) {
     return prev + current;
   });
-};
+}; // 変更を反映する
+
+
+function update_data(crane_id) {
+  display_spec_data(crane_id);
+  display_table_data(crane_id); // chart描画
+
+  draw_radar_chart(crane_id);
+}
 
 $(function () {
   $('.select_crane').change(function () {
     //選択された地方のvalueを取得し変数に入れる
     var crane_id = $(this).val();
     console.log("selected_craneID", crane_id);
-    display_spec_data(crane_id);
-    display_table_data(crane_id);
+    update_data(crane_id);
   });
 });
 

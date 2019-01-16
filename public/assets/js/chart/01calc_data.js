@@ -22,12 +22,11 @@ async function loadAllFiles() {
   save_log_data(xhr2);
 
   // id=1のクレーンのデータを表示
-  display_table_data(1);
-  display_spec_data(1);
   display_crane_selection();
   // chart描画
-  draw_radar_chart();
+  update_data(1);
 }
+
 
 
 function save_spec_data( spec_data ){
@@ -180,10 +179,14 @@ function add_passes_time(index, range_id, pass_time){
   if(range_id == 5){ crane_data[index]._100_over_time += pass_time;}
 }
 
+function calc_index( crane_id ){
+  return (crane_id - 1) * segment_num;
+}
 
 /* ----------------------------
 変数定義
  ----------------------------*/
+//  グローバル変数　後で絶対名前空間に変換
 const segment_num = 8;
 var spec_data_list = [];
 var log_data_list = [];

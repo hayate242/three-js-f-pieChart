@@ -4,13 +4,20 @@ var sum  = function(arr) {
   });
 };
 
+// 変更を反映する
+function update_data( crane_id ){
+  display_spec_data(crane_id);
+  display_table_data(crane_id);
+  // chart描画
+  draw_radar_chart( crane_id );
+}
+
 $(function(){
   $('.select_crane').change(function() {
     //選択された地方のvalueを取得し変数に入れる
     var crane_id = $(this).val();
     console.log("selected_craneID", crane_id);
-    display_spec_data(crane_id);
-    display_table_data(crane_id);
+    update_data(crane_id);
   });
 });
 
