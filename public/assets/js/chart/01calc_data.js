@@ -20,8 +20,11 @@ async function loadAllFiles() {
   console.log('load_done!');
   save_spec_data(xhr1);
   save_log_data(xhr2);
+
   // id=1のクレーンのデータを表示
   display_table_data(1);
+  display_spec_data(1);
+  display_crane_selection();
 }
 
 

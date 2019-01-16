@@ -9,9 +9,26 @@ $(function(){
     //選択された地方のvalueを取得し変数に入れる
     var crane_id = $(this).val();
     console.log("selected_craneID", crane_id);
+    display_spec_data(crane_id);
     display_table_data(crane_id);
   });
 });
+
+function display_crane_selection(){
+  // クレーンのセレクトボックス
+  for(var i = 1; i < spec_data_list.length; i++){
+    $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
+  }
+}
+
+function display_spec_data(crane_id){
+  console.log('spec_data_list', spec_data_list);
+  
+  $('.max_weight').text(spec_data_list[crane_id][1]);
+  $('.max_turn_radius').text(spec_data_list[crane_id][2]);
+  $('.ttb_pcd').text(spec_data_list[crane_id][3]);
+  
+}
 
 function display_table_data(crane_id){
   const index = (crane_id - 1) * segment_num;
