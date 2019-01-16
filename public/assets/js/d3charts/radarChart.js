@@ -120,7 +120,7 @@ var RadarChart = {
 
  
 	d.forEach(function(y, x){
-	  var dataValues = [];
+	  dataValues = [];
 	  g.selectAll(".nodes")
 		.data(y, function(j, i){
 		  dataValues.push([
