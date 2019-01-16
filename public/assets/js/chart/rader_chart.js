@@ -8,7 +8,7 @@
 //For a bit of extra information check the blog about it:
 //http://nbremer.blogspot.nl/2013/09/making-d3-radar-chart-look-bit-better.html
 
-function draw_radar_chart(){
+
 
 
 var RadarChart = {
@@ -28,7 +28,7 @@ var RadarChart = {
 	 TranslateY: 30,
 	 ExtraWidthX: 100,
 	 ExtraWidthY: 100,
-	 color: d3.scale.category10()
+	 color: d3.scaleOrdinal(d3.schemeCategory10)
 	};
 	
 	if('undefined' !== typeof options){
@@ -226,7 +226,7 @@ var RadarChart = {
 var w = 400,
 	h = 500;
 
-var colorscale = d3.scale.category10();
+var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
 
 //Legend titles
 var LegendOptions = ['Smartphone','Tablet'];
@@ -344,4 +344,3 @@ var legend = svg.append("g")
 	  .attr("fill", "#737373")
 	  .text(function(d) { return d; })
 	  ;	
-}

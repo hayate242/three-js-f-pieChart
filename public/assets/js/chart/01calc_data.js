@@ -25,6 +25,8 @@ async function loadAllFiles() {
   display_table_data(1);
   display_spec_data(1);
   display_crane_selection();
+  // chart描画
+  
 }
 
 
