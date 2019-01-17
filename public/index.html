@@ -281,25 +281,36 @@
       <!-- <div class="chart" id="startLineChartContainer" style="height: 370px;"></div> -->
       <!-- <div class="chart" id="endLineChartContainer" style="height: 370px;"></div> -->
     <!-- </div> -->
-    <!-- <div id="body">
-      <div id="radar_chart" class="chart"></div>
-    </div> -->
-    <!-- テスト用 -->
+    
+    <!-- レーダーチャート -->
     <div class="flex">
-      <div id="radar_chart_txt">
-        <h3 class="chart_title">荷重区分別ゾーン頻度</h3>
-        <div id="radar_chart"></div>
+      <div class="chart" style="height: 600px;">
+        <div id="radar_chart_txt">
+          <h3 class="chart_title">荷重区分別ゾーン頻度</h3>
+          <div id="radar_chart"></div>
+        </div>
       </div>
-      <div id="radar_chart_time_txt">
+      <div class="chart" style="height: 600px;">
+        <div id="radar_chart_time_txt">
           <h3 class="chart_title">荷重区分別ゾーン累計時間</h3>
           <div id="radar_chart_time"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- 積み上げ縦棒グラフ -->
+    <div class="flex">
+      <div class="chart">
+        <div id="main">
+          <svg width="960" height="500"></svg>
+        </div>
+      </div>
+      <div class="chart"></div>
+
     </div>
 
     <div class="flex">
       <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
-      
-       
       <div class="pieChartContainer chart">
         <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
         <!-- 親のタグの基準点をリセット -->
