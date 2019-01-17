@@ -44,14 +44,14 @@ function save_log_data( log_data ){
   for(var i = 1; i < log_data_list.length; i++ ){
     // 登録されたことがなかったら,crane_dataに追加
     if(added_id.indexOf(log_data_list[i][0]) == -1){
-      crane_data[j] = new Info(log_data_list[i][0],"A",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"B",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"C",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"D",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"E",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"F",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"G",0,0,0,0,0,0,0,0,0,0,0,0);j++;
-      crane_data[j] = new Info(log_data_list[i][0],"H",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"A",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"B",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"C",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"D",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"E",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"F",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"G",0,0,0,0,0,0,0,0,0,0,0,0);j++;
+      crane_data[j] = new Array(log_data_list[i][0],"H",0,0,0,0,0,0,0,0,0,0,0,0);j++;
       added_id.push(log_data_list[i][0]);
     }
   }
@@ -145,12 +145,14 @@ function add_passes_num(index, range_id){
   // console.log("range_id", range_id);
   // console.log("cnt", cnt);
   // cnt++;
-  if(range_id == 0){ crane_data[index]._0_10 += 1; }
-  if(range_id == 1){ crane_data[index]._10_50 += 1;}
-  if(range_id == 2){ crane_data[index]._50_63 += 1;}
-  if(range_id == 3){ crane_data[index]._63_80 += 1;}
-  if(range_id == 4){ crane_data[index]._80_100 += 1;}
-  if(range_id == 5){ crane_data[index]._100_over += 1;}
+  const range = range_id+2;
+  crane_data[index][range] += 1;
+  // if(range_id == 0){ crane_data[index]._0_10 += 1; }
+  // if(range_id == 1){ crane_data[index]._10_50 += 1;}
+  // if(range_id == 2){ crane_data[index]._50_63 += 1;}
+  // if(range_id == 3){ crane_data[index]._63_80 += 1;}
+  // if(range_id == 4){ crane_data[index]._80_100 += 1;}
+  // if(range_id == 5){ crane_data[index]._100_over += 1;}
 }
 
 function calc_pass_time( start_time, end_time ){
@@ -171,12 +173,14 @@ function calc_pass_time( start_time, end_time ){
 function add_passes_time(index, range_id, pass_time){
   // console.log(pass_time);
   pass_time = Number(pass_time);
-  if(range_id == 0){ crane_data[index]._0_10_time += pass_time; }
-  if(range_id == 1){ crane_data[index]._10_50_time += pass_time;}
-  if(range_id == 2){ crane_data[index]._50_63_time += pass_time;}
-  if(range_id == 3){ crane_data[index]._63_80_time += pass_time;}
-  if(range_id == 4){ crane_data[index]._80_100_time += pass_time;}
-  if(range_id == 5){ crane_data[index]._100_over_time += pass_time;}
+  const range = range_id+8;
+  crane_data[index][range] += pass_time;
+  // if(range_id == 0){ crane_data[index]._0_10_time += pass_time; }
+  // if(range_id == 1){ crane_data[index]._10_50_time += pass_time;}
+  // if(range_id == 2){ crane_data[index]._50_63_time += pass_time;}
+  // if(range_id == 3){ crane_data[index]._63_80_time += pass_time;}
+  // if(range_id == 4){ crane_data[index]._80_100_time += pass_time;}
+  // if(range_id == 5){ crane_data[index]._100_over_time += pass_time;}
 }
 
 function calc_index( crane_id ){
@@ -189,23 +193,29 @@ function calc_max_val( crane_id ){
   // 最大値を求める
   var max = [0,0];
   for(var i = 0, len = segment_num; i < len; i++){
-    if      (crane_data[index+i]._0_10 > max[0]) { max[0] = crane_data[index+i]._0_10 }
-    else if (crane_data[index+i]._10_50 > max[0]) { max[0] = crane_data[index+i]._10_50 }
-    else if (crane_data[index+i]._50_63 > max[0]) { max[0] = crane_data[index+i]._50_63 }
-    else if (crane_data[index+i]._63_80 > max[0]) { max[0] = crane_data[index+i]._63_80 }
-    else if (crane_data[index+i]._80_100 > max[0]) { max[0] = crane_data[index+i]._80_100 }
-    else if (crane_data[index+i]._100_over > max[0]) { max[0] = crane_data[index+i]._100_over }
+    for(var j = 2; j < 8; j++){
+      if (crane_data[index+i][j] > max[0]) { max[0] = crane_data[index+i][j] }
+    }
+    // if      (crane_data[index+i]._0_10 > max[0]) { max[0] = crane_data[index+i]._0_10 }
+    // else if (crane_data[index+i]._10_50 > max[0]) { max[0] = crane_data[index+i]._10_50 }
+    // else if (crane_data[index+i]._50_63 > max[0]) { max[0] = crane_data[index+i]._50_63 }
+    // else if (crane_data[index+i]._63_80 > max[0]) { max[0] = crane_data[index+i]._63_80 }
+    // else if (crane_data[index+i]._80_100 > max[0]) { max[0] = crane_data[index+i]._80_100 }
+    // else if (crane_data[index+i]._100_over > max[0]) { max[0] = crane_data[index+i]._100_over }
   }
   for(var i = 0, len = segment_num; i < len; i++){
-    if      (crane_data[index+i]._0_10_time > max[1]) { max[1] = crane_data[index+i]._0_10_time }
-    else if (crane_data[index+i]._10_50_time > max[1]) { max[1] = crane_data[index+i]._10_50_time }
-    else if (crane_data[index+i]._50_63_time > max[1]) { max[1] = crane_data[index+i]._50_63_time }
-    else if (crane_data[index+i]._63_80_time > max[1]) { max[1] = crane_data[index+i]._63_80_time }
-    else if (crane_data[index+i]._80_100_time > max[1]) { max[1] = crane_data[index+i]._80_100_time }
-    else if (crane_data[index+i]._100_over_time > max[1]) { max[1] = crane_data[index+i]._100_over_time }
+    for(var j = 8; j < 14; j++){
+      if (crane_data[index+i][j] > max[1]) { max[1] = crane_data[index+i][j] }
+    }
+    // if      (crane_data[index+i]._0_10_time > max[1]) { max[1] = crane_data[index+i]._0_10_time }
+    // else if (crane_data[index+i]._10_50_time > max[1]) { max[1] = crane_data[index+i]._10_50_time }
+    // else if (crane_data[index+i]._50_63_time > max[1]) { max[1] = crane_data[index+i]._50_63_time }
+    // else if (crane_data[index+i]._63_80_time > max[1]) { max[1] = crane_data[index+i]._63_80_time }
+    // else if (crane_data[index+i]._80_100_time > max[1]) { max[1] = crane_data[index+i]._80_100_time }
+    // else if (crane_data[index+i]._100_over_time > max[1]) { max[1] = crane_data[index+i]._100_over_time }
   }
   max_val_list = max;
-  // console.log("max_val_list",max_val_list);
+  console.log("max_val_list",max_val_list);
 }
 
 /* ----------------------------
@@ -218,22 +228,22 @@ var log_data_list = [];
 var max_val_list = [];
 
 var crane_data = [];
-function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
-  this.id = _id,
-  this.segment = _segment;
-  this._0_10 = _0_10;
-  this._10_50 = _10_50;
-  this._50_63 = _50_63;
-  this._63_80 = _63_80;
-  this._80_100 = _80_100;
-  this._100_over = _100_over;
-  this._0_10_time = _0_10_time;
-  this._10_50_time = _10_50_time;
-  this._50_63_time = _50_63_time;
-  this._63_80_time = _63_80_time;
-  this._80_100_time = _80_100_time;
-  this._100_over_time = _100_over_time;
-}
+// function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
+//   this.id = _id,
+//   this.segment = _segment;
+//   this._0_10 = _0_10;
+//   this._10_50 = _10_50;
+//   this._50_63 = _50_63;
+//   this._63_80 = _63_80;
+//   this._80_100 = _80_100;
+//   this._100_over = _100_over;
+//   this._0_10_time = _0_10_time;
+//   this._10_50_time = _10_50_time;
+//   this._50_63_time = _50_63_time;
+//   this._63_80_time = _63_80_time;
+//   this._80_100_time = _80_100_time;
+//   this._100_over_time = _100_over_time;
+// }
 
 loadAllFiles();
 
