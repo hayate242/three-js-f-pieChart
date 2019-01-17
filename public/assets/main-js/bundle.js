@@ -267,7 +267,7 @@ function calc_index(crane_id) {
 }
 
 function calc_max_val(crane_id) {
-  console.log("calc_mac_val_!");
+  // console.log("calc_mac_val_!");
   const index = calc_index(crane_id); // 最大値を求める
 
   var max = [0, 0];
@@ -304,8 +304,7 @@ function calc_max_val(crane_id) {
     }
   }
 
-  max_val_list = max;
-  console.log("max_val_list", max_val_list);
+  max_val_list = max; // console.log("max_val_list",max_val_list);
 }
 /* ----------------------------
 変数定義
