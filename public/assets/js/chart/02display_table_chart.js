@@ -13,6 +13,7 @@ function update_data( crane_id ){
   // chart描画
   draw_radar_chart( crane_id, false, "#radar_chart" , max_val_list[0]);
   draw_radar_chart( crane_id, true, "#radar_chart_time", max_val_list[1]);
+  draw_stacked_chart( crane_id );
 }
 
 $(function(){
@@ -60,34 +61,16 @@ function display_table_data(crane_id){
   // 回数合計
   for(var ittr = 0; ittr < 6; ittr++){
     for(var j = 0; j < segment_num; j++){ 
-      for(var k = 2; k < 8; k++){
-        sum_class_num[ittr] += crane_data[index+j][k]
-      }
+      sum_class_num[ittr] += crane_data[index+j][ittr+2];
     } 
   }
-   
-  // for(var j = 0; j < segment_num; j++){ sum_class_num[ittr] += crane_data[index+j]._10_50 }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_num[ittr] += crane_data[index+j]._50_63 }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_num[ittr] += crane_data[index+j]._63_80 }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_num[ittr] += crane_data[index+j]._80_100 }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_num[ittr] += crane_data[index+j]._100_over }  ittr++;
-  
-  // 時間合計
-  ittr = 0;
+
   // 回数合計
   for(var ittr = 0; ittr < 6; ittr++){
     for(var j = 0; j < segment_num; j++){ 
-      for(var k = 8; k < 14; k++){
-        sum_class_time[ittr] += crane_data[index+j][k]
-      }
-    } 
+      sum_class_time[ittr] += crane_data[index+j][ittr+8];
+    }
   }
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._0_10_time }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._10_50_time }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._50_63_time }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._63_80_time }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._80_100_time }  ittr++;
-  // for(var j = 0; j < segment_num; j++){ sum_class_time[ittr] += crane_data[index+j]._100_over_time }  ittr++;
 
   console.log('sum_class_num',sum_class_num);
   console.log('sum_class_time',sum_class_time);
@@ -101,23 +84,11 @@ function display_table_data(crane_id){
     for(var j = 2; j < 8; j++ ){
       $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child('+ String(j) +') > td:nth-child('+ String(2+i) +')').text(crane_data[index+i][j]);
     }
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._0_10);
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(3) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._10_50);
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(4) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._50_63);
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(5) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._63_80);
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(6) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._80_100);
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(7) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._100_over);
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(8) > td:nth-child('+ String(2+i) +')').text(sum_segments_num[i]);
     // 時間データ
     for(var j = 2; j < 8; j++){
       $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child('+ String(j) +') > td:nth-child('+ String(2+i) +')').text(crane_data[index+i][j+6].toFixed(1));
     }
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._0_10_time.toFixed(1));
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._10_50_time.toFixed(1));
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(4) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._50_63_time.toFixed(1));
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(5) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._63_80_time.toFixed(1));
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(6) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._80_100_time.toFixed(1));
-    // $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(7) > td:nth-child('+ String(2+i) +')').text(crane_data[index+i]._100_over_time.toFixed(1));
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child('+ String(2+i) +')').text(sum_segments_time[i].toFixed(1));
   }
   // 合計(縦列)

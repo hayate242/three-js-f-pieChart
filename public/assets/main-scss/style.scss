@@ -364,13 +364,10 @@ $border_color: #bbb;
   display: flex;
 }
 
-#chart {
-  width: 100%;
-}	
 
 .chart {
-  width: 600px;
-  height: 400px;
+  width: 45vw;
+  height: 45vw;
   border: solid 2px #000;
   margin: 3px;
   filter: drop-shadow(7px 7px 5px rgba(0,0,0,0.3));
@@ -510,8 +507,17 @@ $border_color: #bbb;
   }
   
   #radar_chart {
-    width: 50%;
-    height: 500px;
+    width: calc(40% + 100px);
   }
+  // #stacked_chart {
+  //   width: 400px;
+  //   height: 300px;
+  // }
 }
 
+// #main {
+//   width: 960px;
+// }
+// .axis .domain {
+//   display: none;
+// }

@@ -1,8 +1,13 @@
 
 
 function draw_radar_chart( crane_id , is_time, id, max_val ){
-	var w = 400,
-		h = 400;
+	var w = $(window).width() / 3,
+		h = $(window).width() / 3;
+	// if(w > 500){
+	// 	console.log("pre w", w);
+	// 	w = 500;h = 500;
+	// }
+	console.log("w", w);
 	
 	var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
 
