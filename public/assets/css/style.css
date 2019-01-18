@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -360,6 +361,21 @@ template {
 
 .chart_title {
   text-align: center;
+}
+
+.svg_wrapper svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.svg-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  /* SVG高さ / SVG幅 * 100 */
 }
 
 .list_style_none {

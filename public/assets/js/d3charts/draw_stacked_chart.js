@@ -1,4 +1,8 @@
 function draw_stacked_chart( crane_id ){
+
+}
+
+function draw_stacked_chart( crane_id, id_wrapper, id, stack_data ){
   var cfg = {
     w: 400,
     h: 300,
@@ -7,7 +11,6 @@ function draw_stacked_chart( crane_id ){
     levels: 3,
     maxValue: 0,
     opacityArea: 0.5,
-    ToRight: 5,
     TranslateX: 80,
     TranslateY: 30,
     ExtraWidthX: 100,
@@ -15,8 +18,8 @@ function draw_stacked_chart( crane_id ){
     color: d3.scaleOrdinal(d3.schemeCategory10)
    };
   // 要素の上書き回避
-  $('#stacked_chart').remove();
-  $('#main').append('<svg width="'+ cfg.w + cfg.ExtraWidthX+'" height="'+ cfg.h + cfg.ExtraWidthY+'" id="stacked_chart"></svg>');
+  $(id).remove();
+  $(id_wrapper).append('<svg width="'+ (Number(cfg.w) + Number(cfg.ExtraWidthX)) +'" height="'+ (Number(cfg.h) + Number(cfg.ExtraWidthY)) +'" id="stacked_chart"></svg>');
 
  
 
@@ -43,90 +46,6 @@ function draw_stacked_chart( crane_id ){
   // var z = d3.scaleOrdinal()
   // .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
   var z = d3.scaleOrdinal(d3.schemeCategory10);
-
-  // // load the csv and create the chart
-  // d3.csv("assets/data/agegroups.csv", function(d, i, columns) {
-  //   for (i = 1, t = 0; i < columns.length; ++i){ 
-  //     // console.log("d[columns[i]]", i ,d[columns[i]]);
-  //     t += d[columns[i]] = +d[columns[i]]; 
-  //   }
-  //   // console.log("total = ",t);
-  //   d.total = t;
-  //   // console.log("csv d",d);
-  //   return d;
-  // }).then( function(data) {
-  // // if (error) throw error;
-  // console.log("data", data);
-  // console.log("data.columns",data.columns);
-
-  // var keys = data.columns.slice(1);
-  // console.log('keys', keys);
-  
-
-  // // data.sort(function(a, b) { return b.total - a.total; });
-  // x.domain(data.map(function(d) { return d.State; }));
-  // y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
-  // z.domain(keys);
-
-  // g.append("g")
-  // .selectAll("g")
-  // .data(d3.stack().keys(keys)(data))
-  // .enter().append("g")
-  //   .attr("fill", function(d) { return z(d.key); })
-  // .selectAll("rect")
-  // .data(function(d) { return d; })
-  // .enter().append("rect")
-  //   .attr("x", function(d) { return x(d.data.State); })
-  //   .attr("y", function(d) { return y(d[1]); })
-  //   .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-  //   .attr("width", x.bandwidth())
-  // .on("mouseover", function() { tooltip.style("display", null); })
-  // .on("mouseout", function() { tooltip.style("display", "none"); })
-  // .on("mousemove", function(d) {
-  //   console.log(d);
-  //   var xPosition = d3.mouse(this)[0] - 5;
-  //   var yPosition = d3.mouse(this)[1] - 5;
-  //   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-  //   tooltip.select("text").text(d[1]-d[0]);
-  // });
-
-  // g.append("g")
-  //   .attr("class", "axis")
-  //   .attr("transform", "translate(0," + height + ")")
-  //   .call(d3.axisBottom(x));
-
-  // g.append("g")
-  //   .attr("class", "axis")
-  //   .call(d3.axisLeft(y).ticks(null, "s"))
-  // .append("text")
-  //   .attr("x", 2)
-  //   .attr("y", y(y.ticks().pop()) + 0.5)
-  //   .attr("dy", "0.32em")
-  //   .attr("fill", "#000")
-  //   .attr("font-weight", "bold")
-  //   .attr("text-anchor", "start");
-
-  // var legend = g.append("g")
-  //   .attr("font-family", "sans-serif")
-  //   .attr("font-size", 10)
-  //   .attr("text-anchor", "end")
-  // .selectAll("g")
-  // .data(keys.slice().reverse())
-  // .enter().append("g")
-  //   .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-  // legend.append("rect")
-  //   .attr("x", width - 19)
-  //   .attr("width", 19)
-  //   .attr("height", 19)
-  //   .attr("fill", z);
-
-  // legend.append("text")
-  //   .attr("x", width - 24)
-  //   .attr("y", 9.5)
-  //   .attr("dy", "0.32em")
-  //   .text(function(d) { return d; });
-  // });
 
   // Data
   var d = [];
@@ -205,26 +124,77 @@ function draw_stacked_chart( crane_id ){
       .attr("font-weight", "bold")
       .attr("text-anchor", "start");
   
-    var legend = g.append("g")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("text-anchor", "end")
-      .selectAll("g")
-      .data(keys.slice().reverse())
-      .enter().append("g")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+    // var legend = g.append("g")
+    //   .attr("font-family", "sans-serif")
+    //   .attr("font-size", 10)
+    //   .attr("text-anchor", "end")
+    //   .selectAll("g")
+    //   .data(keys.slice().reverse())
+    //   .enter().append("g")
+    //   .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
   
-    legend.append("rect")
-      .attr("x", width + 19)
-      .attr("width", 10)
-      .attr("height", 10)
-      .attr("fill", z);
+    // legend.append("rect")
+    //   .attr("x", width + 19)
+    //   .attr("width", 10)
+    //   .attr("height", 10)
+    //   .attr("fill", z);
   
-    legend.append("text")
-      .attr("x", width + 84)
-      .attr("y", 5)
-      .attr("dy", "0.32em")
-      .text(function(d) { return d; });
+    // legend.append("text")
+    //   .attr("x", width + 84)
+    //   .attr("y", 5)
+    //   .attr("dy", "0.32em")
+    //   .text(function(d) { return d; });
+
+
+    ////////////////////////////////////////////
+    /////////// Initiate legend ////////////////
+    ////////////////////////////////////////////
+    var LegendOptions = ['0-10%','10-50%','50-63%','63-80%','80-100%','100%以上'];
+    var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
+    console.log(String(id)+'_txt');
+      
+    // var svg = d3.select(String(id)+'_txt')
+    var svg = d3.select("#stacked_chart_txt")
+      // .selectAll('svg')
+      .append('svg')
+      .attr("width", 200)
+      .attr("height", 200)
+      ;
+
+        
+    //Initiate Legend	
+    var legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("height", 200)
+      .attr("width", 100)
+      .attr('transform', 'translate('+ (Number(cfg.w) - 90) +',20)') 
+      ;
+      //Create colour squares
+      legend.selectAll('rect')
+        .data(LegendOptions)
+        .enter()
+        .append("rect")
+        .attr("x", cfg.w - 200)
+        .attr("y", function(d, i){ return i * 20;})
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("fill", function(d, i){ return colorscale(i);})
+        .attr('transform', 'translate(-20,20)') 
+
+        ;
+      //Create text next to squares
+      legend.selectAll('text')
+        .data(LegendOptions)
+        .enter()
+        .append("text")
+        .attr("x", cfg.w -200 )
+        .attr("y", function(d, i){ return i * 20 + 9;})
+        .attr("font-size", "11px")
+        .attr("fill", "#737373")
+        .text(function(d) { return d; })
+        .attr('transform', 'translate(0,20)') 
+        
+        ;	
     }
 
   // Prep the tooltip bits, initial display is hidden

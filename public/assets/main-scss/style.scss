@@ -374,7 +374,18 @@ $border_color: #bbb;
 }
 .chart_title {
   text-align: center;
-
+}
+.svg_wrapper svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.svg-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* SVG高さ / SVG幅 * 100 */
 }
 
 .list_style_none {

@@ -4047,7 +4047,7 @@ function update_data(crane_id) {
 
   draw_radar_chart(crane_id, false, "#radar_chart", max_val_list[0]);
   draw_radar_chart(crane_id, true, "#radar_chart_time", max_val_list[1]);
-  draw_stacked_chart(crane_id);
+  draw_stacked_chart(crane_id, '#main', '#stacked_chart', crane_data);
 }
 
 $(function () {
