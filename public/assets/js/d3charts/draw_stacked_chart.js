@@ -1,8 +1,4 @@
-function draw_stacked_chart( crane_id ){
-
-}
-
-function draw_stacked_chart( crane_id, id_wrapper, id, stack_data ){
+function draw_stacked_chart( crane_id, id, is_time ){
   var cfg = {
     w: 400,
     h: 300,
@@ -17,14 +13,123 @@ function draw_stacked_chart( crane_id, id_wrapper, id, stack_data ){
     ExtraWidthY: 100,
     color: d3.scaleOrdinal(d3.schemeCategory10)
    };
+
+  // Data
+  var d = [];
+  var totals = [];
+  const index = calc_index(crane_id);
+  if( is_time ){
+    for(var i = 0; i < segment_num; i++){
+      const columns = {
+        'State': crane_data[index+i][1],
+        '0-10%': crane_data[index+i][8],
+        '10-50%': crane_data[index+i][9],
+        '50-63%': crane_data[index+i][10],
+        '63-80%': crane_data[index+i][11],
+        '80-100%': crane_data[index+i][12],
+        '100%以上': crane_data[index+i][13],
+      };
+      d.push(columns);
+      totals.push( crane_data[index+i][8] + crane_data[index+i][9] + crane_data[index+i][10] + crane_data[index+i][11] + crane_data[index+i][12] + crane_data[index+i][13] );
+    }
+  }else {
+    for(var i = 0; i < segment_num; i++){
+      const columns = {
+        'State': crane_data[index+i][1],
+        '0-10%': crane_data[index+i][2],
+        '10-50%': crane_data[index+i][3],
+        '50-63%': crane_data[index+i][4],
+        '63-80%': crane_data[index+i][5],
+        '80-100%': crane_data[index+i][6],
+        '100%以上': crane_data[index+i][7],
+      };
+      d.push(columns);
+      totals.push( crane_data[index+i][2] + crane_data[index+i][3] + crane_data[index+i][4] + crane_data[index+i][5] + crane_data[index+i][6] + crane_data[index+i][7] );
+    }
+  }
+  console.log("d",d);
+
+      ////////////////////////////////////////////
+    /////////// Initiate legend ////////////////
+    ////////////////////////////////////////////
+    var LegendOptions = ['0-10%','10-50%','50-63%','63-80%','80-100%','100%以上'];
+    var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
+    console.log(String(id)+'_txt');
+      
+    // var svg = d3.select(String(id)+'_txt')
+    var svg = d3.select(id+"_txt")
+      // .selectAll('svg')
+      .append('svg')
+      .attr("width", 200)
+      .attr("height", 200)
+      ;
+
+        
+    //Initiate Legend	
+    var legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("height", 200)
+      .attr("width", 100)
+      .attr('transform', 'translate('+ (Number(cfg.w) - 90) +',20)') 
+      ;
+      //Create colour squares
+      legend.selectAll('rect')
+        .data(LegendOptions)
+        .enter()
+        .append("rect")
+        .attr("x", cfg.w - 200)
+        .attr("y", function(d, i){ return i * 20;})
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("fill", function(d, i){ return colorscale(i);})
+        .attr('transform', 'translate(-20,20)') 
+
+        ;
+      //Create text next to squares
+      legend.selectAll('text')
+        .data(LegendOptions)
+        .enter()
+        .append("text")
+        .attr("x", cfg.w -200 )
+        .attr("y", function(d, i){ return i * 20 + 9;})
+        .attr("font-size", "11px")
+        .attr("fill", "#737373")
+        .text(function(d) { return d; })
+        .attr('transform', 'translate(0,20)') 
+        
+        ;	
+
+  draw_chart(d, totals, id , cfg);
+}
+
+function draw_bar_chart( crane_id, id, is_time ){
+  var cfg = {
+    w: 400,
+    h: 300,
+    factor: 1,
+    factorLegend: .85,
+    levels: 3,
+    maxValue: 0,
+    opacityArea: 0.5,
+    TranslateX: 80,
+    TranslateY: 30,
+    ExtraWidthX: 100,
+    ExtraWidthY: 100,
+    color: d3.scaleOrdinal(d3.schemeCategory10)
+   };
+   draw_chart(d, totals, id , cfg);
+}
+
+function draw_chart( d, totals, id, cfg ){
+  
   // 要素の上書き回避
   $(id).remove();
-  $(id_wrapper).append('<svg width="'+ (Number(cfg.w) + Number(cfg.ExtraWidthX)) +'" height="'+ (Number(cfg.h) + Number(cfg.ExtraWidthY)) +'" id="stacked_chart"></svg>');
+  $(id+"_main").append('<svg width="'+ (Number(cfg.w) + Number(cfg.ExtraWidthX)) +'" height="'+ (Number(cfg.h) + Number(cfg.ExtraWidthY)) +'" id="'+ id.slice(1) +'"></svg>');
 
  
 
   // create the svg
-  var svg = d3.select("#stacked_chart"),
+  var svg = d3.select(id),
   margin = {top: 20, right: 20, bottom: 30, left: 40},
   // width = +svg.attr("width") - margin.left - margin.right,
   width = +cfg.w - margin.left - margin.right + cfg.ExtraWidthX,
@@ -47,24 +152,7 @@ function draw_stacked_chart( crane_id, id_wrapper, id, stack_data ){
   // .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
   var z = d3.scaleOrdinal(d3.schemeCategory10);
 
-  // Data
-  var d = [];
-  var totals = [];
-  const index = calc_index(crane_id);
-  for(var i = 0; i < segment_num; i++){
-    const columns = {
-      'State': crane_data[index+i][1],
-      '0-10%': crane_data[index+i][2],
-      '10-50%': crane_data[index+i][3],
-      '50-63%': crane_data[index+i][4],
-      '63-80%': crane_data[index+i][5],
-      '80-100%': crane_data[index+i][6],
-      '100%以上': crane_data[index+i][7],
-    };
-    d.push(columns);
-    totals.push( crane_data[index+i][2] + crane_data[index+i][3] + crane_data[index+i][4] + crane_data[index+i][5] + crane_data[index+i][6] + crane_data[index+i][7] );
-  }
-  console.log("d",d);
+  // 作図
   create_chart(d, totals);
 
   function create_chart(data, totals) {
@@ -146,55 +234,7 @@ function draw_stacked_chart( crane_id, id_wrapper, id, stack_data ){
     //   .text(function(d) { return d; });
 
 
-    ////////////////////////////////////////////
-    /////////// Initiate legend ////////////////
-    ////////////////////////////////////////////
-    var LegendOptions = ['0-10%','10-50%','50-63%','63-80%','80-100%','100%以上'];
-    var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
-    console.log(String(id)+'_txt');
-      
-    // var svg = d3.select(String(id)+'_txt')
-    var svg = d3.select("#stacked_chart_txt")
-      // .selectAll('svg')
-      .append('svg')
-      .attr("width", 200)
-      .attr("height", 200)
-      ;
 
-        
-    //Initiate Legend	
-    var legend = svg.append("g")
-      .attr("class", "legend")
-      .attr("height", 200)
-      .attr("width", 100)
-      .attr('transform', 'translate('+ (Number(cfg.w) - 90) +',20)') 
-      ;
-      //Create colour squares
-      legend.selectAll('rect')
-        .data(LegendOptions)
-        .enter()
-        .append("rect")
-        .attr("x", cfg.w - 200)
-        .attr("y", function(d, i){ return i * 20;})
-        .attr("width", 10)
-        .attr("height", 10)
-        .style("fill", function(d, i){ return colorscale(i);})
-        .attr('transform', 'translate(-20,20)') 
-
-        ;
-      //Create text next to squares
-      legend.selectAll('text')
-        .data(LegendOptions)
-        .enter()
-        .append("text")
-        .attr("x", cfg.w -200 )
-        .attr("y", function(d, i){ return i * 20 + 9;})
-        .attr("font-size", "11px")
-        .attr("fill", "#737373")
-        .text(function(d) { return d; })
-        .attr('transform', 'translate(0,20)') 
-        
-        ;	
     }
 
   // Prep the tooltip bits, initial display is hidden

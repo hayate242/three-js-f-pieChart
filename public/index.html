@@ -303,16 +303,26 @@
     <!-- 積み上げ縦棒グラフ -->
     <div class="flex">
       <div class="chart svg_wrapper">
-        <div id="main">
-          <svg width="500" height="400" id="stacked_chart"></svg>
+        <div id="stacked_chart_main">
+          <svg width="400" height="400" id="stacked_chart"></svg>
         </div>
         <div id="stacked_chart_txt"></div>
       </div>
-      <div class="chart"></div>
+      <div class="chart svg_wrapper">
+        <div id="stacked_chart_time_main">
+          <svg width="400" height="400" id="stacked_chart_time"></svg>
+        </div>
+        <div id="stacked_chart_time_txt"></div>
+      </div>
 
     </div>
     <div class="flex">
-      <div class="chart"></div>
+      <div class="chart svg_wrapper">
+        <div id="bar_chart_main">
+          <svg width="400" height="400" id="bar_chart"></svg>
+        </div>
+        <div id="bar_chart_txt"></div>
+      </div>
       <div class="chart"></div>
     </div>
     <div class="pieChartContainer chart">
