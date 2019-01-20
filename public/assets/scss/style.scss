@@ -24,6 +24,9 @@ $border_color: #bbb;
 }
 .chart_title {
   text-align: center;
+  // position: absolute;
+  // left: 50%;
+  // transform:  translateX(-50%);
 }
 .svg_wrapper svg {
   position: absolute;

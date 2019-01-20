@@ -47,16 +47,15 @@ function draw_stacked_chart( crane_id, id, is_time ){
       totals.push( crane_data[index+i][2] + crane_data[index+i][3] + crane_data[index+i][4] + crane_data[index+i][5] + crane_data[index+i][6] + crane_data[index+i][7] );
     }
   }
-  console.log("d",d);
+  // //console.log("d",d);
 
       ////////////////////////////////////////////
     /////////// Initiate legend ////////////////
     ////////////////////////////////////////////
     var LegendOptions = ['0-10%','10-50%','50-63%','63-80%','80-100%','100%以上'];
     var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
-    console.log(String(id)+'_txt');
+    //console.log(String(id)+'_txt');
       
-    // var svg = d3.select(String(id)+'_txt')
     var svg = d3.select(id+"_txt")
       // .selectAll('svg')
       .append('svg')
@@ -99,10 +98,43 @@ function draw_stacked_chart( crane_id, id, is_time ){
         
         ;	
 
+  console.log("data", d);
+  console.log("totals", totals);
+
+
   draw_chart(d, totals, id , cfg);
+
+  // ラベルの作成
+  var ver_label = "（回数）";
+  var hor_label = "（区分）";
+  var svg = d3.select(id+"_ver_label")
+  .append('svg')
+  .attr("width", 200)
+  .attr("height", 200)
+  ;
+  var label = svg.append("g")
+      .attr("class", "legend")
+      .attr("height", 200)
+      .attr("width", 100)
+      .attr('transform', 'translate(20,20)') 
+      ;
+      label.selectAll('text')
+      .data("回数")
+      .enter()
+      .append("text")
+      .attr("font-size", "11px")
+      .attr("fill", "#737373")
+      .attr("transform", "rotate(-90)")
+      .text(ver_label)
+      ;
+      label.selectAll('text')
+      .attr("x", -200)
+      .attr("y", 0)
+      ;
 }
 
-function draw_bar_chart( crane_id, id, is_time ){
+function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
+  console.log("sum_of_class", sum_of_class);
   var cfg = {
     w: 400,
     h: 300,
@@ -117,8 +149,32 @@ function draw_bar_chart( crane_id, id, is_time ){
     ExtraWidthY: 100,
     color: d3.scaleOrdinal(d3.schemeCategory10)
    };
-   draw_chart(d, totals, id , cfg);
+  // Data
+  var d = [];
+  var totals = [];
+  var LegendOptions = ['0-10%','10-50%','50-63%','63-80%','80-100%','100%以上'];
+
+  for(var i = 0, len = LegendOptions.length; i < len; i++){
+    const columns = {
+      'State': LegendOptions[i],
+      'total': sum_of_class[i]
+    };
+    d.push(columns);
+    totals.push( sum_of_class[i] );
+  }
+
+  draw_chart(d, totals, id , cfg);
 }
+
+// function get_total( crane_id, range_id ){
+//   const index = calc_index(crane_id);
+//   var sum = 0;
+//   for(var i = 0; i < segment_num; i++){
+//     sum += crane_data[index + i][range_id + 2];
+//   }
+//   console.log("sum", sum);
+//   return sum;
+// }
 
 function draw_chart( d, totals, id, cfg ){
   
@@ -126,11 +182,9 @@ function draw_chart( d, totals, id, cfg ){
   $(id).remove();
   $(id+"_main").append('<svg width="'+ (Number(cfg.w) + Number(cfg.ExtraWidthX)) +'" height="'+ (Number(cfg.h) + Number(cfg.ExtraWidthY)) +'" id="'+ id.slice(1) +'"></svg>');
 
- 
-
   // create the svg
   var svg = d3.select(id),
-  margin = {top: 20, right: 20, bottom: 30, left: 40},
+  margin = {top: 50, right: 20, bottom: 30, left: 40},
   // width = +svg.attr("width") - margin.left - margin.right,
   width = +cfg.w - margin.left - margin.right + cfg.ExtraWidthX,
   // height = +svg.attr("height") - margin.top - margin.bottom,
@@ -157,21 +211,21 @@ function draw_chart( d, totals, id, cfg ){
 
   function create_chart(data, totals) {
     // if (error) throw error;
-    console.log(data);
+    //console.log(data);
     var keys = [];
     var key_flag = false;
     for(key in data[0]){
       if(key_flag === true){ keys.push(key); }
       key_flag = true;
     }
-    console.log("keys", keys);
+    //console.log("keys", keys);
     
     // data.sort(function(a, b) { return b.total - a.total; });
     x.domain(data.map(function(d) { return d.State; }));
     y.domain([0, d3.max(totals, function(d) { return d; })]).nice();
     z.domain(keys);
 
-    console.log("d",d);
+    //console.log("d",d);
     g.append("g")
     .selectAll("g")
     .data(d3.stack().keys(keys)(data))

@@ -303,12 +303,16 @@
     <!-- 積み上げ縦棒グラフ -->
     <div class="flex">
       <div class="chart svg_wrapper">
+        <h3 class="chart_title">旋回ゾーン別荷重区分頻度</h3>
         <div id="stacked_chart_main">
           <svg width="400" height="400" id="stacked_chart"></svg>
         </div>
         <div id="stacked_chart_txt"></div>
+        <div id="stacked_chart_ver_label"></div>
+        <div id="stacked_chart_hor_label"></div>
       </div>
       <div class="chart svg_wrapper">
+        <h3 class="chart_title">旋回ゾーン別荷重区分累積時間</h3>
         <div id="stacked_chart_time_main">
           <svg width="400" height="400" id="stacked_chart_time"></svg>
         </div>
@@ -323,7 +327,12 @@
         </div>
         <div id="bar_chart_txt"></div>
       </div>
-      <div class="chart"></div>
+      <div class="chart svg_wrapper">
+        <div id="bar_chart_time_main">
+          <svg width="400" height="400" id="bar_chart_time"></svg>
+        </div>
+        <div id="bar_chart_time_txt"></div>
+      </div>
     </div>
     <div class="pieChartContainer chart">
         <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
@@ -355,7 +364,6 @@
     
     
   </section>
-      <!-- <div class="chart" id="mixChartContainer" style="height: 300px;"></div> -->
 
   <!-- IE対策 -->
   <script src="https://www.promisejs.org/polyfills/promise-6.1.0.min.js"></script>
