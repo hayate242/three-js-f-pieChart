@@ -102,39 +102,11 @@ function draw_stacked_chart( crane_id, id, is_time ){
   console.log("totals", totals);
 
 
-  draw_chart(d, totals, id , cfg);
+  draw_chart(d, totals, id , cfg, is_time);
 
-  // ラベルの作成
-  var ver_label = "（回数）";
-  var hor_label = "（区分）";
-  var svg = d3.select(id+"_ver_label")
-  .append('svg')
-  .attr("width", 200)
-  .attr("height", 200)
-  ;
-  var label = svg.append("g")
-      .attr("class", "legend")
-      .attr("height", 200)
-      .attr("width", 100)
-      .attr('transform', 'translate(20,20)') 
-      ;
-      label.selectAll('text')
-      .data("回数")
-      .enter()
-      .append("text")
-      .attr("font-size", "11px")
-      .attr("fill", "#737373")
-      .attr("transform", "rotate(-90)")
-      .text(ver_label)
-      ;
-      label.selectAll('text')
-      .attr("x", -200)
-      .attr("y", 0)
-      ;
 }
 
 function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
-  console.log("sum_of_class", sum_of_class);
   var cfg = {
     w: 400,
     h: 300,
@@ -163,7 +135,7 @@ function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
     totals.push( sum_of_class[i] );
   }
 
-  draw_chart(d, totals, id , cfg);
+  draw_chart(d, totals, id , cfg , is_time);
 }
 
 // function get_total( crane_id, range_id ){
@@ -176,7 +148,7 @@ function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
 //   return sum;
 // }
 
-function draw_chart( d, totals, id, cfg ){
+function draw_chart( d, totals, id, cfg, is_time ){
   
   // 要素の上書き回避
   $(id).remove();
@@ -308,6 +280,62 @@ function draw_chart( d, totals, id, cfg ){
   .style("text-anchor", "middle")
   .attr("font-size", "12px")
   .attr("font-weight", "bold");
+
+  // ラベルの作成
+  
+  var ver_label = "";
+  var hor_label = "（区分）";
+  if( is_time ){ ver_label = "（時間）"; }
+  else         { ver_label = "（回数）"; }
+
+  var svg_ver = d3.select(id+"_ver_label")
+  .append('svg')
+  .attr("width", 200)
+  .attr("height", 200)
+  ;
+  var label = svg_ver.append("g")
+      .attr("class", "legend")
+      .attr("height", 200)
+      .attr("width", 100)
+      .attr('transform', 'translate(20,20)') 
+      ;
+      label.selectAll('text')
+      .data("回数")
+      .enter()
+      .append("text")
+      .attr("font-size", "11px")
+      .attr("fill", "#737373")
+      .attr("transform", "rotate(-90)")
+      .text(ver_label)
+      ;
+      label.selectAll('text')
+      .attr("x", -200)
+      .attr("y", -5)
+      ;
+
+  var svg_hor = d3.select(id+"_hor_label")
+  .append('svg')
+  .attr("width", 200)
+  .attr("height", 200)
+  ;
+  var label = svg_hor.append("g")
+      .attr("class", "legend")
+      .attr("height", 200)
+      .attr("width", 100)
+      .attr('transform', 'translate(20,20)') 
+      ;
+      label.selectAll('text')
+      .data(hor_label)
+      .enter()
+      .append("text")
+      .attr("font-size", "11px")
+      .attr("fill", "#737373")
+      .text(hor_label)
+      ;
+      label.selectAll('text')
+      .attr("x", 230)
+      .attr("y", 380)
+      ;
 
 
 }
