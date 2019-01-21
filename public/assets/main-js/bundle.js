@@ -92,6 +92,7 @@ function save_log_data(log_data) {
   }); // 最後に出力
 
   console.log(crane_data);
+  calc_date_list(log_data_list);
 }
 
 function get_segment_num(segment) {
@@ -269,6 +270,41 @@ function calc_max_val(crane_id) {
 
   max_val_list = max;
   console.log("max_val_list", max_val_list);
+} // 年のリストを作成
+
+
+function calc_date_list(log_data_list) {
+  for (var i = 1, len = spec_data_list.length; i < len; i++) {
+    crane_date_list[i] = new Object({
+      'crane_id': i,
+      'start_y': new Date(Number(275755), Number(1), Number(1)),
+      'end_y': new Date(Number(1970), Number(1), Number(1))
+    });
+  }
+
+  console.log("init crane_date_list", crane_date_list);
+  console.log(crane_date_list[1].start_y);
+  console.log(crane_date_list[1].end_y);
+  console.log(crane_date_list[2].start_y);
+  console.log(crane_date_list[2].end_y); // var d2 = new Date(2014, 3, 1, 12, 34, 56);
+  // console.log(d2);
+
+  for (var i = 1, len = log_data_list.length; i < len; i++) {
+    const y = Number(log_data_list[i][1]);
+    const m = Number(log_data_list[i][2]);
+    const d = Number(log_data_list[i][3]);
+    var d1 = new Date(y + "/" + m + "/" + d); // 対象日より小さければ
+
+    if (d1 < crane_date_list[log_data_list[i][0]].start_y) {
+      crane_date_list[log_data_list[i][0]].start_y = d1;
+    }
+
+    if (d1 > crane_date_list[log_data_list[i][0]].end_y) {
+      crane_date_list[log_data_list[i][0]].end_y = d1;
+    }
+  }
+
+  console.log("crane_date_list", crane_date_list);
 }
 /* ----------------------------
 変数定義
@@ -280,7 +316,8 @@ const segment_num = 8;
 var spec_data_list = [];
 var log_data_list = [];
 var max_val_list = [];
-var crane_data = []; // function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
+var crane_data = [];
+var crane_date_list = []; // function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
 //   this.id = _id,
 //   this.segment = _segment;
 //   this._0_10 = _0_10;
@@ -4045,6 +4082,7 @@ function update_data(crane_id) {
   // 最大値を更新
   calc_max_val(crane_id);
   display_spec_data(crane_id);
+  display_date_selection(crane_id);
   display_table_data(crane_id); // chart描画
 
   draw_radar_chart(crane_id, false, "#radar_chart", max_val_list[0]);
@@ -4053,7 +4091,8 @@ function update_data(crane_id) {
   draw_stacked_chart(crane_id, '#stacked_chart_time', true);
   draw_bar_chart(crane_id, '#bar_chart', sum_class_num, false);
   draw_bar_chart(crane_id, '#bar_chart_time', sum_class_time, true); // draw_stacked_chart( crane_id , '#stacked_chart' , false);
-}
+} // セレクトボックスを変更した際
+
 
 $(function () {
   $('.select_crane').change(function () {
@@ -4076,6 +4115,19 @@ function display_spec_data(crane_id) {
   $('.max_weight').text(spec_data_list[crane_id][1]);
   $('.max_turn_radius').text(spec_data_list[crane_id][2]);
   $('.ttb_pcd').text(spec_data_list[crane_id][3]);
+} // 期間を表示
+
+
+function display_date_selection(crane_id) {
+  console.log(crane_date_list);
+
+  for (var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++) {
+    $('#date_selection_start').append($('<option>').html(i).val(i));
+  }
+
+  for (var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++) {
+    $('#date_selection_end').append($('<option>').html(i).val(i));
+  }
 }
 
 function display_table_data(crane_id) {
@@ -4109,7 +4161,10 @@ function display_table_data(crane_id) {
     for (var j = 0; j < segment_num; j++) {
       sum_class_time[ittr] += crane_data[index + j][ittr + 8];
     }
-  }
+  } // for(var ittr = 0; ittr < 6; ittr++){
+  //   sum_class_time[ittr] = sum_class_time[ittr].toFixed(1);
+  // }
+
 
   console.log('sum_class_num', sum_class_num);
   console.log('sum_class_time', sum_class_time); // 表示

@@ -7,11 +7,13 @@ var sum  = function(arr) {
 var sum_class_num = [0,0,0,0,0,0];
 var sum_class_time = [0,0,0,0,0,0];
 
+
 // 変更を反映する
 function update_data( crane_id ){
   // 最大値を更新
   calc_max_val(crane_id);
   display_spec_data(crane_id);
+  display_date_selection(crane_id);
   display_table_data(crane_id);
   // chart描画
   draw_radar_chart( crane_id, false, "#radar_chart" , max_val_list[0]);
@@ -23,6 +25,7 @@ function update_data( crane_id ){
   // draw_stacked_chart( crane_id , '#stacked_chart' , false);
 }
 
+// セレクトボックスを変更した際
 $(function(){
   $('.select_crane').change(function() {
     //選択された地方のvalueを取得し変数に入れる
@@ -46,6 +49,17 @@ function display_spec_data(crane_id){
   $('.max_turn_radius').text(spec_data_list[crane_id][2]);
   $('.ttb_pcd').text(spec_data_list[crane_id][3]);
   
+}
+
+// 期間を表示
+function display_date_selection( crane_id ){
+  console.log(crane_date_list);
+  for(var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++){
+    $('#date_selection_start').append($('<option>').html(i).val(i));
+  }
+  for(var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++){
+    $('#date_selection_end').append($('<option>').html(i).val(i));
+  }
 }
 
 function display_table_data(crane_id){
@@ -80,6 +94,9 @@ function display_table_data(crane_id){
       sum_class_time[ittr] += crane_data[index+j][ittr+8];
     }
   }
+  // for(var ittr = 0; ittr < 6; ittr++){
+  //   sum_class_time[ittr] = sum_class_time[ittr].toFixed(1);
+  // }
 
   console.log('sum_class_num',sum_class_num);
   console.log('sum_class_time',sum_class_time);

@@ -41,29 +41,11 @@
         <ul class="flex list_style_none crane_data_li setting">
           <li>表示期間　</li>
           <li class="cp_ipselect cp_sl01 display_start_date">
-            <select name="開始年月日" required>
-              <option value="2000">2000</option>
-              <option value="2000">2001</option>
-              <option value="2000">2002</option>
-              <option value="2000">2003</option>
-              <option value="2000">2004</option>
-              <option value="2000">2005</option>
-              <option value="2000">2006</option>
-              <option value="2000">2007</option>
-              <option value="2000">2008</option>
+            <select name="開始年月日" id="date_selection_start" required>
             </select>
           </li>
           <li class="cp_ipselect cp_sl01 display_end_date">
-            <select name="終了年月日" required>
-              <option value="2000">2000</option>
-              <option value="2000">2001</option>
-              <option value="2000">2002</option>
-              <option value="2000">2003</option>
-              <option value="2000">2004</option>
-              <option value="2000">2005</option>
-              <option value="2000">2006</option>
-              <option value="2000">2007</option>
-              <option value="2000">2008</option>
+            <select name="終了年月日" id="date_selection_end" required>
             </select>
           </li>
         </ul>
@@ -340,16 +322,16 @@
         <div id="bar_chart_time_hor_label"></div>
       </div>
     </div>
-    <div class="pieChartContainer chart">
-        <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
-        <!-- 親のタグの基準点をリセット -->
-        <div class="pieChart">
-            <canvas id="myCanvas"></canvas>
-        </div>
-        <div class="color_bar"></div>
-        <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
-        <p>※ドラッグで回転，スクロールでズーム</p>
+    <div class="pieChartContainer">
+      <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
+      <!-- 親のタグの基準点をリセット -->
+      <div class="pieChart">
+          <canvas id="myCanvas"></canvas>
       </div>
+      <div class="color_bar"></div>
+      <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
+      <p>※ドラッグで回転，スクロールでズーム</p>
+    </div>
     <!-- <div class="flex">
       <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
       <div class="pieChartContainer chart">

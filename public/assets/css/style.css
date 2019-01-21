@@ -354,7 +354,7 @@ template {
 .chart {
   width: 45vw;
   height: 45vw;
-  border: solid 2px #000;
+  border: solid 2px #bbb;
   margin: 3px;
   filter: drop-shadow(7px 7px 5px rgba(0, 0, 0, 0.3));
 }
@@ -478,6 +478,12 @@ template {
 
 .graphs {
   margin: 30px;
+}
+
+.graphs .pieChartContainer {
+  width: 600px;
+  margin: 0 auto;
+  border: solid 2px #bbb;
 }
 
 .graphs .pieChartContainer h2 {

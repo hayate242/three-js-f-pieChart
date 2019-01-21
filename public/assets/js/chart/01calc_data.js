@@ -74,6 +74,7 @@ function save_log_data( log_data ){
 
   // 最後に出力
   console.log(crane_data);
+  calc_date_list(log_data_list);
   
 }
 function get_segment_num(segment){
@@ -217,6 +218,38 @@ function calc_max_val( crane_id ){
   max_val_list = max;
   console.log("max_val_list",max_val_list);
 }
+// 年のリストを作成
+function calc_date_list( log_data_list ){
+
+  for(var i = 1, len = spec_data_list.length; i < len; i++){
+    crane_date_list[i] = new Object({
+      'crane_id': (i),
+      'start_y': new Date(Number(275755), Number(1), Number(1)),
+      'end_y': new Date(Number(1970), Number(1), Number(1))
+    });
+  }
+  console.log("init crane_date_list", crane_date_list);
+  console.log(crane_date_list[1].start_y);
+  console.log(crane_date_list[1].end_y);
+  console.log(crane_date_list[2].start_y);
+  console.log(crane_date_list[2].end_y);
+  // var d2 = new Date(2014, 3, 1, 12, 34, 56);
+  // console.log(d2);
+  for( var i = 1, len = log_data_list.length; i < len; i++){
+    const y = Number(log_data_list[i][1]);
+    const m = Number(log_data_list[i][2]);
+    const d = Number(log_data_list[i][3]);
+    var d1 = new Date(y+"/"+m+"/"+d);
+    // 対象日より小さければ
+    if( d1 < crane_date_list[log_data_list[i][0]].start_y ){
+      crane_date_list[log_data_list[i][0]].start_y = d1;
+    }
+    if( d1 > crane_date_list[log_data_list[i][0]].end_y ){
+      crane_date_list[log_data_list[i][0]].end_y = d1;
+    }
+  }
+  console.log("crane_date_list", crane_date_list);
+} 
 
 /* ----------------------------
 変数定義
@@ -228,6 +261,7 @@ var log_data_list = [];
 var max_val_list = [];
 
 var crane_data = [];
+var crane_date_list = [];
 // function Info(_id, _segment, _0_10, _10_50, _50_63, _63_80, _80_100, _100_over, _0_10_time, _10_50_time, _50_63_time, _63_80_time, _80_100_time, _100_over_time) {
 //   this.id = _id,
 //   this.segment = _segment;
