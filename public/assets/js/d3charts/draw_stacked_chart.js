@@ -98,8 +98,8 @@ function draw_stacked_chart( crane_id, id, is_time ){
         
         ;	
 
-  console.log("data", d);
-  console.log("totals", totals);
+  // console.log("data", d);
+  // console.log("totals", totals);
 
 
   draw_chart(d, totals, id , cfg, is_time);
@@ -134,8 +134,8 @@ function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
     d.push(columns);
     totals.push( sum_of_class[i] );
   }
-  console.log("data", d);
-  console.log("totals", totals);
+  // console.log("data", d);
+  // console.log("totals", totals);
 
   draw_chart(d, totals, id , cfg , is_time);
 }

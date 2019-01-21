@@ -37,6 +37,14 @@ function save_log_data( log_data ){
   // console.log(log_data.responseText);
   log_data_list = convertCSVtoArray(log_data.responseText); // 渡されるのは読み込んだCSVデータ
   console.log(log_data_list);
+  // 日付指定範囲を計算
+  calc_date_list();
+  format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
+}
+
+function format_crane_data( start, end ){
+  console.log("format_start", start);
+  console.log("format_end", end);
 
   var j = 0;
   // 全部のidを調べて保存用配列の作成
@@ -55,27 +63,33 @@ function save_log_data( log_data ){
       added_id.push(log_data_list[i][0]);
     }
   }
-  console.log(crane_data);
+  console.log("init",crane_data);
   var isFirst = true;
   log_data_list.forEach(function(data){
     if(isFirst){
       isFirst = false;
     }else{
-      // console.log(data);
-      // 負荷率
-      if     (data[7] > 0    && data[7] <= 0.10)  { classify_data(data,0); }
-      else if(data[7] > 0.10 && data[7] <= 0.50)  { classify_data(data,1); }
-      else if(data[7] > 0.50 && data[7] <= 0.63)  { classify_data(data,2); }
-      else if(data[7] > 0.63 && data[7] <= 0.80)  { classify_data(data,3); }
-      else if(data[7] > 0.80 && data[7] <= 1   )  { classify_data(data,4); }
-      else if(data[7] > 1)                        { classify_data(data,5); }
+      const y = Number(data[1]);
+      const m = Number(data[2]);
+      const d = Number(data[3]);
+      var the_date = new Date(y+"/"+m+"/"+d);
+      console.log("the_date", the_date);
+
+      if(the_date >= start && the_date <= end){
+        console.log("data", data);
+        // 負荷率
+        if     (data[7] > 0    && data[7] <= 0.10)  { classify_data(data,0); }
+        else if(data[7] > 0.10 && data[7] <= 0.50)  { classify_data(data,1); }
+        else if(data[7] > 0.50 && data[7] <= 0.63)  { classify_data(data,2); }
+        else if(data[7] > 0.63 && data[7] <= 0.80)  { classify_data(data,3); }
+        else if(data[7] > 0.80 && data[7] <= 1   )  { classify_data(data,4); }
+        else if(data[7] > 1)                        { classify_data(data,5); }
+      }
     }
   });
 
   // 最後に出力
   console.log(crane_data);
-  calc_date_list(log_data_list);
-  
 }
 function get_segment_num(segment){
   if(segment == "A"){ return 0;}
@@ -219,7 +233,7 @@ function calc_max_val( crane_id ){
   console.log("max_val_list",max_val_list);
 }
 // 年のリストを作成
-function calc_date_list( log_data_list ){
+function calc_date_list(){
 
   for(var i = 1, len = spec_data_list.length; i < len; i++){
     crane_date_list[i] = new Object({

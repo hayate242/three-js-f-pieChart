@@ -10,8 +10,11 @@ var sum_class_time = [0,0,0,0,0,0];
 
 // 変更を反映する
 function update_data( crane_id ){
+  // 再計算
   // 最大値を更新
   calc_max_val(crane_id);
+  // format_crane_data();
+  // データ表示
   display_spec_data(crane_id);
   display_date_selection(crane_id);
   display_table_data(crane_id);
@@ -33,6 +36,10 @@ $(function(){
     console.log("selected_craneID", crane_id);
     update_data(crane_id);
   });
+  $('#date_selection_start').change(function(){
+    var start_date = $(this).val();
+    console.log("start_date", start_date);
+  });
 });
 
 function display_crane_selection(){
@@ -43,7 +50,7 @@ function display_crane_selection(){
 }
 
 function display_spec_data(crane_id){
-  console.log('spec_data_list', spec_data_list);
+  // console.log('spec_data_list', spec_data_list);
   
   $('.max_weight').text(spec_data_list[crane_id][1]);
   $('.max_turn_radius').text(spec_data_list[crane_id][2]);
@@ -84,7 +91,7 @@ function display_date_selection( crane_id ){
 
 function display_table_data(crane_id){
   const index = (crane_id - 1) * segment_num;
-  console.log(index);
+  // console.log(index);
   // 合計を計算
   var sum_segments_num = [];
   var sum_segments_time = [];
@@ -118,8 +125,8 @@ function display_table_data(crane_id){
   //   sum_class_time[ittr] = sum_class_time[ittr].toFixed(1);
   // }
 
-  console.log('sum_class_num',sum_class_num);
-  console.log('sum_class_time',sum_class_time);
+  // console.log('sum_class_num',sum_class_num);
+  // console.log('sum_class_time',sum_class_time);
 
 
 

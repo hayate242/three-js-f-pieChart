@@ -39,7 +39,15 @@ function save_log_data(log_data) {
   // console.log(log_data.responseText);
   log_data_list = convertCSVtoArray(log_data.responseText); // 渡されるのは読み込んだCSVデータ
 
-  console.log(log_data_list);
+  console.log(log_data_list); // 日付指定範囲を計算
+
+  calc_date_list();
+  format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
+}
+
+function format_crane_data(start, end) {
+  console.log("format_start", start);
+  console.log("format_end", end);
   var j = 0; // 全部のidを調べて保存用配列の作成
 
   var added_id = [];
@@ -67,32 +75,39 @@ function save_log_data(log_data) {
     }
   }
 
-  console.log(crane_data);
+  console.log("init", crane_data);
   var isFirst = true;
   log_data_list.forEach(function (data) {
     if (isFirst) {
       isFirst = false;
     } else {
-      // console.log(data);
-      // 負荷率
-      if (data[7] > 0 && data[7] <= 0.10) {
-        classify_data(data, 0);
-      } else if (data[7] > 0.10 && data[7] <= 0.50) {
-        classify_data(data, 1);
-      } else if (data[7] > 0.50 && data[7] <= 0.63) {
-        classify_data(data, 2);
-      } else if (data[7] > 0.63 && data[7] <= 0.80) {
-        classify_data(data, 3);
-      } else if (data[7] > 0.80 && data[7] <= 1) {
-        classify_data(data, 4);
-      } else if (data[7] > 1) {
-        classify_data(data, 5);
+      const y = Number(data[1]);
+      const m = Number(data[2]);
+      const d = Number(data[3]);
+      var the_date = new Date(y + "/" + m + "/" + d);
+      console.log("the_date", the_date);
+
+      if (the_date >= start && the_date <= end) {
+        console.log("data", data); // 負荷率
+
+        if (data[7] > 0 && data[7] <= 0.10) {
+          classify_data(data, 0);
+        } else if (data[7] > 0.10 && data[7] <= 0.50) {
+          classify_data(data, 1);
+        } else if (data[7] > 0.50 && data[7] <= 0.63) {
+          classify_data(data, 2);
+        } else if (data[7] > 0.63 && data[7] <= 0.80) {
+          classify_data(data, 3);
+        } else if (data[7] > 0.80 && data[7] <= 1) {
+          classify_data(data, 4);
+        } else if (data[7] > 1) {
+          classify_data(data, 5);
+        }
       }
     }
   }); // 最後に出力
 
   console.log(crane_data);
-  calc_date_list(log_data_list);
 }
 
 function get_segment_num(segment) {
@@ -273,7 +288,7 @@ function calc_max_val(crane_id) {
 } // 年のリストを作成
 
 
-function calc_date_list(log_data_list) {
+function calc_date_list() {
   for (var i = 1, len = spec_data_list.length; i < len; i++) {
     crane_date_list[i] = new Object({
       'crane_id': i,
@@ -4079,8 +4094,11 @@ var sum_class_num = [0, 0, 0, 0, 0, 0];
 var sum_class_time = [0, 0, 0, 0, 0, 0]; // 変更を反映する
 
 function update_data(crane_id) {
+  // 再計算
   // 最大値を更新
-  calc_max_val(crane_id);
+  calc_max_val(crane_id); // format_crane_data();
+  // データ表示
+
   display_spec_data(crane_id);
   display_date_selection(crane_id);
   display_table_data(crane_id); // chart描画
@@ -4101,6 +4119,10 @@ $(function () {
     console.log("selected_craneID", crane_id);
     update_data(crane_id);
   });
+  $('#date_selection_start').change(function () {
+    var start_date = $(this).val();
+    console.log("start_date", start_date);
+  });
 });
 
 function display_crane_selection() {
@@ -4111,7 +4133,7 @@ function display_crane_selection() {
 }
 
 function display_spec_data(crane_id) {
-  console.log('spec_data_list', spec_data_list);
+  // console.log('spec_data_list', spec_data_list);
   $('.max_weight').text(spec_data_list[crane_id][1]);
   $('.max_turn_radius').text(spec_data_list[crane_id][2]);
   $('.ttb_pcd').text(spec_data_list[crane_id][3]);
@@ -4157,8 +4179,8 @@ function display_date_selection(crane_id) {
 }
 
 function display_table_data(crane_id) {
-  const index = (crane_id - 1) * segment_num;
-  console.log(index); // 合計を計算
+  const index = (crane_id - 1) * segment_num; // console.log(index);
+  // 合計を計算
 
   var sum_segments_num = [];
   var sum_segments_time = []; // 初期化
@@ -4190,10 +4212,10 @@ function display_table_data(crane_id) {
   } // for(var ittr = 0; ittr < 6; ittr++){
   //   sum_class_time[ittr] = sum_class_time[ittr].toFixed(1);
   // }
+  // console.log('sum_class_num',sum_class_num);
+  // console.log('sum_class_time',sum_class_time);
+  // 表示
 
-
-  console.log('sum_class_num', sum_class_num);
-  console.log('sum_class_time', sum_class_time); // 表示
 
   for (var i = 0; i < segment_num; i++) {
     // 回数データ
