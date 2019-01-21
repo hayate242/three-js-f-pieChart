@@ -1,7 +1,7 @@
 // ページの読み込みを待つ
-window.addEventListener('load', getCSV_init("assets/data/demo.csv"));
+// window.addEventListener('load', getCSV_init("assets/data/demo.csv"));
 
-// //CSVファイルを読み込む関数getCSV()の定義
+// // //CSVファイルを読み込む関数getCSV()の定義
 // function getCSV_init(targetFile){
 //   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
 //   req.open("get", targetFile, true); // アクセスするファイルを指定
@@ -74,7 +74,6 @@ function draw_pieChart(damage_data) {
   controls.update();
 
   camera.lookAt(new THREE.Vector3(0, 0, 0));
-  camera.rotation.set(0,Math.PI/2,Math.PI/2);
 
   // // 地面を作成
   scene.add(new THREE.GridHelper(600));

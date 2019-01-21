@@ -177,8 +177,8 @@ function display_table_data(crane_id){
 
 function calc_pieChart_data(){
   var damage_data = [];
-  for( var i = 0; i < 360; i++ ){
-    damage_data[i] = 10;
+  for( var i = 0; i <= 360; i++ ){
+    damage_data[i] = [i, 10];
   }
   return damage_data;
 }

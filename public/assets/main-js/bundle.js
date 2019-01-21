@@ -4267,8 +4267,8 @@ function display_table_data(crane_id) {
 function calc_pieChart_data() {
   var damage_data = [];
 
-  for (var i = 0; i < 360; i++) {
-    damage_data[i] = 10;
+  for (var i = 0; i <= 360; i++) {
+    damage_data[i] = [i, 10];
   }
 
   return damage_data;
@@ -4568,9 +4568,8 @@ class PieChart extends THREE.Group {
 
 
 } // ページの読み込みを待つ
-
-
-window.addEventListener('load', getCSV_init("assets/data/demo.csv")); // //CSVファイルを読み込む関数getCSV()の定義
+// window.addEventListener('load', getCSV_init("assets/data/demo.csv"));
+// // //CSVファイルを読み込む関数getCSV()の定義
 // function getCSV_init(targetFile){
 //   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
 //   req.open("get", targetFile, true); // アクセスするファイルを指定
@@ -4584,6 +4583,7 @@ window.addEventListener('load', getCSV_init("assets/data/demo.csv")); // //CSV�
 //     draw_pieChart(result);
 //   }
 // }
+
 
 function draw_pieChart(damage_data) {
   // console.log("getCSV");
@@ -4634,8 +4634,7 @@ function draw_pieChart(damage_data) {
   // controls.enablePan = false; 
 
   controls.update();
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
-  camera.rotation.set(0, Math.PI / 2, Math.PI / 2); // // 地面を作成
+  camera.lookAt(new THREE.Vector3(0, 0, 0)); // // 地面を作成
 
   scene.add(new THREE.GridHelper(600));
   scene.add(new THREE.AxesHelper(100)); // 平行光源
