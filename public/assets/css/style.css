@@ -458,6 +458,10 @@ template {
   border: none;
 }
 
+.display_period .date_selection input {
+  width: 149px;
+}
+
 .summary_sheet .units p {
   width: 50%;
   text-align: right;

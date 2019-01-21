@@ -470,6 +470,11 @@ $border_color: #bbb;
   .setting :nth-child(1) {
       border: none;
   }
+  .date_selection {
+    input {
+      width: 149px;
+    }
+  }
 }
 
 .summary_sheet {

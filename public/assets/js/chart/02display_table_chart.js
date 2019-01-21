@@ -50,16 +50,38 @@ function display_spec_data(crane_id){
   $('.ttb_pcd').text(spec_data_list[crane_id][3]);
   
 }
+// dateFormat 関数の定義
+function dateFormat(date) {
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  var d = date.getDate();
 
+  if (m < 10) { m = '0' + m; }
+  if (d < 10) { d = '0' + d; }
+  // フォーマット整形済みの文字列を戻り値にする
+  return y + '-' + m + '-' + d;
+}
 // 期間を表示
 function display_date_selection( crane_id ){
-  console.log(crane_date_list);
-  for(var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++){
-    $('#date_selection_start').append($('<option>').html(i).val(i));
-  }
-  for(var i = crane_date_list[crane_id].start_y.getFullYear(); i <= crane_date_list[crane_id].end_y.getFullYear(); i++){
-    $('#date_selection_end').append($('<option>').html(i).val(i));
-  }
+  console.log(crane_date_list[crane_id].start_y);
+  const s = crane_date_list[crane_id].start_y;
+  const e = crane_date_list[crane_id].end_y;
+  const start = dateFormat(s);
+  const end = dateFormat(e);
+  console.log(start);
+  console.log(end);
+  $('#date_selection_start').val(start);
+  $('#date_selection_end').val(end);
+  // 選択範囲の設定
+  $('#date_selection_start').attr({
+    "min" : start,
+    "max" : end
+  });
+  $('#date_selection_end').attr({
+    "min" : start,
+    "max" : end
+  });
+
 }
 
 function display_table_data(crane_id){
