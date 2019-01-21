@@ -27,7 +27,7 @@ async function loadAllFiles() {
 
   display_crane_selection(); // chart描画
 
-  update_data(1);
+  update_data(1, crane_date_list[1].start_y, crane_date_list[1].end_y);
 }
 
 function save_spec_data(spec_data) {
@@ -41,8 +41,7 @@ function save_log_data(log_data) {
 
   console.log(log_data_list); // 日付指定範囲を計算
 
-  calc_date_list();
-  format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
+  calc_date_list(); // format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
 }
 
 function format_crane_data(start, end) {
@@ -4093,14 +4092,14 @@ var sum = function (arr) {
 var sum_class_num = [0, 0, 0, 0, 0, 0];
 var sum_class_time = [0, 0, 0, 0, 0, 0]; // 変更を反映する
 
-function update_data(crane_id) {
+function update_data(crane_id, start, end) {
   // 再計算
   // 最大値を更新
-  calc_max_val(crane_id); // format_crane_data();
-  // データ表示
+  format_crane_data(start, end);
+  calc_max_val(crane_id); // データ表示
 
   display_spec_data(crane_id);
-  display_date_selection(crane_id);
+  display_date_selection(crane_id, start, end);
   display_table_data(crane_id); // chart描画
 
   draw_radar_chart(crane_id, false, "#radar_chart", max_val_list[0]);
@@ -4114,15 +4113,35 @@ function update_data(crane_id) {
 
 $(function () {
   $('.select_crane').change(function () {
-    //選択された地方のvalueを取得し変数に入れる
-    var crane_id = $(this).val();
-    console.log("selected_craneID", crane_id);
-    update_data(crane_id);
+    on_change_action(true);
   });
   $('#date_selection_start').change(function () {
-    var start_date = $(this).val();
-    console.log("start_date", start_date);
+    on_change_action(false);
   });
+  $('#date_selection_end').change(function () {
+    on_change_action(false);
+  });
+
+  function on_change_action(is_select_crane) {
+    var crane_id = $('.select_crane').val();
+
+    if (is_select_crane) {
+      var start = crane_date_list[crane_id].start_y;
+      var end = crane_date_list[crane_id].end_y;
+    } else {
+      var start_date = String($('#date_selection_start').val()).replace(/-/g, '/');
+      var end_date = String($('#date_selection_end').val()).replace(/-/g, '/'); // console.log("selected_craneID", crane_id);
+
+      var start = new Date(start_date);
+      var end = new Date(end_date);
+    } // console.log("start_date", start_date);
+    // console.log("end_date", end_date);
+    // console.log("start", start);
+    // console.log("end", end);
+
+
+    update_data(crane_id, start, end);
+  }
 });
 
 function display_crane_selection() {
@@ -4157,24 +4176,23 @@ function dateFormat(date) {
 } // 期間を表示
 
 
-function display_date_selection(crane_id) {
-  console.log(crane_date_list[crane_id].start_y);
-  const s = crane_date_list[crane_id].start_y;
-  const e = crane_date_list[crane_id].end_y;
+function display_date_selection(crane_id, s, e) {
   const start = dateFormat(s);
   const end = dateFormat(e);
-  console.log(start);
-  console.log(end);
+  console.log("display_start", start);
+  console.log("display_end", end);
   $('#date_selection_start').val(start);
   $('#date_selection_end').val(end); // 選択範囲の設定
 
+  const min_date = dateFormat(crane_date_list[crane_id].start_y);
+  const max_date = dateFormat(crane_date_list[crane_id].end_y);
   $('#date_selection_start').attr({
-    "min": start,
-    "max": end
+    "min": min_date,
+    "max": max_date
   });
   $('#date_selection_end').attr({
-    "min": start,
-    "max": end
+    "min": min_date,
+    "max": max_date
   });
 }
 

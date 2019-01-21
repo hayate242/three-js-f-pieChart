@@ -24,7 +24,7 @@ async function loadAllFiles() {
   // id=1のクレーンのデータを表示
   display_crane_selection();
   // chart描画
-  update_data(1);
+  update_data(1, crane_date_list[1].start_y, crane_date_list[1].end_y);
 }
 
 
@@ -39,7 +39,7 @@ function save_log_data( log_data ){
   console.log(log_data_list);
   // 日付指定範囲を計算
   calc_date_list();
-  format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
+  // format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
 }
 
 function format_crane_data( start, end ){
