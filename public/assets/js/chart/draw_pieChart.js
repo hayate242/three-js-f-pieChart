@@ -1,28 +1,28 @@
 // ページの読み込みを待つ
 window.addEventListener('load', getCSV_init("assets/data/demo.csv"));
 
-//CSVファイルを読み込む関数getCSV()の定義
-function getCSV_init(targetFile){
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-  req.open("get", targetFile, true); // アクセスするファイルを指定
-  req.send(null); // HTTPリクエストの発行
-  var result = [];
-  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-  req.onload = function(){
-    result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-    // console.log(result);
-    // return result;
-    init(result);
-  }
-}
+// //CSVファイルを読み込む関数getCSV()の定義
+// function getCSV_init(targetFile){
+//   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+//   req.open("get", targetFile, true); // アクセスするファイルを指定
+//   req.send(null); // HTTPリクエストの発行
+//   var result = [];
+//   // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
+//   req.onload = function(){
+//     result = convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+//     // console.log(result);
+//     // return result;
+//     draw_pieChart(result);
+//   }
+// }
 
 
 
-function init(damage_data) {
+function draw_pieChart(damage_data) {
   // console.log("getCSV");
   // var result = getCSV("assets/data/demo.csv");
   // console.log(damage_data[0][1]);
-  // console.log(damage_data);
+  console.log(damage_data);
   
 
 
@@ -60,12 +60,11 @@ function init(damage_data) {
   const camera = new THREE.PerspectiveCamera(45, width / height);
   // カメラの初期座標を設定
   camera.position.set(0, 350, 0);
-  camera.rotation.set(0, -Math.PI/2,0);
   // カメラコントローラーを作成
   let canvas = document.getElementById('myCanvas');
   const controls = new THREE.OrbitControls(camera, canvas);
-  // controls.minDistance = radius*2;
-  // controls.maxDistance = Infinity;
+  controls.minDistance = radius*2;
+  controls.maxDistance = radius*6;
   controls.maxPolarAngle = Math.PI/2;
   // to disable zoom 
   // controls.enableZoom = false;
@@ -75,6 +74,7 @@ function init(damage_data) {
   controls.update();
 
   camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera.rotation.set(0,Math.PI/2,Math.PI/2);
 
   // // 地面を作成
   scene.add(new THREE.GridHelper(600));
@@ -119,9 +119,9 @@ function init(damage_data) {
     // 3D空間にグループを追加する
     sectorlist[sectorNum] = new THREE.Group();
     sectorlist[sectorNum] = new PieChart(i, i+sectorAngle, sectorNum, String.fromCharCode(65+sectorNum),damage_data);
-    sectorlist[sectorNum].rotation.y = Math.PI/2;
+    sectorlist[sectorNum].rotation.y = Math.PI;
     scene.add(sectorlist[sectorNum]);
-    // console.log(sectorlist[sectorNum]);
+    // console.log("sectorlist = ",sectorlist[sectorNum]);
   }
 
   render();

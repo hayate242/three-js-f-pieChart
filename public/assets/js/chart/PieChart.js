@@ -70,6 +70,8 @@ class PieChart extends THREE.Group {
     // piechartの1sectorの角度
     const sectorAngle = 45;
 
+    const loader = new THREE.FontLoader();
+
     // 横の線
     var max_damage = getMaxDamage();
     const interval = max_damage/5;
@@ -171,7 +173,6 @@ class PieChart extends THREE.Group {
     // 縦軸の数値を追加
     const drawAxisLabelVal = (positions, text, y, angle) => {
       const that = this;
-      const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
         const textGeometry = new THREE.TextGeometry(text, {
           font: font,
@@ -196,7 +197,6 @@ class PieChart extends THREE.Group {
 
       // Pie Chartの数値を追加
       const that = this;
-      const loader = new THREE.FontLoader();
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
         const textGeometry = new THREE.TextGeometry(String(text)+"°", {
           font: font,
@@ -209,12 +209,13 @@ class PieChart extends THREE.Group {
           new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
-        textMesh.rotation.set( -Math.PI/2, 0, -Math.PI/2 );
-        if(angle == 135){ textMesh.position.set(positions.x+0, y, positions.z-29); }
-        else if(angle == 180){ textMesh.position.set(positions.x+0, y, positions.z-29); }
-        else if(angle == 225){ textMesh.position.set(positions.x-10, y, positions.z-29); }
-        else if(angle == 270){ textMesh.position.set(positions.x-13, y, positions.z); }
-        else if(angle == 315){ textMesh.position.set(positions.x-10, y, positions.z); }
+        textMesh.rotation.set( -Math.PI/2, 0, -Math.PI );
+        if(angle == 0){ textMesh.position.set(positions.x, y, positions.z+5); }
+        else if(angle == 45){ textMesh.position.set(positions.x+25, y, positions.z); }
+        else if(angle == 90){ textMesh.position.set(positions.x+25, y, positions.z); }
+        else if(angle == 135){ textMesh.position.set(positions.x+25, y, positions.z-20); }
+        else if(angle == 180){ textMesh.position.set(positions.x+25, y, positions.z-15); }
+        else if(angle == 225){ textMesh.position.set(positions.x, y, positions.z-18); }
         else { textMesh.position.set(positions.x, 2, positions.z); }
         that.axisLabelGroup.add(textMesh);
         that.add(that.axisLabelGroup);
@@ -227,7 +228,7 @@ class PieChart extends THREE.Group {
       const positions = getRotPosition(angle, radius*0.7);
       // function内でthisの内容が変わるためthatで記憶しておく
       const that = this;
-      const loader = new THREE.FontLoader();
+      
       loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
         const textGeometry = new THREE.TextGeometry(text, {
           font: font,
@@ -240,8 +241,8 @@ class PieChart extends THREE.Group {
           new THREE.MeshBasicMaterial( { color: 0x000000 } )
         ];
         const textMesh = new THREE.Mesh(textGeometry, materials);
-        textMesh.position.set(positions.x-10, -3, positions.z-10);
-        textMesh.rotation.set(-Math.PI/2, 0, -Math.PI/2);
+        textMesh.position.set(positions.x+11, -3, positions.z-10);
+        textMesh.rotation.set(-Math.PI/2, 0, -Math.PI);
         that.add(textMesh);
       });
     }

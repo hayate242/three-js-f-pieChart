@@ -25,10 +25,12 @@ function update_data( crane_id, start, end ){
   draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
   draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
   draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
+  draw_pieChart( calc_pieChart_data() );
   // draw_stacked_chart( crane_id , '#stacked_chart' , false);
 }
 
-// セレクトボックスを変更した際
+
+// セレクトボックスを変更した際の処理
 $(function(){
   $('.select_crane').change(function() {
     on_change_action(true);
@@ -171,4 +173,12 @@ function display_table_data(crane_id){
   $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_num));
   $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_time).toFixed(1));
 
+}
+
+function calc_pieChart_data(){
+  var damage_data = [];
+  for( var i = 0; i < 360; i++ ){
+    damage_data[i] = 10;
+  }
+  return damage_data;
 }
