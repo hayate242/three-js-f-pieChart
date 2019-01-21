@@ -4129,8 +4129,7 @@ function dateFormat(date) {
 
   if (d < 10) {
     d = '0' + d;
-  } // フォーマット整形済みの文字列を戻り値にする
-
+  }
 
   return y + '-' + m + '-' + d;
 } // 期間を表示

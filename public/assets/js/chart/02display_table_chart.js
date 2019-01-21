@@ -55,10 +55,8 @@ function dateFormat(date) {
   var y = date.getFullYear();
   var m = date.getMonth() + 1;
   var d = date.getDate();
-
   if (m < 10) { m = '0' + m; }
   if (d < 10) { d = '0' + d; }
-  // フォーマット整形済みの文字列を戻り値にする
   return y + '-' + m + '-' + d;
 }
 // 期間を表示
