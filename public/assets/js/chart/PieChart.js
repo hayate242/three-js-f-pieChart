@@ -85,6 +85,8 @@ class PieChart extends THREE.Group {
     // 横の線
     var max_damage = getMaxDamage();
     const damage_interval = max_damage/interval_num;
+
+    const fontPath = "./assets/fonts/helvetiker_regular.typeface.json";
     
     // console.log("max_damage", max_damage, "max_hight", max_hight);
 
@@ -182,7 +184,7 @@ class PieChart extends THREE.Group {
     // 縦軸の数値を追加
     const drawAxisLabelVal = (positions, text, y, angle) => {
       const that = this;
-      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+      loader.load(fontPath , function(font){
         const textGeometry = new THREE.TextGeometry(text, {
           font: font,
           size: 5,
@@ -206,7 +208,7 @@ class PieChart extends THREE.Group {
 
       // Pie Chartの数値を追加
       const that = this;
-      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+      loader.load(fontPath, function(font){
         const textGeometry = new THREE.TextGeometry(String(text)+"°", {
           font: font,
           size: 10,
@@ -238,7 +240,7 @@ class PieChart extends THREE.Group {
       // function内でthisの内容が変わるためthatで記憶しておく
       const that = this;
       
-      loader.load('../../../assets/fonts/helvetiker_regular.typeface.json', function(font){
+      loader.load(fontPath, function(font){
         const textGeometry = new THREE.TextGeometry(text, {
           font: font,
           size: 20,
