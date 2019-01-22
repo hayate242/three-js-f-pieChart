@@ -32,21 +32,28 @@ class PieChart extends THREE.Group {
         const sin = 10 * Math.sin(10*radian) + 40 + 10*radian/2;
         return sin;
     }
-    // 適当な負荷値を返す関数
-    const getDamage = ( angle ) => {
+    // 負荷値を返す関数
+    const getOriginalDamage = ( angle ) => {
+      // console.log(Math.floor(damage_data[Math.floor(angle)][1]/max_damage * max_hight) );
       return damage_data[Math.floor(angle)][1];
+    }
+    // 正規化した負荷値を返す関数
+    const getDamageHight = ( angle ) => {
+      // console.log(Math.floor(damage_data[Math.floor(angle)][1]/max_damage * max_hight) );
+      return Math.floor(damage_data[Math.floor(angle)][1]/max_damage * max_hight);
     }
     const getMaxDamage = () => {
       var max_damage = 0;
       for(var i = 0; i < 360; i+= stride){
-        const damage = getDamage(i);
+        const damage = damage_data[Math.floor(i)][1];
         // 最大値の更新
         if( max_damage < damage ){ max_damage = Number(damage); }
       }
       return max_damage;
     }
+
     const getColor_grad = ( angle ) => {
-      const damage = damage_data[Math.floor(angle)][1];
+      const damage = getOriginalDamage(angle);
       if( max_damage*0.8 < damage ){ return 0xd81200; }      //赤
       else if( max_damage*0.7 < damage ){ return 0xd82e00; }
       else if( max_damage*0.6 < damage ){ return 0xd85200; }
@@ -71,10 +78,15 @@ class PieChart extends THREE.Group {
     const sectorAngle = 45;
 
     const loader = new THREE.FontLoader();
-
+    // グラフの高さ
+    const interval_num = 5;
+    const max_hight = 100;
+    const interval = max_hight/interval_num;
     // 横の線
     var max_damage = getMaxDamage();
-    const interval = max_damage/5;
+    const damage_interval = max_damage/interval_num;
+    
+    console.log("max_damage", max_damage, "max_hight", max_hight);
 
     this.axisLabelGroup = new THREE.Group();
 
@@ -117,7 +129,7 @@ class PieChart extends THREE.Group {
         }
 
         // 横の線
-        for(var line_height = interval; line_height <= max_damage; line_height += interval){
+        for(var line_height = interval; line_height <= max_hight; line_height += interval){
           var holi_geometry = new THREE.Geometry();
           holi_geometry.vertices.push( new THREE.Vector3( positions.x, line_height, positions.z) );
           holi_geometry.vertices.push( new THREE.Vector3( next_positions.x, line_height, next_positions.z) );
@@ -130,11 +142,10 @@ class PieChart extends THREE.Group {
         }
 
         // 負荷のグラフ
-        //geometryの宣言と生成
         if( i+stride <= 360 ){
           var damage_geometry = new THREE.Geometry();
-          const damage_position = getDamage(i);
-          const next_damage_position = getDamage(i+stride);
+          const damage_position = getDamageHight(i);
+          const next_damage_position = getDamageHight(i+stride);
 
           //頂点座標の追加
           damage_geometry.vertices.push( new THREE.Vector3( positions.x, damage_position, positions.z) ); 
@@ -146,8 +157,6 @@ class PieChart extends THREE.Group {
           //sceneにlineを追加
           this.add( line );
         }
-
-        
       }
     }
     // 縦の線を書く
@@ -157,16 +166,16 @@ class PieChart extends THREE.Group {
       // 縦の線
       var ver_geometry = new THREE.Geometry();
       ver_geometry.vertices.push( new THREE.Vector3( positions.x, 0, positions.z) );
-      ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_damage, positions.z) );
+      ver_geometry.vertices.push( new THREE.Vector3( positions.x, max_hight, positions.z) );
       var material = new THREE.LineBasicMaterial( { color: 0x000000} );
       // material.linewidth = 2;
       var vertical_line = new THREE.Line( ver_geometry, material );
       //sceneにlineを追加
       this.add( vertical_line );
 
-      for(var i = 0; i <= max_damage; i += interval){
+      for(var i = 0; i <= max_hight; i += interval){
         // positions.y = i + 5;
-        drawAxisLabelVal( positions, String(i) , i+5 ,startAngle);
+        drawAxisLabelVal( positions, String(damage_interval*i/interval) , i+5 ,startAngle);
       }
     }
 

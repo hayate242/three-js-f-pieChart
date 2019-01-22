@@ -25,7 +25,7 @@ function update_data( crane_id, start, end ){
   draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
   draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
   draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
-  draw_pieChart( calc_pieChart_data() );
+  draw_pieChart( calc_pieChart_data( crane_id ) );
   // draw_stacked_chart( crane_id , '#stacked_chart' , false);
 }
 
@@ -175,10 +175,27 @@ function display_table_data(crane_id){
 
 }
 
-function calc_pieChart_data(){
+function calc_pieChart_data( crane_id ){
   var damage_data = [];
-  for( var i = 0; i <= 360; i++ ){
-    damage_data[i] = [i, 10];
+  var index = calc_index(crane_id);
+  console.log("crane_data", crane_data);
+  for( var i = 0; i < segment_num; i++ ){
+    const d_index = i * 45;
+    for( var j = d_index; j < d_index+45; j++ ){
+      damage_data[j] = [j,calc_damage_crane(crane_data[index+i])];
+    }
   }
+  console.log("damagedata", damage_data);
+  // for( var i = 0; i < 360; i++ ){
+  //   damage_data[i] = [i, 10];
+  // }
   return damage_data;
+}
+function calc_damage_crane( data ){
+  var sum = 0;
+  for(var i = 2; i < 8;i++){
+    sum += Number(data[i]);
+  }
+  console.log(sum);
+  return sum;
 }
