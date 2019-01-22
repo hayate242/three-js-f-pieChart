@@ -175,7 +175,7 @@ class PieChart extends THREE.Group {
 
       for(var i = 0; i <= max_hight; i += interval){
         // positions.y = i + 5;
-        drawAxisLabelVal( positions, String(damage_interval*i/interval) , i+5 ,startAngle);
+        drawAxisLabelVal( positions, String((damage_interval*i/interval).toFixed(1)) , i+5 ,startAngle);
       }
     }
 
