@@ -186,8 +186,8 @@ var RadarChart = {
 		.attr("data-id", function(j){return j.axis})
 		.style("fill", cfg.color(series)).style("fill-opacity", .9)
 		.on('mouseover', function (d){
-					newX =  parseFloat(d3.select(this).attr('cx')) - 10;
-					newY =  parseFloat(d3.select(this).attr('cy')) - 5;
+					var newX =  parseFloat(d3.select(this).attr('cx')) - 10;
+					var newY =  parseFloat(d3.select(this).attr('cy')) - 5;
 					
 					tooltip
 						.attr('x', newX)

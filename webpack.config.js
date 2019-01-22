@@ -1,5 +1,6 @@
 module.exports = {
-  mode: 'development',
+  mode: 'development',  //開発用
+  // mode: 'production', //本番用
   devtool: 'source-map',
   entry: ['@babel/polyfill', './public/assets/main-js/bundle.js'], // polyfill はIE11などで必要
   output: {

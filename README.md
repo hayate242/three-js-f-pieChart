@@ -10,4 +10,4 @@ npx webpack
 #開発の仕方
 cd /path/to/three-js-f-pieChart
 gulp watch
-npm run watch(別ターミナル)
+npm run watch(別ターミナル) //いらなくなりました

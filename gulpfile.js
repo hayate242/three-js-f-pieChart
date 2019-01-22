@@ -27,17 +27,11 @@ const concat   = require('gulp-concat');
 const uglify   = require('gulp-uglify');
 const babel    = require('gulp-babel');
 
-const merge = require('gulp-merge');
-const strip = require('gulp-strip-comments');
-const sourcemaps = require('gulp-sourcemaps');
+const webpackStream = require("webpack-stream");
+const webpack = require("webpack");
 
-const BABEL_POLYFILL = './node_modules/babel-polyfill/browser.js';
-const JS_FILES = 'app/assets/javascripts/**/*.js';
-
-const CLIENT_BABEL_OPTS = {
-  presets: ['env'],
-  plugins: ['transform-flow-strip-types'],
-};
+// webpackの設定ファイルの読み込み
+const webpackConfig = require("./webpack.config");
 
 // style.scssをタスクを作成する
 // concat
@@ -96,8 +90,14 @@ gulp.task('js.es5', function() {
         .pipe(gulp.dest('public/assets/main-js/'));
 });
 
+gulp.task('js.webpack', function () {
+    return webpackStream(webpackConfig, webpack)
+    .pipe(gulp.dest("public/assets/main-js/"));
+});
+
 // gulp.task('js', gulp.series('js.concat', 'js.uglify'));
-gulp.task('js', gulp.series('js.concat'));
+// gulp.task('js', gulp.series('js.concat'));
+gulp.task('js', gulp.series('js.concat', 'js.webpack'));
 // gulp.task('js', gulp.series('js.concat','js.es5'));
 gulp.task('scss', gulp.series('scss.concat', 'scss.compile'));
 
