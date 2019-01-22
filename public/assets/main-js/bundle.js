@@ -38,15 +38,15 @@ function save_spec_data(spec_data) {
 function save_log_data(log_data) {
   // console.log(log_data.responseText);
   log_data_list = convertCSVtoArray(log_data.responseText); // 渡されるのは読み込んだCSVデータ
-
-  console.log(log_data_list); // 日付指定範囲を計算
+  // console.log(log_data_list);
+  // 日付指定範囲を計算
 
   calc_date_list(); // format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
 }
 
 function format_crane_data(start, end) {
-  console.log("format_start", start);
-  console.log("format_end", end);
+  // console.log("format_start", start);
+  // console.log("format_end", end);
   var j = 0; // 全部のidを調べて保存用配列の作成
 
   var added_id = [];
@@ -72,9 +72,9 @@ function format_crane_data(start, end) {
       j++;
       added_id.push(log_data_list[i][0]);
     }
-  }
+  } // console.log("init",crane_data);
 
-  console.log("init", crane_data);
+
   var isFirst = true;
   log_data_list.forEach(function (data) {
     if (isFirst) {
@@ -83,12 +83,11 @@ function format_crane_data(start, end) {
       const y = Number(data[1]);
       const m = Number(data[2]);
       const d = Number(data[3]);
-      var the_date = new Date(y + "/" + m + "/" + d);
-      console.log("the_date", the_date);
+      var the_date = new Date(y + "/" + m + "/" + d); // console.log("the_date", the_date);
 
       if (the_date >= start && the_date <= end) {
-        console.log("data", data); // 負荷率
-
+        // console.log("data", data);
+        // 負荷率
         if (data[7] > 0 && data[7] <= 0.10) {
           classify_data(data, 0);
         } else if (data[7] > 0.10 && data[7] <= 0.50) {
@@ -282,8 +281,7 @@ function calc_max_val(crane_id) {
 
   }
 
-  max_val_list = max;
-  console.log("max_val_list", max_val_list);
+  max_val_list = max; // console.log("max_val_list",max_val_list);
 } // 年のリストを作成
 
 
@@ -294,14 +292,14 @@ function calc_date_list() {
       'start_y': new Date(Number(275755), Number(1), Number(1)),
       'end_y': new Date(Number(1970), Number(1), Number(1))
     });
-  }
-
-  console.log("init crane_date_list", crane_date_list);
-  console.log(crane_date_list[1].start_y);
-  console.log(crane_date_list[1].end_y);
-  console.log(crane_date_list[2].start_y);
-  console.log(crane_date_list[2].end_y); // var d2 = new Date(2014, 3, 1, 12, 34, 56);
+  } // console.log("init crane_date_list", crane_date_list);
+  // console.log(crane_date_list[1].start_y);
+  // console.log(crane_date_list[1].end_y);
+  // console.log(crane_date_list[2].start_y);
+  // console.log(crane_date_list[2].end_y);
+  // var d2 = new Date(2014, 3, 1, 12, 34, 56);
   // console.log(d2);
+
 
   for (var i = 1, len = log_data_list.length; i < len; i++) {
     const y = Number(log_data_list[i][1]);
@@ -4179,9 +4177,9 @@ function dateFormat(date) {
 
 function display_date_selection(crane_id, s, e) {
   const start = dateFormat(s);
-  const end = dateFormat(e);
-  console.log("display_start", start);
-  console.log("display_end", end);
+  const end = dateFormat(e); // console.log("display_start", start);
+  // console.log("display_end", end);
+
   $('#date_selection_start').val(start);
   $('#date_selection_end').val(end); // 選択範囲の設定
 
@@ -4266,8 +4264,7 @@ function display_table_data(crane_id) {
 
 function calc_pieChart_data(crane_id) {
   var damage_data = [];
-  var index = calc_index(crane_id);
-  console.log("crane_data", crane_data);
+  var index = calc_index(crane_id); // console.log("crane_data", crane_data);
 
   for (var i = 0; i < segment_num; i++) {
     const d_index = i * 45;
@@ -4275,11 +4272,8 @@ function calc_pieChart_data(crane_id) {
     for (var j = d_index; j < d_index + 45; j++) {
       damage_data[j] = [j, calc_damage_crane(crane_data[index + i])];
     }
-  }
+  } // console.log("damagedata", damage_data);
 
-  console.log("damagedata", damage_data); // for( var i = 0; i < 360; i++ ){
-  //   damage_data[i] = [i, 10];
-  // }
 
   return damage_data;
 }
@@ -4291,7 +4285,14 @@ function calc_damage_crane(data) {
     sum += Number(data[i]);
   }
 
-  console.log(sum);
+  sum += Number(data[2] * 5 * data[8] + //0-10%
+  data[3] * 4 * data[9] + //10-50%
+  data[4] * 3 * data[10] + //50-63%
+  data[5] * 2 * data[11] + //63-80%
+  data[6] * 1 * data[12] + //80-100%
+  data[7] * 6 * data[13] //100%以上
+  ); // console.log(sum);
+
   return sum;
 }
 /** グループを継承したサブクラスです。 */
@@ -4399,8 +4400,8 @@ class PieChart extends THREE.Group {
     const interval = max_hight / interval_num; // 横の線
 
     var max_damage = getMaxDamage();
-    const damage_interval = max_damage / interval_num;
-    console.log("max_damage", max_damage, "max_hight", max_hight);
+    const damage_interval = max_damage / interval_num; // console.log("max_damage", max_damage, "max_hight", max_hight);
+
     this.axisLabelGroup = new THREE.Group(); // console.log(max_damage);
     // chart 描く
 
@@ -4621,8 +4622,8 @@ function draw_pieChart(damage_data) {
   // console.log("getCSV");
   // var result = getCSV("assets/data/demo.csv");
   // console.log(damage_data[0][1]);
-  console.log(damage_data); // サイズを指定
-
+  // console.log(damage_data);
+  // サイズを指定
   const width = 600;
   const height = 350; // 刻み幅
 

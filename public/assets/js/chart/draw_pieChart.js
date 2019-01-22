@@ -22,7 +22,7 @@ function draw_pieChart(damage_data) {
   // console.log("getCSV");
   // var result = getCSV("assets/data/demo.csv");
   // console.log(damage_data[0][1]);
-  console.log(damage_data);
+  // console.log(damage_data);
   
 
 

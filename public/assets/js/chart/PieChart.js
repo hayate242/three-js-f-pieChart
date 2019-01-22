@@ -86,7 +86,7 @@ class PieChart extends THREE.Group {
     var max_damage = getMaxDamage();
     const damage_interval = max_damage/interval_num;
     
-    console.log("max_damage", max_damage, "max_hight", max_hight);
+    // console.log("max_damage", max_damage, "max_hight", max_hight);
 
     this.axisLabelGroup = new THREE.Group();
 

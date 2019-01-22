@@ -36,15 +36,15 @@ function save_spec_data( spec_data ){
 function save_log_data( log_data ){
   // console.log(log_data.responseText);
   log_data_list = convertCSVtoArray(log_data.responseText); // 渡されるのは読み込んだCSVデータ
-  console.log(log_data_list);
+  // console.log(log_data_list);
   // 日付指定範囲を計算
   calc_date_list();
   // format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
 }
 
 function format_crane_data( start, end ){
-  console.log("format_start", start);
-  console.log("format_end", end);
+  // console.log("format_start", start);
+  // console.log("format_end", end);
 
   var j = 0;
   // 全部のidを調べて保存用配列の作成
@@ -63,7 +63,7 @@ function format_crane_data( start, end ){
       added_id.push(log_data_list[i][0]);
     }
   }
-  console.log("init",crane_data);
+  // console.log("init",crane_data);
   var isFirst = true;
   log_data_list.forEach(function(data){
     if(isFirst){
@@ -73,10 +73,10 @@ function format_crane_data( start, end ){
       const m = Number(data[2]);
       const d = Number(data[3]);
       var the_date = new Date(y+"/"+m+"/"+d);
-      console.log("the_date", the_date);
+      // console.log("the_date", the_date);
 
       if(the_date >= start && the_date <= end){
-        console.log("data", data);
+        // console.log("data", data);
         // 負荷率
         if     (data[7] > 0    && data[7] <= 0.10)  { classify_data(data,0); }
         else if(data[7] > 0.10 && data[7] <= 0.50)  { classify_data(data,1); }
@@ -230,7 +230,7 @@ function calc_max_val( crane_id ){
     // else if (crane_data[index+i]._100_over_time > max[1]) { max[1] = crane_data[index+i]._100_over_time }
   }
   max_val_list = max;
-  console.log("max_val_list",max_val_list);
+  // console.log("max_val_list",max_val_list);
 }
 // 年のリストを作成
 function calc_date_list(){
@@ -242,11 +242,11 @@ function calc_date_list(){
       'end_y': new Date(Number(1970), Number(1), Number(1))
     });
   }
-  console.log("init crane_date_list", crane_date_list);
-  console.log(crane_date_list[1].start_y);
-  console.log(crane_date_list[1].end_y);
-  console.log(crane_date_list[2].start_y);
-  console.log(crane_date_list[2].end_y);
+  // console.log("init crane_date_list", crane_date_list);
+  // console.log(crane_date_list[1].start_y);
+  // console.log(crane_date_list[1].end_y);
+  // console.log(crane_date_list[2].start_y);
+  // console.log(crane_date_list[2].end_y);
   // var d2 = new Date(2014, 3, 1, 12, 34, 56);
   // console.log(d2);
   for( var i = 1, len = log_data_list.length; i < len; i++){

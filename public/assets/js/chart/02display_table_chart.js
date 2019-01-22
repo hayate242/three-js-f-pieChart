@@ -89,8 +89,8 @@ function dateFormat(date) {
 function display_date_selection( crane_id , s, e){
   const start = dateFormat(s);
   const end = dateFormat(e);
-  console.log("display_start", start);
-  console.log("display_end", end);
+  // console.log("display_start", start);
+  // console.log("display_end", end);
   $('#date_selection_start').val(start);
   $('#date_selection_end').val(end);
   // 選択範囲の設定
@@ -178,17 +178,14 @@ function display_table_data(crane_id){
 function calc_pieChart_data( crane_id ){
   var damage_data = [];
   var index = calc_index(crane_id);
-  console.log("crane_data", crane_data);
+  // console.log("crane_data", crane_data);
   for( var i = 0; i < segment_num; i++ ){
     const d_index = i * 45;
     for( var j = d_index; j < d_index+45; j++ ){
       damage_data[j] = [j,calc_damage_crane(crane_data[index+i])];
     }
   }
-  console.log("damagedata", damage_data);
-  // for( var i = 0; i < 360; i++ ){
-  //   damage_data[i] = [i, 10];
-  // }
+  // console.log("damagedata", damage_data);
   return damage_data;
 }
 function calc_damage_crane( data ){
@@ -196,6 +193,15 @@ function calc_damage_crane( data ){
   for(var i = 2; i < 8;i++){
     sum += Number(data[i]);
   }
-  console.log(sum);
+  sum += Number(
+    data[2] * 5 * data[8] +  //0-10%
+    data[3] * 4 * data[9] +  //10-50%
+    data[4] * 3 * data[10] + //50-63%
+    data[5] * 2 * data[11] + //63-80%
+    data[6] * 1 * data[12] + //80-100%
+    data[7] * 6 * data[13]   //100%以上
+  );
+
+  // console.log(sum);
   return sum;
 }
