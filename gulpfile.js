@@ -68,20 +68,25 @@ gulp.task('js.es5', function() {
     return gulp.src('public/assets/main-js/bundle.js')
         .pipe(babel({
             "presets": [
-              [
-                "@babel/preset-env", {
-                  "targets": {
-                    "node": "current"
-                  }
-                }
-              ]
+                [
+                    "@babel/preset-env", {
+                        // import文をそのままにする
+                        "modules": false,
+                        "targets": {
+                            "browsers": [">0.25% in JP", "not ie <= 10", "not op_mini all"]
+                        },
+                        // 必要なpolyfillプラグインを自動的に使う
+                        // "useBuiltIns": "usage",
+                    }
+                ]
             ]
         }))
         .pipe(gulp.dest('public/assets/main-js/'));
 });
 
 // gulp.task('js', gulp.series('js.concat', 'js.uglify'));
-gulp.task('js', gulp.series('js.concat','js.es5'));
+gulp.task('js', gulp.series('js.concat'));
+// gulp.task('js', gulp.series('js.concat','js.es5'));
 gulp.task('scss', gulp.series('scss.concat', 'scss.compile'));
 
 

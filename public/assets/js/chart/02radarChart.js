@@ -30,6 +30,8 @@ var RadarChart = {
 	 ExtraWidthY: 100,
 	 color: d3.scaleOrdinal(d3.schemeCategory10)
 	};
+	// グローバル化
+	var dataValues = [];
 	
 	if('undefined' !== typeof options){
 	  for(var i in options){

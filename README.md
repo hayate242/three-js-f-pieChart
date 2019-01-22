@@ -3,3 +3,6 @@
 
 # How to start development
 docker-compose up -d --bulid
+
+#webpack　実行
+npx webpack
