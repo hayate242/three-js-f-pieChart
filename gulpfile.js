@@ -27,6 +27,18 @@ const concat   = require('gulp-concat');
 const uglify   = require('gulp-uglify');
 const babel    = require('gulp-babel');
 
+const merge = require('gulp-merge');
+const strip = require('gulp-strip-comments');
+const sourcemaps = require('gulp-sourcemaps');
+
+const BABEL_POLYFILL = './node_modules/babel-polyfill/browser.js';
+const JS_FILES = 'app/assets/javascripts/**/*.js';
+
+const CLIENT_BABEL_OPTS = {
+  presets: ['env'],
+  plugins: ['transform-flow-strip-types'],
+};
+
 // style.scssをタスクを作成する
 // concat
 gulp.task('scss.concat', function () {
@@ -65,7 +77,7 @@ gulp.task('js.uglify', function() {
 
 // IE11対応
 gulp.task('js.es5', function() {
-    return gulp.src('public/assets/main-js/bundle.js')
+    return gulp.src(['public/assets/main-js/bundle.js', BABEL_POLYFILL])
         .pipe(babel({
             "presets": [
                 [

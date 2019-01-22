@@ -10192,7 +10192,7 @@ var RadarChart = {
       }).style("fill", function (j, i) {
         return cfg.color(series);
       }).style("fill-opacity", cfg.opacityArea).on('mouseover', function (d) {
-        z = "polygon." + d3.select(this).attr("class");
+        var z = "polygon." + d3.select(this).attr("class");
         g.selectAll("polygon").transition(200).style("fill-opacity", 0.1);
         g.selectAll(z).transition(200).style("fill-opacity", .7);
       }).on('mouseout', function () {
@@ -10215,7 +10215,7 @@ var RadarChart = {
         newX = parseFloat(d3.select(this).attr('cx')) - 10;
         newY = parseFloat(d3.select(this).attr('cy')) - 5;
         tooltip.attr('x', newX).attr('y', newY).text(d.value).transition(200).style('opacity', 1);
-        z = "polygon." + d3.select(this).attr("class");
+        var z = "polygon." + d3.select(this).attr("class");
         g.selectAll("polygon").transition(200).style("fill-opacity", 0.1);
         g.selectAll(z).transition(200).style("fill-opacity", .7);
       }).on('mouseout', function () {
@@ -11177,15 +11177,15 @@ function draw_chart(d, totals, id, cfg, is_time) {
     // if (error) throw error;
     //console.log(data);
     var keys = [];
-    var key_flag = false;
+    var key_flag = false; // console.log("data[0]", data[0]);
 
-    for (key in data[0]) {
+    for (var key in data[0]) {
       if (key_flag === true) {
         keys.push(key);
       }
 
       key_flag = true;
-    } //console.log("keys", keys);
+    } // console.log("keys", keys);
     // data.sort(function(a, b) { return b.total - a.total; });
 
 

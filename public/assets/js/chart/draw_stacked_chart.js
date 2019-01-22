@@ -188,11 +188,12 @@ function draw_chart( d, totals, id, cfg, is_time ){
     //console.log(data);
     var keys = [];
     var key_flag = false;
-    for(key in data[0]){
+    // console.log("data[0]", data[0]);
+    for(var key in data[0]){
       if(key_flag === true){ keys.push(key); }
       key_flag = true;
     }
-    //console.log("keys", keys);
+    // console.log("keys", keys);
     
     // data.sort(function(a, b) { return b.total - a.total; });
     x.domain(data.map(function(d) { return d.State; }));
