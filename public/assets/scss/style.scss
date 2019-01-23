@@ -1,4 +1,5 @@
 $border_color: #bbb;
+$graph_width: 700px;
 
 #maps {
   width: 500px;
@@ -31,17 +32,17 @@ $border_color: #bbb;
   // left: 50%;
   // transform:  translateX(-50%);
 }
-svg {
-  position: absolute;
+.svg_wrapper svg {
+  position: absolute; //IE11で
   top: 0;
   left: 0;
-  width: 100%;
+  width: $graph_width;
   height: 100%;
 }
-.svg-wrapper {
+.svg_wrapper {
   position: relative;
-  width: 100%;
-  padding-top: 100%; /* SVG高さ / SVG幅 * 100 */
+  width: $graph_width;
+  // padding-top: 100px; /* SVG高さ / SVG幅 * 100 */
 }
 
 .list_style_none {
@@ -125,7 +126,7 @@ svg {
   }
   .date_selection {
     input {
-      width: 149px;
+      width: 140px;
     }
   }
 }

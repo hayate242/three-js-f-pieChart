@@ -1,11 +1,60 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <title>test</title>
-  </head>
+<head>
+  <!-- the following scripts provide a way to check if the browser
+		 supports various input types. If it does, the browser will
+		 use the native HTML5 implementation of the widget. Otherwise
+		 it will load the appropriate 3rd party resources to get the
+		 job done.
 
-  <body>
-    <!-- 日付入力 -->
-    <input type="date" min="2018-04-08" max="2018-04-14"></input>
-  </body>
-</html>
+		 I'm using the JQuery UI DatePicker: https://jqueryui.com/datepicker/
+		 and a JQuery plugin called ColPick: http://colpick.com/plugin
+		 Chris Coyier's article was helpful: https://css-tricks.com/progressively-enhancing-html5-forms/
+	-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script>
+	  function init() {
+		  if (Modernizr.inputtypes.date == false) {
+
+				// load the JQuery UI styles:
+				link = document.createElement('link');
+				link.rel = 'stylesheet';
+				link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css';
+				document.getElementsByTagName('head')[0].appendChild(link);
+
+				// load JQuery:
+				newScript = document.createElement('script');
+				newScript.src = '//code.jquery.com/jquery-1.10.2.js';
+				document.getElementsByTagName('head')[0].appendChild(newScript);
+
+				// jquery-ui.js depends on jquery-1.10.2.js being fully loaded,
+				// so wait half a second:
+				setTimeout(function(){
+					newScript = document.createElement('script');
+					newScript.src = '//code.jquery.com/ui/1.11.4/jquery-ui.js';
+					document.getElementsByTagName('head')[0].appendChild(newScript);
+
+					// the datepicker plugin depends on jquery-ui.js being fully loaded,
+					// so wait another half a second:
+					setTimeout(function(){
+						$("#datepicker").datepicker();
+					}, 500);
+
+				}, 500);
+
+			}
+
+		}
+  	</script>
+</head>
+
+<body onload="init();">
+
+
+	
+	<!-- the 'date' type has full support for mobile devices; only supported (natively) 
+		 in Chrome on desktop at this time -->
+	<label for="input_date">type='date'</label><br><br>
+	
+	<!-- the following min and max attributes restrict the time period -->
+	<input id="datepicker" type="date" value="2016-01-06" min="2016-01-01" max="2016-01-31"/>
+ 
+</body>

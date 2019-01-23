@@ -1,8 +1,10 @@
 
 
 function draw_radar_chart( crane_id , is_time, id, max_val ){
-	var w = $(window).width() / 3,
-		h = $(window).width() / 3;
+	var w = 400,
+		h = 400;
+	// var w = $(window).width() / 3,
+	// 	h = $(window).width() / 3;
 	// if(w > 500){
 	// 	console.log("pre w", w);
 	// 	w = 500;h = 500;
@@ -70,15 +72,15 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 		.attr("width", w+300)
 		.attr("height", h)
 
-	//Create the title for the legend
-	var text = svg.append("text")
-		.attr("class", "title")
-		.attr('transform', 'translate(90,0)') 
-		.attr("x", w + 200)
-		.attr("y", 10)
-		.attr("font-size", "12px")
-		.attr("fill", "#404040")
-		.text("What % of owners use a specific service in a week");
+	// //Create the title for the legend
+	// var text = svg.append("text")
+	// 	.attr("class", "title")
+	// 	.attr('transform', 'translate(90,0)') 
+	// 	.attr("x", w + 200)
+	// 	.attr("y", 10)
+	// 	.attr("font-size", "12px")
+	// 	.attr("fill", "#404040")
+	// 	.text("What % of owners use a specific service in a week");
 			
 	//Initiate Legend	
 	var legend = svg.append("g")

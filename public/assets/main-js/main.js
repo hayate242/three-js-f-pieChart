@@ -10131,6 +10131,7 @@ var RadarChart = {
     var radius = cfg.factor * Math.min(cfg.w / 2, cfg.h / 2);
     var Format = d3.format('%');
     d3.select(id).select("svg").remove();
+    console.log("cfg.w+cfg.ExtraWidthX", cfg.w + cfg.ExtraWidthX);
     var g = d3.select(id).append("svg").attr("width", cfg.w + cfg.ExtraWidthX).attr("height", cfg.h + cfg.ExtraWidthY).append("g").attr("transform", "translate(" + cfg.TranslateX + "," + cfg.TranslateY + ")");
     ;
     var tooltip; //Circular segments
@@ -10917,8 +10918,10 @@ function draw_pieChart(damage_data) {
 }
 
 function draw_radar_chart(crane_id, is_time, id, max_val) {
-  var w = $(window).width() / 3,
-      h = $(window).width() / 3; // if(w > 500){
+  var w = 400,
+      h = 400; // var w = $(window).width() / 3,
+  // 	h = $(window).width() / 3;
+  // if(w > 500){
   // 	console.log("pre w", w);
   // 	w = 500;h = 500;
   // }
@@ -11006,9 +11009,16 @@ function draw_radar_chart(crane_id, is_time, id, max_val) {
   /////////// Initiate legend ////////////////
   ////////////////////////////////////////////
 
-  var svg = d3.select(String(id) + '_txt').selectAll('svg').append('svg').attr("width", w + 300).attr("height", h); //Create the title for the legend
-
-  var text = svg.append("text").attr("class", "title").attr('transform', 'translate(90,0)').attr("x", w + 200).attr("y", 10).attr("font-size", "12px").attr("fill", "#404040").text("What % of owners use a specific service in a week"); //Initiate Legend	
+  var svg = d3.select(String(id) + '_txt').selectAll('svg').append('svg').attr("width", w + 300).attr("height", h); // //Create the title for the legend
+  // var text = svg.append("text")
+  // 	.attr("class", "title")
+  // 	.attr('transform', 'translate(90,0)') 
+  // 	.attr("x", w + 200)
+  // 	.attr("y", 10)
+  // 	.attr("font-size", "12px")
+  // 	.attr("fill", "#404040")
+  // 	.text("What % of owners use a specific service in a week");
+  //Initiate Legend	
 
   var legend = svg.append("g").attr("class", "legend").attr("height", 100).attr("width", 200).attr('transform', 'translate(90,20)'); //Create colour squares
 
@@ -11296,17 +11306,50 @@ function convertCSVtoArray(str) {
   }
 
   return result;
-}
+} // Modernizr.load({
+//   test: Modernizr.inputtypes.date,
+//   nope: [
+//     'http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+//     'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
+//     'jquery-ui.css'
+//   ],
+//   complete: function() {
+//     $('input[type=date]').datepicker({
+//       dateFormat: 'yy-mm-dd'
+//     });
+//   }
+// });
 
-Modernizr.load({
-  test: Modernizr.inputtypes.date,
-  nope: ['jquery-ui.css'],
-  complete: function complete() {
-    $('#date_selection_start').datepicker({
-      dateFormat: 'yy-mm-dd'
-    });
+
+window.addEventListener('load', set_input_type_date());
+
+function set_input_type_date() {
+  if (Modernizr.inputtypes.date == false) {
+    // load the JQuery UI styles:
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css';
+    document.getElementsByTagName('head')[0].appendChild(link); // load JQuery:
+
+    var newScript = document.createElement('script');
+    newScript.src = '//code.jquery.com/jquery-1.10.2.js';
+    document.getElementsByTagName('head')[0].appendChild(newScript); // jquery-ui.js depends on jquery-1.10.2.js being fully loaded,
+    // so wait half a second:
+
+    setTimeout(function () {
+      var newScript = document.createElement('script');
+      newScript.src = '//code.jquery.com/ui/1.11.4/jquery-ui.js';
+      document.getElementsByTagName('head')[0].appendChild(newScript); // the datepicker plugin depends on jquery-ui.js being fully loaded,
+      // so wait another half a second:
+
+      setTimeout(function () {
+        $('input[type=date]').datepicker({
+          dateFormat: 'yy-mm-dd'
+        });
+      }, 500);
+    }, 500);
   }
-});
+}
 
 /***/ }),
 

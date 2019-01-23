@@ -46,6 +46,8 @@ var RadarChart = {
 	var radius = cfg.factor*Math.min(cfg.w/2, cfg.h/2);
 	var Format = d3.format('%');
 	d3.select(id).select("svg").remove();
+
+	console.log("cfg.w+cfg.ExtraWidthX",cfg.w+cfg.ExtraWidthX);
 	
 	var g = d3.select(id)
 			.append("svg")
