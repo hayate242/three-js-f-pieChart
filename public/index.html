@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
@@ -334,35 +335,15 @@
       <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
       <p>※ドラッグで回転，スクロールでズーム</p>
     </div>
-    <!-- <div class="flex">
-      <div class="chart" id="allLineChartContainer" style="height: 370px;"></div>
-      <div class="pieChartContainer chart">
-        <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2> -->
-        <!-- 親のタグの基準点をリセット -->
-        <!-- <div class="pieChart">
-            <canvas id="myCanvas"></canvas>
-        </div>
-        <div class="color_bar"></div>
-        <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
-        <p>※ドラッグで回転，スクロールでズーム</p>
-      </div>
-    </div> -->
-    <!-- <div class="flex">
-      <div class="chart" id="scatterChartContainer" style="height: 370px;"></div>
-      <div class="chart" id="columnChartContainer" style="height: 370px;"></div>
-    </div> -->
-    
-    
+
   </section>
 
-  <!-- IE対策 -->
-  <script src="https://www.promisejs.org/polyfills/promise-6.1.0.min.js"></script>
-  <!-- <script src="./assets/js/ie/promise-6.1.0.min.js"></script> -->
 
   <!-- Three JS読み込み -->
   <script src="./assets/js/three.min.js"></script>
   <script src="./assets/js/controls/OrbitControls.js"></script>
   <script src="./assets/js/01jquery-3.3.1.min.js"></script>
+  <script src="./assets/js/modernizr-input-types.js"></script>
   <!-- Google Map読み込み -->
   <!-- <script src="./assets/js/map/GoogleMap.js"></script> -->
   <!-- <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDjOCUT_oXFbyAKjdZz3qHCTwezThsayxc&callback=initMap" async></script> -->
@@ -379,5 +360,6 @@
   <!-- <script src="./assets/main-js/bundle.js"></script> -->
   <script src="./assets/main-js/main.js"></script>
   <!-- http://pbl.ict.ehime-u.ac.jp/crane/public/ -->
+
 </body>
 </html>

@@ -348,12 +348,15 @@ template {
 }
 
 .flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 
 .chart {
-  width: 45vw;
-  height: 45vw;
+  width: 700px;
+  height: 500px;
   border: solid 2px #bbb;
   margin: 3px;
   filter: drop-shadow(7px 7px 5px rgba(0, 0, 0, 0.3));
@@ -363,7 +366,7 @@ template {
   text-align: center;
 }
 
-.svg_wrapper svg {
+svg {
   position: absolute;
   top: 0;
   left: 0;

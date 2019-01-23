@@ -11298,6 +11298,16 @@ function convertCSVtoArray(str) {
   return result;
 }
 
+Modernizr.load({
+  test: Modernizr.inputtypes.date,
+  nope: ['jquery-ui.css'],
+  complete: function complete() {
+    $('#date_selection_start').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
+  }
+});
+
 /***/ }),
 
 /***/ 0:

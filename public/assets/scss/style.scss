@@ -11,13 +11,16 @@ $border_color: #bbb;
 }
 
 .flex {
+  display: -webkit-box;  //この辺が
+  display: -webkit-flex; //Android2.3~とか
+  display: -ms-flexbox; //IE9~用
   display: flex;
 }
 
 
 .chart {
-  width: 45vw;
-  height: 45vw;
+  width: 700px;
+  height: 500px;
   border: solid 2px $border_color;
   margin: 3px;
   filter: drop-shadow(7px 7px 5px rgba(0,0,0,0.3));
@@ -28,7 +31,7 @@ $border_color: #bbb;
   // left: 50%;
   // transform:  translateX(-50%);
 }
-.svg_wrapper svg {
+svg {
   position: absolute;
   top: 0;
   left: 0;
