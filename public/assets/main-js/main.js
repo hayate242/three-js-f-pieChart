@@ -9784,7 +9784,7 @@ function format_crane_data(start, end) {
 
   var added_id = [];
 
-  for (var i = 1; i < log_data_list.length; i++) {
+  for (var i = 1, len = log_data_list.length; i < len; i++) {
     // 登録されたことがなかったら,crane_dataに追加
     if (added_id.indexOf(log_data_list[i][0]) == -1) {
       crane_data[j] = new Array(log_data_list[i][0], "A", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -10185,7 +10185,7 @@ var RadarChart = {
       g.selectAll(".area").data([dataValues]).enter().append("polygon").attr("class", "radar-chart-serie" + series).style("stroke-width", "2px").style("stroke", cfg.color(series)).attr("points", function (d) {
         var str = "";
 
-        for (var pti = 0; pti < d.length; pti++) {
+        for (var pti = 0, len = d.length; pti < len; pti++) {
           str = str + d[pti][0] + "," + d[pti][1] + " ";
         }
 
@@ -10311,7 +10311,7 @@ $(function () {
 
 function display_crane_selection() {
   // クレーンのセレクトボックス
-  for (var i = 1; i < spec_data_list.length; i++) {
+  for (var i = 1, len = spec_data_list.length; i < len; i++) {
     $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
   }
 }
@@ -10433,7 +10433,7 @@ function display_table_data(crane_id) {
   } // 合計(縦列)
 
 
-  for (var i = 0; i < sum_class_num.length; i++) {
+  for (var i = 0, len = sum_class_num.length; i < len; i++) {
     // 荷重区分
     // 回数
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(' + String(2 + i) + ') > td:nth-child(10)').text(sum_class_num[i]); // 時間
@@ -11333,7 +11333,7 @@ function convertCSVtoArray(str) {
   var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
   // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
 
-  for (var i = 0; i < tmp.length; ++i) {
+  for (var i = 0, len = tmp.length; i < len; ++i) {
     result[i] = tmp[i].split(',');
   }
 

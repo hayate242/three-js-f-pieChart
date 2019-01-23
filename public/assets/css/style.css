@@ -353,6 +353,14 @@ template {
   display: flex;
 }
 
+header h1 {
+  margin-left: 100px;
+}
+
+section {
+  margin-left: 100px;
+}
+
 .chart {
   width: 700px;
   height: 500px;
@@ -481,7 +489,8 @@ template {
 }
 
 .graphs {
-  margin: 30px;
+  margin-top: 40px;
+  margin-left: 60px;
 }
 
 .graphs .pieChartContainer {

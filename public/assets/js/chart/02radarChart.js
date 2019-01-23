@@ -142,7 +142,7 @@ var RadarChart = {
 					 .style("stroke", cfg.color(series))
 					 .attr("points",function(d) {
 						 var str="";
-						 for(var pti=0;pti<d.length;pti++){
+						 for(var pti=0, len = d.length; pti<len; pti++){
 							 str=str+d[pti][0]+","+d[pti][1]+" ";
 						 }
 						 return str;

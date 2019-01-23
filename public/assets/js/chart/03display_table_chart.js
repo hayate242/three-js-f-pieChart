@@ -77,7 +77,7 @@ $(function(){
 
 function display_crane_selection(){
   // クレーンのセレクトボックス
-  for(var i = 1; i < spec_data_list.length; i++){
+  for(var i = 1, len = spec_data_list.length; i < len; i++){
     $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
   }
 }
@@ -186,7 +186,7 @@ function display_table_data(crane_id){
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child('+ String(2+i) +')').text(sum_segments_time[i].toFixed(1));
   }
   // 合計(縦列)
-  for(var i = 0; i < sum_class_num.length; i++){
+  for(var i = 0, len = sum_class_num.length; i < len; i++){
     // 荷重区分
     // 回数
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child('+ String(2+i) +') > td:nth-child(10)').text(sum_class_num[i]);

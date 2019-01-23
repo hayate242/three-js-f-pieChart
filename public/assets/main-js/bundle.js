@@ -50,7 +50,7 @@ function format_crane_data( start, end ){
   var j = 0;
   // 全部のidを調べて保存用配列の作成
   var added_id = [];
-  for(var i = 1; i < log_data_list.length; i++ ){
+  for(var i = 1, len = log_data_list.length; i < len; i++ ){
     // 登録されたことがなかったら,crane_dataに追加
     if(added_id.indexOf(log_data_list[i][0]) == -1){
       crane_data[j] = new Array(log_data_list[i][0],"A",0,0,0,0,0,0,0,0,0,0,0,0);j++;
@@ -441,7 +441,7 @@ var RadarChart = {
 					 .style("stroke", cfg.color(series))
 					 .attr("points",function(d) {
 						 var str="";
-						 for(var pti=0;pti<d.length;pti++){
+						 for(var pti=0, len = d.length; pti<len; pti++){
 							 str=str+d[pti][0]+","+d[pti][1]+" ";
 						 }
 						 return str;
@@ -604,7 +604,7 @@ $(function(){
 
 function display_crane_selection(){
   // クレーンのセレクトボックス
-  for(var i = 1; i < spec_data_list.length; i++){
+  for(var i = 1, len = spec_data_list.length; i < len; i++){
     $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
   }
 }
@@ -713,7 +713,7 @@ function display_table_data(crane_id){
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child('+ String(2+i) +')').text(sum_segments_time[i].toFixed(1));
   }
   // 合計(縦列)
-  for(var i = 0; i < sum_class_num.length; i++){
+  for(var i = 0, len = sum_class_num.length; i < len; i++){
     // 荷重区分
     // 回数
     $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child('+ String(2+i) +') > td:nth-child(10)').text(sum_class_num[i]);
@@ -1673,7 +1673,7 @@ function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列と�
   var result = []; // 最終的な二次元配列を入れるための配列
   var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
   // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
-  for(var i=0;i<tmp.length;++i){
+  for(var i=0, len = tmp.length;i<len;++i){
       result[i] = tmp[i].split(',');
   }
   return result;

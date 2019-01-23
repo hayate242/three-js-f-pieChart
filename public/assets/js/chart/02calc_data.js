@@ -49,7 +49,7 @@ function format_crane_data( start, end ){
   var j = 0;
   // 全部のidを調べて保存用配列の作成
   var added_id = [];
-  for(var i = 1; i < log_data_list.length; i++ ){
+  for(var i = 1, len = log_data_list.length; i < len; i++ ){
     // 登録されたことがなかったら,crane_dataに追加
     if(added_id.indexOf(log_data_list[i][0]) == -1){
       crane_data[j] = new Array(log_data_list[i][0],"A",0,0,0,0,0,0,0,0,0,0,0,0);j++;

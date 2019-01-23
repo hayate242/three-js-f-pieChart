@@ -18,6 +18,15 @@ $graph_width: 700px;
   display: flex;
 }
 
+header {
+  h1 {
+    margin-left: 100px;
+  }
+}
+section {
+  margin-left: 100px;
+}
+
 
 .chart {
   width: 700px;
@@ -154,7 +163,8 @@ $graph_width: 700px;
 }
 
 .graphs {
-  margin: 30px;
+  margin-top: 40px;
+  margin-left: 60px;
   .pieChartContainer {
     width: 600px;
     margin: 0 auto;
