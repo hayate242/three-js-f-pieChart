@@ -35,7 +35,9 @@
 					// the datepicker plugin depends on jquery-ui.js being fully loaded,
 					// so wait another half a second:
 					setTimeout(function(){
-						$("#datepicker").datepicker();
+						$("#datepicker").datepicker({
+              dateFormat: 'yy-mm-dd'  
+            });
 					}, 500);
 
 				}, 500);

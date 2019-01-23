@@ -10242,22 +10242,37 @@ var sum_class_num = [0, 0, 0, 0, 0, 0];
 var sum_class_time = [0, 0, 0, 0, 0, 0]; // 変更を反映する
 
 function update_data(crane_id, start, end) {
-  // 再計算
-  // 最大値を更新
-  format_crane_data(start, end);
-  calc_max_val(crane_id); // データ表示
+  var flag = true;
+  console.log("start", start, crane_date_list[crane_id].start_y);
 
-  display_spec_data(crane_id);
-  display_date_selection(crane_id, start, end);
-  display_table_data(crane_id); // chart描画
+  if (start > end) {
+    alert("開始年月日<終了年月日としてください");
+    flag = false;
+  } else if (start < crane_date_list[crane_id].start_y) {
+    alert(slash_dateFormat(start) + "以前にはデータが無いため開始年月日を" + slash_dateFormat(crane_date_list[crane_id].start_y) + "にしました");
+    $('#date_selection_start').val(dateFormat(crane_date_list[crane_id].start_y));
+  } else if (end > crane_date_list[crane_id].end_y) {
+    alert(slash_dateFormat(end) + "以降にはデータが無いため終了年月日を" + slash_dateFormat(crane_date_list[crane_id].end_y) + "にしました");
+    $('#date_selection_end').val(dateFormat(crane_date_list[crane_id].end_y));
+  } else {
+    // 再計算
+    // 最大値を更新
+    format_crane_data(start, end);
+    calc_max_val(crane_id); // データ表示
 
-  draw_radar_chart(crane_id, false, "#radar_chart", max_val_list[0]);
-  draw_radar_chart(crane_id, true, "#radar_chart_time", max_val_list[1]);
-  draw_stacked_chart(crane_id, '#stacked_chart', false);
-  draw_stacked_chart(crane_id, '#stacked_chart_time', true);
-  draw_bar_chart(crane_id, '#bar_chart', sum_class_num, false);
-  draw_bar_chart(crane_id, '#bar_chart_time', sum_class_time, true);
-  draw_pieChart(calc_pieChart_data(crane_id)); // draw_stacked_chart( crane_id , '#stacked_chart' , false);
+    display_spec_data(crane_id);
+    display_date_selection(crane_id, start, end);
+    display_table_data(crane_id); // chart描画
+
+    draw_radar_chart(crane_id, false, "#radar_chart", max_val_list[0]);
+    draw_radar_chart(crane_id, true, "#radar_chart_time", max_val_list[1]);
+    draw_stacked_chart(crane_id, '#stacked_chart', false);
+    draw_stacked_chart(crane_id, '#stacked_chart_time', true);
+    draw_bar_chart(crane_id, '#bar_chart', sum_class_num, false);
+    draw_bar_chart(crane_id, '#bar_chart_time', sum_class_time, true);
+    draw_pieChart(calc_pieChart_data(crane_id)); // draw_stacked_chart( crane_id , '#stacked_chart' , false);
+    // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));
+  }
 } // セレクトボックスを変更した際の処理
 
 
@@ -10323,6 +10338,23 @@ function dateFormat(date) {
   }
 
   return y + '-' + m + '-' + d;
+} // dateFormat 関数の定義
+
+
+function slash_dateFormat(date) {
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  var d = date.getDate();
+
+  if (m < 10) {
+    m = '0' + m;
+  }
+
+  if (d < 10) {
+    d = '0' + d;
+  }
+
+  return y + '/' + m + '/' + d;
 } // 期間を表示
 
 
@@ -11325,23 +11357,25 @@ window.addEventListener('load', set_input_type_date());
 
 function set_input_type_date() {
   if (Modernizr.inputtypes.date == false) {
-    // load the JQuery UI styles:
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css';
-    document.getElementsByTagName('head')[0].appendChild(link); // load JQuery:
-
-    var newScript = document.createElement('script');
-    newScript.src = '//code.jquery.com/jquery-1.10.2.js';
-    document.getElementsByTagName('head')[0].appendChild(newScript); // jquery-ui.js depends on jquery-1.10.2.js being fully loaded,
+    // // load the JQuery UI styles:
+    // var link = document.createElement('link');
+    // link.rel = 'stylesheet';
+    // // link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css';
+    // link.href = './assets/css/themes/base/jquery.ui.all.css';
+    // document.getElementsByTagName('head')[0].appendChild(link);
+    // // load JQuery:
+    // var newScript = document.createElement('script');
+    // newScript.src = '//code.jquery.com/jquery-1.10.2.js';
+    // document.getElementsByTagName('head')[0].appendChild(newScript);
+    // jquery-ui.js depends on jquery-1.10.2.js being fully loaded,
     // so wait half a second:
-
     setTimeout(function () {
-      var newScript = document.createElement('script');
-      newScript.src = '//code.jquery.com/ui/1.11.4/jquery-ui.js';
-      document.getElementsByTagName('head')[0].appendChild(newScript); // the datepicker plugin depends on jquery-ui.js being fully loaded,
+      // var newScript = document.createElement('script');
+      // // newScript.src = '//code.jquery.com/ui/1.11.4/jquery-ui.js';
+      // newScript.src = './assets/js/libs/jquery-ui-1.11.4.min.js';
+      // document.getElementsByTagName('head')[0].appendChild(newScript);
+      // the datepicker plugin depends on jquery-ui.js being fully loaded,
       // so wait another half a second:
-
       setTimeout(function () {
         $('input[type=date]').datepicker({
           dateFormat: 'yy-mm-dd'

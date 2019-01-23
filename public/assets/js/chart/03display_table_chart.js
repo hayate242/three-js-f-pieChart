@@ -10,23 +10,37 @@ var sum_class_time = [0,0,0,0,0,0];
 
 // 変更を反映する
 function update_data( crane_id, start, end ){
-  // 再計算
-  // 最大値を更新
-  format_crane_data( start, end );
-  calc_max_val(crane_id);
-  // データ表示
-  display_spec_data(crane_id);
-  display_date_selection(crane_id, start, end);
-  display_table_data(crane_id);
-  // chart描画
-  draw_radar_chart( crane_id, false, "#radar_chart" , max_val_list[0]);
-  draw_radar_chart( crane_id, true, "#radar_chart_time", max_val_list[1]);
-  draw_stacked_chart( crane_id ,'#stacked_chart', false);
-  draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
-  draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
-  draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
-  draw_pieChart( calc_pieChart_data( crane_id ) );
-  // draw_stacked_chart( crane_id , '#stacked_chart' , false);
+  var flag = true;
+  console.log("start",start,crane_date_list[crane_id].start_y);
+  if( start > end ){
+    alert("開始年月日<終了年月日としてください");
+    flag = false;
+  }else if( start < crane_date_list[crane_id].start_y ){
+    alert(slash_dateFormat(start)+"以前にはデータが無いため開始年月日を"+slash_dateFormat(crane_date_list[crane_id].start_y)+"にしました");
+    $('#date_selection_start').val( dateFormat(crane_date_list[crane_id].start_y) );
+  }else if( end > crane_date_list[crane_id].end_y ){
+    alert(slash_dateFormat(end)+"以降にはデータが無いため終了年月日を"+slash_dateFormat(crane_date_list[crane_id].end_y)+"にしました");
+    $('#date_selection_end').val( dateFormat(crane_date_list[crane_id].end_y) );
+  }else {
+    // 再計算
+    // 最大値を更新
+    format_crane_data( start, end );
+    calc_max_val(crane_id);
+    // データ表示
+    display_spec_data(crane_id);
+    display_date_selection(crane_id, start, end);
+    display_table_data(crane_id);
+    // chart描画
+    draw_radar_chart( crane_id, false, "#radar_chart" , max_val_list[0]);
+    draw_radar_chart( crane_id, true, "#radar_chart_time", max_val_list[1]);
+    draw_stacked_chart( crane_id ,'#stacked_chart', false);
+    draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
+    draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
+    draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
+    draw_pieChart( calc_pieChart_data( crane_id ) );
+    // draw_stacked_chart( crane_id , '#stacked_chart' , false);
+    // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));
+  }
 }
 
 
@@ -84,6 +98,15 @@ function dateFormat(date) {
   if (m < 10) { m = '0' + m; }
   if (d < 10) { d = '0' + d; }
   return y + '-' + m + '-' + d;
+}
+// dateFormat 関数の定義
+function slash_dateFormat(date) {
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  var d = date.getDate();
+  if (m < 10) { m = '0' + m; }
+  if (d < 10) { d = '0' + d; }
+  return y + '/' + m + '/' + d;
 }
 // 期間を表示
 function display_date_selection( crane_id , s, e){
