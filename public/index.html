@@ -57,8 +57,8 @@
   <!-- 集計表 -->
   <section class="summary_sheet">
     <div class="flex units">
-      <p>回</p>
-      <p>H</p>
+      <p>（単位：回数）</p>
+      <p>（単位：時間）</p>
     </div>
     <div class="flex tables">
       <table border="1">
@@ -270,13 +270,13 @@
     
     <!-- レーダーチャート -->
     <div class="flex">
-      <div class="chart" style="height: 600px;">
+      <div class="chart">
         <div id="radar_chart_txt">
           <h3 class="chart_title">荷重区分別ゾーン頻度</h3>
           <div id="radar_chart"></div>
         </div>
       </div>
-      <div class="chart" style="height: 600px;">
+      <div class="chart">
         <div id="radar_chart_time_txt">
           <h3 class="chart_title">荷重区分別ゾーン累計時間</h3>
           <div id="radar_chart_time"></div>
@@ -326,9 +326,9 @@
       </div>
     </div>
     <div class="flex">
-      <div class="chart" style="height: 600px;">
+      <div class="chart radar_chart_sum_time">
         <div id="radar_chart_sum_time_txt">
-          <h3 class="chart_title">荷重区分別ゾーン頻度</h3>
+          <h3 class="chart_title">累積負荷時間</h3>
           <div id="radar_chart_sum_time"></div>
         </div>
       </div>

@@ -350,11 +350,10 @@ template {
 
 $border_color: #bbb;
 $graph_width: 700px;
+$chart_margin: 3px;
 
-#maps {
-  width: 500px;
-  height: 400px;
-  // margin: 0 auto;
+body {
+  max-width: 1400px;
 }
 
 .text_center {
@@ -382,7 +381,7 @@ section {
   width: 700px;
   height: 500px;
   border: solid 2px $border_color;
-  margin: 3px;
+  margin: $chart_margin;
   filter: drop-shadow(7px 7px 5px rgba(0,0,0,0.3));
 }
 .chart_title {
@@ -492,6 +491,8 @@ section {
 
 .summary_sheet {
   .units{
+    justify-content: space-around;
+    margin-bottom: -10px;
     p {
       width: 50%;
       text-align: right;
@@ -499,6 +500,7 @@ section {
     }
   }
   .tables {
+    justify-content: space-around;
     table {
       width: 50%;
       text-align: right;
@@ -516,8 +518,8 @@ section {
   margin-top: 40px;
   margin-left: 60px;
   .pieChartContainer {
-    width: 600px;
-    margin: 0 auto;
+    width: 660px;
+    margin: $chart_margin;
     border: solid 2px $border_color;
     h2 {
       margin: 0px;
@@ -545,10 +547,10 @@ section {
   #radar_chart {
     width: calc(40% + 100px);
   }
-  // #stacked_chart {
-  //   width: 400px;
-  //   height: 300px;
-  // }
+  .radar_chart_sum_time {
+    width: 660px;
+  }
+
 }
 
 // #main {

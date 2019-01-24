@@ -337,9 +337,8 @@ template {
   display: none;
 }
 
-#maps {
-  width: 500px;
-  height: 400px;
+body {
+  max-width: 1400px;
 }
 
 .text_center {
@@ -470,10 +469,19 @@ section {
   width: 140px;
 }
 
+.summary_sheet .units {
+  justify-content: space-around;
+  margin-bottom: -10px;
+}
+
 .summary_sheet .units p {
   width: 50%;
   text-align: right;
   max-width: 500px;
+}
+
+.summary_sheet .tables {
+  justify-content: space-around;
 }
 
 .summary_sheet .tables table {
@@ -494,8 +502,8 @@ section {
 }
 
 .graphs .pieChartContainer {
-  width: 600px;
-  margin: 0 auto;
+  width: 660px;
+  margin: 3px;
   border: solid 2px #bbb;
 }
 
@@ -530,4 +538,8 @@ section {
 
 .graphs #radar_chart {
   width: calc(40% + 100px);
+}
+
+.graphs .radar_chart_sum_time {
+  width: 660px;
 }

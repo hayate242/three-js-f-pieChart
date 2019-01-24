@@ -10951,8 +10951,8 @@ function draw_pieChart(damage_data) {
 }
 
 function draw_radar_chart(crane_id, is_time, id, max_val) {
-  var w = 400,
-      h = 400; // var w = $(window).width() / 3,
+  var w = 370,
+      h = 370; // var w = $(window).width() / 3,
   // 	h = $(window).width() / 3;
   // if(w > 500){
   // 	console.log("pre w", w);
@@ -11073,8 +11073,8 @@ function draw_radar_chart(crane_id, is_time, id, max_val) {
 
 
 function draw_radar_chart_sum_time(id, data) {
-  var w = 400,
-      h = 400; // var w = $(window).width() / 3,
+  var w = 370,
+      h = 370; // var w = $(window).width() / 3,
   // 	h = $(window).width() / 3;
   // if(w > 500){
   // 	console.log("pre w", w);
