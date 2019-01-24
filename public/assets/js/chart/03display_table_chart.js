@@ -4,6 +4,9 @@ var sum  = function(arr) {
   });
 };
 
+// 合計を計算
+var sum_segments_num = [];
+var sum_segments_time = [];
 var sum_class_num = [0,0,0,0,0,0];
 var sum_class_time = [0,0,0,0,0,0];
 
@@ -37,6 +40,7 @@ function update_data( crane_id, start, end ){
     draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
     draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
     draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
+    draw_radar_chart_sum_time(crane_id, "#radar_chart_sum_time" , sum_segments_time)
     draw_pieChart( calc_pieChart_data( crane_id ) );
     // draw_stacked_chart( crane_id , '#stacked_chart' , false);
     // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));
@@ -133,9 +137,7 @@ function display_date_selection( crane_id , s, e){
 function display_table_data(crane_id){
   const index = (crane_id - 1) * segment_num;
   // console.log(index);
-  // 合計を計算
-  var sum_segments_num = [];
-  var sum_segments_time = [];
+  
   // 初期化
   for(var i = 0, len = sum_class_num.length; i < len; i++){
     sum_class_num[i] = 0;

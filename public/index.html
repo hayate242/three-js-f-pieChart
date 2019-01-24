@@ -304,7 +304,6 @@
         <div id="stacked_chart_time_ver_label"></div>
         <div id="stacked_chart_time_hor_label"></div>
       </div>
-
     </div>
     <div class="flex">
       <div class="chart svg_wrapper">
@@ -326,15 +325,23 @@
         <div id="bar_chart_time_hor_label"></div>
       </div>
     </div>
-    <div class="pieChartContainer">
-      <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
-      <!-- 親のタグの基準点をリセット -->
-      <div class="pieChart">
-          <canvas id="myCanvas"></canvas>
+    <div class="flex">
+      <div class="chart" style="height: 600px;">
+        <div id="radar_chart_sum_time_txt">
+          <h3 class="chart_title">荷重区分別ゾーン頻度</h3>
+          <div id="radar_chart_sum_time"></div>
+        </div>
       </div>
-      <div class="color_bar"></div>
-      <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
-      <p>※ドラッグで回転，スクロールでズーム</p>
+      <div class="pieChartContainer">
+        <h2>ターンテーブル軸受にかかる累積負荷のグラフ（３D）</h2>
+        <!-- 親のタグの基準点をリセット -->
+        <div class="pieChart">
+            <canvas id="myCanvas"></canvas>
+        </div>
+        <div class="color_bar"></div>
+        <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
+        <p>※ドラッグで回転，スクロールでズーム</p>
+      </div>
     </div>
 
   </section>

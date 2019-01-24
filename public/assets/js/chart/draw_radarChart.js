@@ -57,7 +57,7 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 		levels: 6,
 		ExtraWidthX: w/2
 	}
-
+	console.log("d", d);
 	//Call function to draw the Radar chart
 	//Will expect that data is in %'s
 	RadarChart.draw(id , d, mycfg);
@@ -111,5 +111,59 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 			.attr("fill", "#737373")
 			.text(function(d) { return d; })
 			;	
+
+}
+
+/////////////////////////////////
+// 時間の合計値 レーダーチャート
+/////////////////////////////////
+function draw_radar_chart_sum_time( id, data ){
+	var w = 400,
+		h = 400;
+	// var w = $(window).width() / 3,
+	// 	h = $(window).width() / 3;
+	// if(w > 500){
+	// 	console.log("pre w", w);
+	// 	w = 500;h = 500;
+	// }
+	console.log("w", w);
+	
+	//Data
+	var max = 0;
+	for(var i = 0, len = data.length; i < len; i++){
+		if( max < data[i]){
+			max = data[i];
+		}
+	}
+	// console.log(crane_data[index][2]);
+
+	var d = [];
+	d.push([
+		{axis:"A",value: Number(data[0])},
+		{axis:"B",value: Number(data[1])},
+		{axis:"C",value: Number(data[2])},
+		{axis:"D",value: Number(data[3])},
+		{axis:"E",value: Number(data[4])},
+		{axis:"F",value: Number(data[5])},
+		{axis:"G",value: Number(data[6])},
+		{axis:"H",value: Number(data[7])}
+	]);
+	// console.log("data",data);
+	// console.log("d",d);
+	
+
+	//Options for the Radar chart, other than default
+	var mycfg = {
+		w: w,
+		h: h,
+		maxValue: max,
+		levels: 6,
+		ExtraWidthX: w/2
+	}
+
+	//Call function to draw the Radar chart
+	//Will expect that data is in %'s
+	RadarChart.draw(id , d, mycfg);
+
 
 }

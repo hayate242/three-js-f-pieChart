@@ -32,6 +32,7 @@ var RadarChart = {
 	};
 	// グローバル化
 	var dataValues = [];
+	// console.log("radarchart.d",d);
 	
 	if('undefined' !== typeof options){
 	  for(var i in options){
@@ -47,7 +48,7 @@ var RadarChart = {
 	var Format = d3.format('%');
 	d3.select(id).select("svg").remove();
 
-	console.log("cfg.w+cfg.ExtraWidthX",cfg.w+cfg.ExtraWidthX);
+	// console.log("cfg.w+cfg.ExtraWidthX",cfg.w+cfg.ExtraWidthX);
 	
 	var g = d3.select(id)
 			.append("svg")
