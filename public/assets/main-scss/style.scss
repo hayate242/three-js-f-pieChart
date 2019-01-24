@@ -354,7 +354,9 @@ $chart_margin: 3px;
 
 body {
   max-width: 1400px;
+  margin: 0 auto;
 }
+
 
 .text_center {
   text-align: center;
@@ -372,8 +374,11 @@ header {
     margin-left: 100px;
   }
 }
-section {
-  margin-left: 100px;
+footer {
+  padding: 30px;
+  p {
+    text-align: center;
+  }
 }
 
 
@@ -516,7 +521,6 @@ section {
 
 .graphs {
   margin-top: 40px;
-  margin-left: 60px;
   .pieChartContainer {
     width: 660px;
     margin: $chart_margin;

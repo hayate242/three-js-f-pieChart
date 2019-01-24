@@ -9,7 +9,8 @@ var sum_segments_num = [];
 var sum_segments_time = [];
 var sum_class_num = [0,0,0,0,0,0];
 var sum_class_time = [0,0,0,0,0,0];
-
+// IE判定用
+var userAgent = window.navigator.userAgent.toLowerCase();
 
 // 変更を反映する
 function update_data( crane_id, start, end ){
@@ -40,8 +41,19 @@ function update_data( crane_id, start, end ){
     draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
     draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
     draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
-    draw_radar_chart_sum_time("#radar_chart_sum_time" , sum_segments_time)
-    draw_pieChart( calc_pieChart_data( crane_id ) );
+    draw_radar_chart_sum_time("#radar_chart_sum_time" , sum_segments_time);
+    console.log("userAgent",userAgent);
+    console.log("userAgent", typeof( userAgent));
+    if(userAgent.indexOf('chrome') != -1 ) {
+      console.log('お使いのブラウザはchromeですね！');
+      draw_pieChart( calc_pieChart_data( crane_id ) );
+    }else {
+      $('.pieChartContainer').remove();
+      $('.radar_chart_sum_time').css({
+        'margin': '0 auto'
+      });
+    }
+
     // draw_stacked_chart( crane_id , '#stacked_chart' , false);
     // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));
   }

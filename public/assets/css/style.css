@@ -339,6 +339,7 @@ template {
 
 body {
   max-width: 1400px;
+  margin: 0 auto;
 }
 
 .text_center {
@@ -356,8 +357,12 @@ header h1 {
   margin-left: 100px;
 }
 
-section {
-  margin-left: 100px;
+footer {
+  padding: 30px;
+}
+
+footer p {
+  text-align: center;
 }
 
 .chart {
@@ -498,7 +503,6 @@ section {
 
 .graphs {
   margin-top: 40px;
-  margin-left: 60px;
 }
 
 .graphs .pieChartContainer {

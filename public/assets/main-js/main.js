@@ -9683,8 +9683,6 @@ module.exports = g;
 "use strict";
 
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -9696,6 +9694,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -10242,7 +10242,9 @@ var sum = function sum(arr) {
 var sum_segments_num = [];
 var sum_segments_time = [];
 var sum_class_num = [0, 0, 0, 0, 0, 0];
-var sum_class_time = [0, 0, 0, 0, 0, 0]; // 変更を反映する
+var sum_class_time = [0, 0, 0, 0, 0, 0]; // IE判定用
+
+var userAgent = window.navigator.userAgent.toLowerCase(); // 変更を反映する
 
 function update_data(crane_id, start, end) {
   var flag = true;
@@ -10274,8 +10276,20 @@ function update_data(crane_id, start, end) {
     draw_bar_chart(crane_id, '#bar_chart', sum_class_num, false);
     draw_bar_chart(crane_id, '#bar_chart_time', sum_class_time, true);
     draw_radar_chart_sum_time("#radar_chart_sum_time", sum_segments_time);
-    draw_pieChart(calc_pieChart_data(crane_id)); // draw_stacked_chart( crane_id , '#stacked_chart' , false);
+    console.log("userAgent", userAgent);
+    console.log("userAgent", _typeof(userAgent));
+
+    if (userAgent.indexOf('chrome') != -1) {
+      console.log('お使いのブラウザはchromeですね！');
+      draw_pieChart(calc_pieChart_data(crane_id));
+    } else {
+      $('.pieChartContainer').remove();
+      $('.radar_chart_sum_time').css({
+        'margin': '0 auto'
+      });
+    } // draw_stacked_chart( crane_id , '#stacked_chart' , false);
     // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));
+
   }
 } // セレクトボックスを変更した際の処理
 
