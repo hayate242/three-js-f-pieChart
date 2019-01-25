@@ -10435,29 +10435,29 @@ function display_table_data(crane_id) {
   for (var i = 0; i < segment_num; i++) {
     // 回数データ
     for (var j = 2; j < 8; j++) {
-      $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(' + String(j) + ') > td:nth-child(' + String(2 + i) + ')').text(crane_data[index + i][j]);
+      $('table.tb_numbers  > tbody > tr:nth-child(' + String(j) + ') > td:nth-child(' + String(2 + i) + ')').text(crane_data[index + i][j]);
     }
 
-    $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(8) > td:nth-child(' + String(2 + i) + ')').text(sum_segments_num[i]); // 時間データ
+    $('table.tb_numbers  > tbody > tr:nth-child(8) > td:nth-child(' + String(2 + i) + ')').text(sum_segments_num[i]); // 時間データ
 
     for (var j = 2; j < 8; j++) {
-      $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(' + String(j) + ') > td:nth-child(' + String(2 + i) + ')').text(crane_data[index + i][j + 6].toFixed(1));
+      $('table.tb_hours > tbody > tr:nth-child(' + String(j) + ') > td:nth-child(' + String(2 + i) + ')').text(crane_data[index + i][j + 6].toFixed(1));
     }
 
-    $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child(' + String(2 + i) + ')').text(sum_segments_time[i].toFixed(1));
+    $('table.tb_hours > tbody > tr:nth-child(8) > td:nth-child(' + String(2 + i) + ')').text(sum_segments_time[i].toFixed(1));
   } // 合計(縦列)
 
 
   for (var i = 0, len = sum_class_num.length; i < len; i++) {
     // 荷重区分
     // 回数
-    $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(' + String(2 + i) + ') > td:nth-child(10)').text(sum_class_num[i]); // 時間
+    $('table.tb_numbers  > tbody > tr:nth-child(' + String(2 + i) + ') > td:nth-child(10)').text(sum_class_num[i]); // 時間
 
-    $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(' + String(2 + i) + ') > td:nth-child(10)').text(sum_class_time[i].toFixed(1));
+    $('table.tb_hours > tbody > tr:nth-child(' + String(2 + i) + ') > td:nth-child(10)').text(sum_class_time[i].toFixed(1));
   }
 
-  $('body > section.summary_sheet > div.flex.tables > table:nth-child(1) > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_num));
-  $('body > section.summary_sheet > div.flex.tables > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_time).toFixed(1));
+  $('table.tb_numbers  > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_num));
+  $('table.tb_hours > tbody > tr:nth-child(8) > td:nth-child(10)').text(sum(sum_class_time).toFixed(1));
 }
 
 function calc_pieChart_data(crane_id) {
