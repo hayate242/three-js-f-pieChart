@@ -353,15 +353,22 @@ body {
   display: flex;
 }
 
+header {
+  padding: 10px;
+}
+
 header h1 {
-  margin-left: 100px;
+  margin-left: 39px;
 }
 
 footer {
-  padding: 30px;
+  background: #e87723;
+  padding: 10px;
+  margin-top: 20px;
 }
 
 footer p {
+  color: #ffffff;
   text-align: center;
 }
 
@@ -444,19 +451,23 @@ footer p {
   color: #666666;
 }
 
+.controlls h2 {
+  margin-left: 39px;
+}
+
 .crane_data_label_li {
   margin-bottom: -25px;
 }
 
 .crane_data_label_li li {
-  width: 150px;
+  width: 160px;
   height: 30px;
   text-align: center;
 }
 
 .crane_data_li li {
   border: solid 1px #bbb;
-  width: 150px;
+  width: 160px;
   height: 30px;
   text-align: right;
   line-height: 30px;

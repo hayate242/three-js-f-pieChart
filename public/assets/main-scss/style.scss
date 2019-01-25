@@ -351,6 +351,7 @@ template {
 $border_color: #bbb;
 $graph_width: 700px;
 $chart_margin: 3px;
+$h_f_bg_color: #e87723;
 
 body {
   max-width: 1400px;
@@ -370,13 +371,17 @@ body {
 }
 
 header {
+  padding: 10px;
   h1 {
-    margin-left: 100px;
+    margin-left: 39px;
   }
 }
 footer {
-  padding: 30px;
+  background: $h_f_bg_color;
+  padding: 10px;
+  margin-top: 20px;
   p {
+    color: #ffffff;
     text-align: center;
   }
 }
@@ -460,12 +465,16 @@ footer {
 	padding: 8px 38px 8px 8px;
 	color: #666666;
 }
-
+.controlls {
+  h2 {
+    margin-left: 39px;
+  }
+}
 // listの形式（クレーン情報，表示期間）
 .crane_data_label_li {
   margin-bottom: -25px;
   li {
-    width: 150px;
+    width: 160px;
     height: 30px;
     text-align: center;
   }
@@ -473,7 +482,7 @@ footer {
 .crane_data_li {
   li {
     border: solid 1px $border_color;
-    width: 150px;
+    width: 160px;
     height: 30px;
     text-align: right;
     line-height: 30px;

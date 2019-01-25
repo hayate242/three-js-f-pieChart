@@ -684,8 +684,8 @@ function display_table_data(crane_id){
     sum_class_time[i] = 0;
   }
   for(var i = 0; i < segment_num; i++){ 
-    sum_segments_num.push(crane_data[index+i][2] + crane_data[index+i][3] + crane_data[index+i][4] + crane_data[index+i][5] + crane_data[index+i][6] + crane_data[index+i][7]);
-    sum_segments_time.push(crane_data[index+i][8] + crane_data[index+i][9] + crane_data[index+i][10] + crane_data[index+i][11] + crane_data[index+i][12] + crane_data[index+i][13]);
+    sum_segments_num[i] = (crane_data[index+i][2] + crane_data[index+i][3] + crane_data[index+i][4] + crane_data[index+i][5] + crane_data[index+i][6] + crane_data[index+i][7]);
+    sum_segments_time[i] = (crane_data[index+i][8] + crane_data[index+i][9] + crane_data[index+i][10] + crane_data[index+i][11] + crane_data[index+i][12] + crane_data[index+i][13]);
   }
   // console.log('sum_segments_num',sum_segments_num);
   // console.log('sum_segments_time',sum_segments_time);
