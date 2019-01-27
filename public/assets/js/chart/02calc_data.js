@@ -23,6 +23,8 @@ async function loadAllFiles() {
 
   // id=1のクレーンのデータを表示
   display_crane_selection();
+  // 選択可能最小，最大日時
+  display_min_max_date(crane_date_list[1].start_y, crane_date_list[1].end_y);
   // chart描画
   update_data(1, crane_date_list[1].start_y, crane_date_list[1].end_y);
 }

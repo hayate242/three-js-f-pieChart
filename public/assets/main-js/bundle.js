@@ -24,6 +24,8 @@ async function loadAllFiles() {
 
   // id=1のクレーンのデータを表示
   display_crane_selection();
+  // 選択可能最小，最大日時
+  display_min_max_date(crane_date_list[1].start_y, crane_date_list[1].end_y);
   // chart描画
   update_data(1, crane_date_list[1].start_y, crane_date_list[1].end_y);
 }
@@ -540,13 +542,25 @@ var sum_class_time = [0,0,0,0,0,0];
 // IE判定用
 var userAgent = window.navigator.userAgent.toLowerCase();
 
+// 表示可能最小最大年月日
+function display_min_max_date(start, end){
+  var date = [];
+  date.push(start.getFullYear());
+  date.push(start.getMonth() + 1);
+  date.push(start.getDate()); 
+  date.push(end.getFullYear());
+  date.push(end.getMonth() + 1);
+  date.push(end.getDate());
+  for(var i = 0; i < 6; i++){
+    $('.date_range > span:nth-child('+ String(i+1) +')').text(date[i]);
+  }
+}
+
 // 変更を反映する
 function update_data( crane_id, start, end ){
-  var flag = true;
   console.log("start",start,crane_date_list[crane_id].start_y);
   if( start > end ){
     alert("開始年月日<終了年月日としてください");
-    flag = false;
   }else if( start < crane_date_list[crane_id].start_y ){
     alert(slash_dateFormat(start)+"以前にはデータが無いため開始年月日を"+slash_dateFormat(crane_date_list[crane_id].start_y)+"にしました");
     $('#date_selection_start').val( dateFormat(crane_date_list[crane_id].start_y) );
@@ -604,6 +618,7 @@ $(function(){
     if(is_select_crane){
       var start = crane_date_list[crane_id].start_y;
       var end = crane_date_list[crane_id].end_y;
+      display_min_max_date(start, end);
     }else{
       var start_date = String($('#date_selection_start').val()).replace(/-/g, '/');
       var end_date = String($('#date_selection_end').val()).replace(/-/g, '/');
