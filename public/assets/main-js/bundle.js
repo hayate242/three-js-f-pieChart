@@ -573,7 +573,7 @@ function update_data( crane_id, start, end ){
     format_crane_data( start, end );
     calc_max_val(crane_id);
     // データ表示
-    display_spec_data(crane_id);
+    // display_spec_data(crane_id);
     display_date_selection(crane_id, start, end);
     display_table_data(crane_id);
     // chart描画
@@ -604,7 +604,7 @@ function update_data( crane_id, start, end ){
 
 // セレクトボックスを変更した際の処理
 $(function(){
-  $('.select_crane').change(function() {
+  $('input[name=crane_id]').change(function() {
     on_change_action(true);
   });
   $('#date_selection_start').change(function(){
@@ -614,7 +614,8 @@ $(function(){
     on_change_action(false);
   });
   function on_change_action( is_select_crane ){
-    var crane_id = $('.select_crane').val();
+    var crane_id = $('input[name=crane_id]:checked').val();
+    console.log("radio crane_id", crane_id);
     if(is_select_crane){
       var start = crane_date_list[crane_id].start_y;
       var end = crane_date_list[crane_id].end_y;

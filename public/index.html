@@ -23,18 +23,24 @@
         <li>TTB_PCD（D）</li>
       </ul>
       <!-- クレーン情報 -->
-      <ul class="flex list_style_none crane_data_li">
-        <li class="cp_ipselect cp_sl01">
-          <select class="select_crane" name="cranes" required>
-            <!-- <option value="1"><span>1</span></option>
-            <option value="2"><span>2</span></option>
-            <option value="3"><span>3</span></option> -->
-          </select>
-        </li>
-        <li class="max_weight"><span>0</span></li>
-        <li class="max_turn_radius"><span>0</span></li>
-        <li class="ttb_pcd"><span>0</span></li>
-      </ul>
+      <form action="test" method="POST">
+        <ul class="flex list_style_none crane_data_li">
+          <li>
+            <input type="radio" name="crane_id" value="1" checked class="select_crane"> 1
+          </li>
+          <li class="max_weight"><span>20</span></li>
+          <li class="max_turn_radius"><span>40</span></li>
+          <li class="ttb_pcd"><span>4.24</span></li>
+        </ul>
+        <ul class="flex list_style_none crane_data_li">
+            <li>
+              <input type="radio" name="crane_id" value="2" class="select_crane"> 2
+            </li>
+            <li class="max_weight"><span>40</span></li>
+            <li class="max_turn_radius"><span>50</span></li>
+            <li class="ttb_pcd"><span>7.24</span></li>
+          </ul>
+      </form>
       <!-- 表示期間 -->
       <div class="display_period">
           <ul class="flex list_style_none crane_data_label_li">
@@ -341,16 +347,16 @@
             <div id="radar_chart_sum_time"></div>
           </div>
         </div>
-        <div class="pieChartContainer">
-          <h2>ターンテーブル軸受にかかる累積負荷（３D）</h2>
+        <!-- <div class="pieChartContainer">
+          <h2>ターンテーブル軸受にかかる累積負荷（３D）</h2> -->
           <!-- 親のタグの基準点をリセット -->
-          <div class="pieChart">
+          <!-- <div class="pieChart">
               <canvas id="myCanvas"></canvas>
           </div>
           <div class="color_bar"></div>
           <div class="text_center">低い　　　　　　　　　　　　　　　　　　　　高い</div>
           <p>※ドラッグで回転，スクロールでズーム</p>
-        </div>
+        </div> -->
       </div>
 
     </section>
