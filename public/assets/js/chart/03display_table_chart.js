@@ -43,7 +43,7 @@ function update_data( crane_id, start, end ){
     format_crane_data( start, end );
     calc_max_val(crane_id);
     // データ表示
-    // display_spec_data(crane_id);
+    display_spec_data(crane_id);
     display_date_selection(crane_id, start, end);
     display_table_data(crane_id);
     // chart描画
@@ -58,7 +58,7 @@ function update_data( crane_id, start, end ){
     console.log("userAgent", typeof( userAgent));
     if(userAgent.indexOf('chrome') != -1 ) {
       console.log('お使いのブラウザはchromeですね！');
-      draw_pieChart( calc_pieChart_data( crane_id ) );
+      // draw_pieChart( calc_pieChart_data( crane_id ) );
     }else {
       $('.pieChartContainer').remove();
       $('.radar_chart_sum_time').css({
@@ -114,7 +114,7 @@ function display_crane_selection(){
 
 function display_spec_data(crane_id){
   // console.log('spec_data_list', spec_data_list);
-  
+  $('.crane_id').text(crane_id);
   $('.max_weight').text(spec_data_list[crane_id][1]);
   $('.max_turn_radius').text(spec_data_list[crane_id][2]);
   $('.ttb_pcd').text(spec_data_list[crane_id][3]);

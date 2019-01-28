@@ -15,41 +15,21 @@
   </header>
   <div class="main_content">
     <section class="controlls">
-      <h2>クレーン情報</h2>
-      <ul class="flex list_style_none crane_data_label_li">
-        <li>号機</li>
-        <li>定格荷重（Ton）</li>
-        <li>最大旋回半径（m）</li>
-        <li>TTB_PCD（D）</li>
-      </ul>
-      <!-- クレーン情報 -->
-      <form action="test" method="POST">
-        <ul class="flex list_style_none crane_data_li">
-          <li>
-            <input type="radio" name="crane_id" value="1" checked class="select_crane"> 1
-          </li>
-          <li class="max_weight"><span>20</span></li>
-          <li class="max_turn_radius"><span>40</span></li>
-          <li class="ttb_pcd"><span>4.24</span></li>
-        </ul>
-        <ul class="flex list_style_none crane_data_li">
-            <li>
-              <input type="radio" name="crane_id" value="2" class="select_crane"> 2
-            </li>
-            <li class="max_weight"><span>40</span></li>
-            <li class="max_turn_radius"><span>50</span></li>
-            <li class="ttb_pcd"><span>7.24</span></li>
-          </ul>
-      </form>
-      <!-- 表示期間 -->
-      <div class="display_period">
+      <h2>選択</h2>
+      <div class="selections round_border">
+        <h2>クレーンを選択</h2>
+        <form action="test" method="POST">
+            <input type="radio" name="crane_id" value="1" checked class="select_crane"> 1号機
+            <input type="radio" name="crane_id" value="2" class="select_crane"> 2号機
+        </form>
+        <!-- 表示期間 -->
+        <div class="display_period">
+          <h2>表示期間を選択</h2>
           <ul class="flex list_style_none crane_data_label_li">
-            <li></li>
             <li>開始年月日</li>
             <li>終了年月日</li>
           </ul>
-          <ul class="flex list_style_none crane_data_li setting date_selection">
-            <li>表示期間　</li>
+          <ul class="flex list_style_none crane_data_li date_selection">
             <li class="display_start_date">
               <!-- 日付入力 -->
               <input type="date" id="date_selection_start"/>
@@ -62,14 +42,39 @@
           <p class="date_range">
             （表示可能期間　<span></span>年<span></span>月<span></span>日 〜 <span></span>年<span></span>月<span></span>日）
           </p>
+        </div>
       </div>
+
+      <div class="selected_crane_info">
+        <h2>クレーン情報</h2>
+        <ul class="flex list_style_none crane_data_label_li">
+          <li>号機</li>
+          <li>定格荷重（Ton）</li>
+          <li>最大旋回半径（m）</li>
+          <li>TTB_PCD（D）</li>
+        </ul>
+        <!-- クレーン情報 -->
+        <ul class="flex list_style_none crane_data_li">
+          <li class="crane_id">0</li>
+          <li class="max_weight"><span>0</span></li>
+          <li class="max_turn_radius"><span>0</span></li>
+          <li class="ttb_pcd"><span>0</span></li>
+        </ul>
+      </div>
+
     </section>
 
     <!-- 集計表 -->
     <section class="summary_sheet">
       <div class="flex units">
-        <p>（単位：回数）</p>
-        <p>（単位：時間）</p>
+        <div class="table_info">
+          <h2>荷重区分，ゾーン別回数表</h2>
+          <p>（単位：回数）</p>
+        </div>
+        <div class="table_info">
+          <h2>荷重区分，ゾーン別時間表</h2>
+          <p>（単位：時間）</p>
+        </div>
       </div>
       <div class="flex tables">
         <table border="1" class="tb_numbers">
@@ -270,7 +275,7 @@
         </table>
       </div>
       <div class="flex bearing_segment_exp">
-          <p>A〜Hはターンテブル軸受上の区画を45度づつ分割したもの　</p>
+          <p>※A〜Hはターンテブル軸受上の区画を45度づつ分割したもの　</p>
           <img src="./assets/imgs/bearing_A_H.png" alt="ベアリングの区画" width="50px" height="50px">
       </div>
     </section>

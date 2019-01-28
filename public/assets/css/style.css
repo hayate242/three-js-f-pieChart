@@ -478,18 +478,41 @@ footer p {
   margin-right: 5px;
 }
 
-.date_range {
+.round_border {
+  border-radius: 10px;
+  border: solid 1px #bbb;
+}
+
+.selections {
+  width: 400px;
+  margin-left: 50px;
+}
+
+.selections form {
+  margin-left: 50px;
+}
+
+.selections .display_period .date_selection li {
+  border: none;
+}
+
+.selections .display_period .date_selection input {
+  width: 140px;
+}
+
+.selections .display_period .date_range {
   border: none;
   width: 100%;
-  padding-left: 200px;
+  padding-left: 20px;
 }
 
-.display_period .setting :nth-child(1) {
-  border: none;
+.selected_crane_info {
+  width: 700px;
+  margin-left: 50px;
 }
 
-.display_period .date_selection input {
-  width: 140px;
+.selected_crane_info ul:nth-child(3) li {
+  background-color: #eee;
 }
 
 .summary_sheet .units {
@@ -497,10 +520,17 @@ footer p {
   margin-bottom: -10px;
 }
 
-.summary_sheet .units p {
+.summary_sheet .units .table_info {
   width: 50%;
+}
+
+.summary_sheet .units .table_info h2 {
+  text-align: center;
+}
+
+.summary_sheet .units .table_info p {
   text-align: right;
-  max-width: 500px;
+  margin-right: 60px;
 }
 
 .summary_sheet .tables {
@@ -517,6 +547,10 @@ footer p {
 
 .summary_sheet .tables table th {
   text-align: center;
+}
+
+.summary_sheet .tables table td {
+  font-weight: bold;
 }
 
 .bearing_segment_exp {
