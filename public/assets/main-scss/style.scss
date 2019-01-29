@@ -386,7 +386,9 @@ footer {
     text-align: center;
   }
 }
-
+.center {
+  margin: 0 auto;
+}
 
 .chart {
   width: 700px;
@@ -518,10 +520,16 @@ footer {
     }
   }
 }
-
+.separate-border {
+  border-top: solid 1px #666666;
+  margin-top: 10px;
+}
 .selected_crane_info {
   width: 700px;
-  margin-left: 50px;
+  margin-top: 10px;
+  h2 {
+    text-align: center;
+  }
   ul:nth-child(3) {
     li {
       background-color: #eee;
