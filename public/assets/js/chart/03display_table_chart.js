@@ -49,6 +49,8 @@ function update_data( crane_id, start, end ){
     // chart描画
     draw_radar_chart( crane_id, false, "#radar_chart" , max_val_list[0]);
     draw_radar_chart( crane_id, true, "#radar_chart_time", max_val_list[1]);
+    draw_stacked_radar_chart( crane_id, false, "#stacked_radar_chart");
+    draw_stacked_radar_chart( crane_id, true, "#stacked_radar_chart_time");
     draw_stacked_chart( crane_id ,'#stacked_chart', false);
     draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
     draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);

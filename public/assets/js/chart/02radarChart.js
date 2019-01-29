@@ -22,7 +22,8 @@ var RadarChart = {
 	 levels: 3,
 	 maxValue: 0,
 	 radians: 2 * Math.PI,
-	 opacityArea: 0.5,
+	 opacityArea: 0,
+	//  opacityArea: 0.5,
 	 ToRight: 5,
 	 TranslateX: 80,
 	 TranslateY: 30,
@@ -154,10 +155,10 @@ var RadarChart = {
 										var z = "polygon."+d3.select(this).attr("class");
 										g.selectAll("polygon")
 										 .transition(200)
-										 .style("fill-opacity", 0.1); 
+										 .style("fill-opacity", 0); 
 										g.selectAll(z)
 										 .transition(200)
-										 .style("fill-opacity", .7);
+										 .style("fill-opacity", 0);
 									  })
 					 .on('mouseout', function(){
 										g.selectAll("polygon")
@@ -202,10 +203,10 @@ var RadarChart = {
 					var z = "polygon."+d3.select(this).attr("class");
 					g.selectAll("polygon")
 						.transition(200)
-						.style("fill-opacity", 0.1); 
+						.style("fill-opacity", 0); 
 					g.selectAll(z)
 						.transition(200)
-						.style("fill-opacity", .7);
+						.style("fill-opacity", 0);
 				  })
 		.on('mouseout', function(){
 					tooltip
