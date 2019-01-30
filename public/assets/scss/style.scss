@@ -41,7 +41,7 @@ footer {
 }
 
 .chart {
-  width: 653px;
+  width: $graph_width;
   height: 500px;
   border: solid 2px $border_color;
   margin: $chart_margin;
