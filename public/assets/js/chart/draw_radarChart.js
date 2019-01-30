@@ -37,14 +37,14 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 			var d = [];
 			for(var i = 8; i < 14; i++){
 				d.push([
-					{axis:"A",value: Number(crane_data[index][i])},
-					{axis:"B",value: Number(crane_data[index+1][i])},
-					{axis:"C",value: Number(crane_data[index+2][i])},
-					{axis:"D",value: Number(crane_data[index+3][i])},
-					{axis:"E",value: Number(crane_data[index+4][i])},
-					{axis:"F",value: Number(crane_data[index+5][i])},
-					{axis:"G",value: Number(crane_data[index+6][i])},
-					{axis:"H",value: Number(crane_data[index+7][i])}
+					{axis:"A",value: Number(crane_data[index][i].toFixed(2))},
+					{axis:"B",value: Number(crane_data[index+1][i].toFixed(2))},
+					{axis:"C",value: Number(crane_data[index+2][i].toFixed(2))},
+					{axis:"D",value: Number(crane_data[index+3][i].toFixed(2))},
+					{axis:"E",value: Number(crane_data[index+4][i].toFixed(2))},
+					{axis:"F",value: Number(crane_data[index+5][i].toFixed(2))},
+					{axis:"G",value: Number(crane_data[index+6][i].toFixed(2))},
+					{axis:"H",value: Number(crane_data[index+7][i].toFixed(2))}
 				]);
 			}
 		}
@@ -117,7 +117,7 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 /////////////////////////////////
 // 時間の合計値 レーダーチャート
 /////////////////////////////////
-function draw_radar_chart_sum_time( id, data ){
+function draw_radar_chart_sum( id, data ){
 	var w = 370,
 		h = 370;
 	// var w = $(window).width() / 3,
@@ -139,14 +139,14 @@ function draw_radar_chart_sum_time( id, data ){
 
 	var d = [];
 	d.push([
-		{axis:"A",value: Number(data[0])},
-		{axis:"B",value: Number(data[1])},
-		{axis:"C",value: Number(data[2])},
-		{axis:"D",value: Number(data[3])},
-		{axis:"E",value: Number(data[4])},
-		{axis:"F",value: Number(data[5])},
-		{axis:"G",value: Number(data[6])},
-		{axis:"H",value: Number(data[7])}
+		{axis:"A",value: Number(data[0].toFixed(2))},
+		{axis:"B",value: Number(data[1].toFixed(2))},
+		{axis:"C",value: Number(data[2].toFixed(2))},
+		{axis:"D",value: Number(data[3].toFixed(2))},
+		{axis:"E",value: Number(data[4].toFixed(2))},
+		{axis:"F",value: Number(data[5].toFixed(2))},
+		{axis:"G",value: Number(data[6].toFixed(2))},
+		{axis:"H",value: Number(data[7].toFixed(2))}
 	]);
 	// console.log("data",data);
 	// console.log("d",d);

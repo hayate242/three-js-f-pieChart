@@ -55,7 +55,8 @@ function update_data( crane_id, start, end ){
     draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
     draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
     draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
-    draw_radar_chart_sum_time("#radar_chart_sum_time" , sum_segments_time);
+    draw_radar_chart_sum("#radar_chart_sum" , sum_segments_num);
+    draw_radar_chart_sum("#radar_chart_sum_time" , sum_segments_time);
     console.log("userAgent",userAgent);
     console.log("userAgent", typeof( userAgent));
     if(userAgent.indexOf('chrome') != -1 ) {

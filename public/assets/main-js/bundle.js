@@ -586,7 +586,8 @@ function update_data( crane_id, start, end ){
     draw_stacked_chart( crane_id ,'#stacked_chart_time', true);
     draw_bar_chart( crane_id ,'#bar_chart', sum_class_num, false);
     draw_bar_chart( crane_id ,'#bar_chart_time', sum_class_time, true);
-    draw_radar_chart_sum_time("#radar_chart_sum_time" , sum_segments_time);
+    draw_radar_chart_sum("#radar_chart_sum" , sum_segments_num);
+    draw_radar_chart_sum("#radar_chart_sum_time" , sum_segments_time);
     console.log("userAgent",userAgent);
     console.log("userAgent", typeof( userAgent));
     if(userAgent.indexOf('chrome') != -1 ) {
@@ -1267,14 +1268,14 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 			var d = [];
 			for(var i = 8; i < 14; i++){
 				d.push([
-					{axis:"A",value: Number(crane_data[index][i])},
-					{axis:"B",value: Number(crane_data[index+1][i])},
-					{axis:"C",value: Number(crane_data[index+2][i])},
-					{axis:"D",value: Number(crane_data[index+3][i])},
-					{axis:"E",value: Number(crane_data[index+4][i])},
-					{axis:"F",value: Number(crane_data[index+5][i])},
-					{axis:"G",value: Number(crane_data[index+6][i])},
-					{axis:"H",value: Number(crane_data[index+7][i])}
+					{axis:"A",value: Number(crane_data[index][i].toFixed(2))},
+					{axis:"B",value: Number(crane_data[index+1][i].toFixed(2))},
+					{axis:"C",value: Number(crane_data[index+2][i].toFixed(2))},
+					{axis:"D",value: Number(crane_data[index+3][i].toFixed(2))},
+					{axis:"E",value: Number(crane_data[index+4][i].toFixed(2))},
+					{axis:"F",value: Number(crane_data[index+5][i].toFixed(2))},
+					{axis:"G",value: Number(crane_data[index+6][i].toFixed(2))},
+					{axis:"H",value: Number(crane_data[index+7][i].toFixed(2))}
 				]);
 			}
 		}
@@ -1347,7 +1348,7 @@ function draw_radar_chart( crane_id , is_time, id, max_val ){
 /////////////////////////////////
 // 時間の合計値 レーダーチャート
 /////////////////////////////////
-function draw_radar_chart_sum_time( id, data ){
+function draw_radar_chart_sum( id, data ){
 	var w = 370,
 		h = 370;
 	// var w = $(window).width() / 3,
@@ -1369,14 +1370,14 @@ function draw_radar_chart_sum_time( id, data ){
 
 	var d = [];
 	d.push([
-		{axis:"A",value: Number(data[0])},
-		{axis:"B",value: Number(data[1])},
-		{axis:"C",value: Number(data[2])},
-		{axis:"D",value: Number(data[3])},
-		{axis:"E",value: Number(data[4])},
-		{axis:"F",value: Number(data[5])},
-		{axis:"G",value: Number(data[6])},
-		{axis:"H",value: Number(data[7])}
+		{axis:"A",value: Number(data[0].toFixed(2))},
+		{axis:"B",value: Number(data[1].toFixed(2))},
+		{axis:"C",value: Number(data[2].toFixed(2))},
+		{axis:"D",value: Number(data[3].toFixed(2))},
+		{axis:"E",value: Number(data[4].toFixed(2))},
+		{axis:"F",value: Number(data[5].toFixed(2))},
+		{axis:"G",value: Number(data[6].toFixed(2))},
+		{axis:"H",value: Number(data[7].toFixed(2))}
 	]);
 	// console.log("data",data);
 	// console.log("d",d);
@@ -1402,7 +1403,7 @@ function get_cumulative_val(index, startIndex, endIndex){
 	for(var i = startIndex; i <= endIndex; i++){
 		sum += crane_data[index][i];
 	}
-	return sum;
+	return sum.toFixed(2);
 }
 
 function draw_stacked_radar_chart( crane_id , is_time, id ){
@@ -1625,7 +1626,7 @@ function draw_stacked_chart( crane_id, id, is_time ){
   // console.log("data", d);
   // console.log("totals", totals);
 
-
+  make_chart_label(id, is_time);
   draw_chart(d, totals, id , cfg, is_time);
 
 }
@@ -1660,7 +1661,7 @@ function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
   }
   // console.log("data", d);
   // console.log("totals", totals);
-
+  make_chart_label(id, is_time);
   draw_chart(d, totals, id , cfg , is_time);
 }
 
@@ -1785,29 +1786,33 @@ function draw_chart( d, totals, id, cfg, is_time ){
     //   .attr("y", 5)
     //   .attr("dy", "0.32em")
     //   .text(function(d) { return d; });
+      // Prep the tooltip bits, initial display is hidden
+      var tooltip = svg.append("g")
+      .attr("class", "tooltip")
+      .style("display", "none");
+        
+      tooltip.append("rect")
+      .attr("width", 60)
+      .attr("height", 20)
+      .attr("fill", "white")
+      .style("opacity", 0.5);
 
+      tooltip.append("text")
+      .attr("x", 30)
+      .attr("dy", "1.2em")
+      .style("text-anchor", "middle")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
 
 
     }
 
-  // Prep the tooltip bits, initial display is hidden
-  var tooltip = svg.append("g")
-  .attr("class", "tooltip")
-  .style("display", "none");
-    
-  tooltip.append("rect")
-  .attr("width", 60)
-  .attr("height", 20)
-  .attr("fill", "white")
-  .style("opacity", 0.5);
 
-  tooltip.append("text")
-  .attr("x", 30)
-  .attr("dy", "1.2em")
-  .style("text-anchor", "middle")
-  .attr("font-size", "12px")
-  .attr("font-weight", "bold");
 
+
+}
+
+function make_chart_label(id, is_time){
   // ラベルの作成
   
   var ver_label = "";
@@ -1863,10 +1868,7 @@ function draw_chart( d, totals, id, cfg, is_time ){
       .attr("x", 230)
       .attr("y", 380)
       ;
-
-
 }
-
 // //CSVファイルを読み込む関数getCSV()の定義
 function getCSV(targetFile){
   var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成

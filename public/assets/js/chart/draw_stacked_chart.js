@@ -101,7 +101,7 @@ function draw_stacked_chart( crane_id, id, is_time ){
   // console.log("data", d);
   // console.log("totals", totals);
 
-
+  make_chart_label(id, is_time);
   draw_chart(d, totals, id , cfg, is_time);
 
 }
@@ -136,7 +136,7 @@ function draw_bar_chart( crane_id, id, sum_of_class, is_time ){
   }
   // console.log("data", d);
   // console.log("totals", totals);
-
+  make_chart_label(id, is_time);
   draw_chart(d, totals, id , cfg , is_time);
 }
 
@@ -261,29 +261,33 @@ function draw_chart( d, totals, id, cfg, is_time ){
     //   .attr("y", 5)
     //   .attr("dy", "0.32em")
     //   .text(function(d) { return d; });
+      // Prep the tooltip bits, initial display is hidden
+      var tooltip = svg.append("g")
+      .attr("class", "tooltip")
+      .style("display", "none");
+        
+      tooltip.append("rect")
+      .attr("width", 60)
+      .attr("height", 20)
+      .attr("fill", "white")
+      .style("opacity", 0.5);
 
+      tooltip.append("text")
+      .attr("x", 30)
+      .attr("dy", "1.2em")
+      .style("text-anchor", "middle")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
 
 
     }
 
-  // Prep the tooltip bits, initial display is hidden
-  var tooltip = svg.append("g")
-  .attr("class", "tooltip")
-  .style("display", "none");
-    
-  tooltip.append("rect")
-  .attr("width", 60)
-  .attr("height", 20)
-  .attr("fill", "white")
-  .style("opacity", 0.5);
 
-  tooltip.append("text")
-  .attr("x", 30)
-  .attr("dy", "1.2em")
-  .style("text-anchor", "middle")
-  .attr("font-size", "12px")
-  .attr("font-weight", "bold");
 
+
+}
+
+function make_chart_label(id, is_time){
   // ラベルの作成
   
   var ver_label = "";
@@ -339,6 +343,4 @@ function draw_chart( d, totals, id, cfg, is_time ){
       .attr("x", 230)
       .attr("y", 380)
       ;
-
-
 }

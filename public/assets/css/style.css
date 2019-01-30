@@ -378,7 +378,7 @@ footer p {
 }
 
 .chart {
-  width: 700px;
+  width: 653px;
   height: 500px;
   border: solid 2px #bbb;
   margin: 3px;
@@ -612,9 +612,4 @@ footer p {
 
 .graphs #radar_chart {
   width: calc(40% + 100px);
-}
-
-.graphs .radar_chart_sum_time {
-  width: 660px;
-  margin: 0 auto;
 }

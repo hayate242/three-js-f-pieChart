@@ -3,7 +3,7 @@ function get_cumulative_val(index, startIndex, endIndex){
 	for(var i = startIndex; i <= endIndex; i++){
 		sum += crane_data[index][i];
 	}
-	return sum;
+	return sum.toFixed(2);
 }
 
 function draw_stacked_radar_chart( crane_id , is_time, id ){
