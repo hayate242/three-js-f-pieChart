@@ -358,7 +358,9 @@ header {
 }
 
 header h1 {
-  margin-left: 39px;
+  width: 1400px;
+  padding-left: 33px;
+  margin: 0 auto;
 }
 
 footer {
@@ -494,6 +496,10 @@ footer p {
 
 .selections form {
   margin-left: 50px;
+}
+
+.selections #crane_form label {
+  margin: 0 5px;
 }
 
 .selections .display_period .date_selection li {

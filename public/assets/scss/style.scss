@@ -2,9 +2,10 @@ $border_color: #bbb;
 $graph_width: 700px;
 $chart_margin: 3px;
 $h_f_bg_color: #e87723;
+$content_width: 1400px;
 
 .main_content {
-  max-width: 1400px;
+  max-width: $content_width;
   margin: 0 auto;
 }
 
@@ -23,7 +24,9 @@ $h_f_bg_color: #e87723;
 header {
   padding: 10px;
   h1 {
-    margin-left: 39px;
+    width: $content_width;
+    padding-left: 33px;
+    margin: 0 auto;
   }
 }
 footer {
@@ -153,6 +156,11 @@ footer {
   margin-left: 50px;
   form {
     margin-left: 50px;
+  }
+  #crane_form {
+    label {
+      margin: 0 5px;
+    }
   }
   .display_period {
     .date_selection {

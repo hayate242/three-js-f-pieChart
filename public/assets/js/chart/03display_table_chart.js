@@ -67,61 +67,19 @@ function update_data( crane_id, start, end ){
   
 }
 
-
-// セレクトボックスを変更した際の処理
-$(function(){
-  $('input[name=crane_id]').change(function() {
-    on_change_action(true);
-  });
-  $('#date_selection_start').change(function(){
-    on_change_action(false);
-  });
-  $('#date_selection_end').change(function(){
-    on_change_action(false);
-  });
-  function on_change_action( is_select_crane ){
-    var crane_id = $('input[name=crane_id]:checked').val();
-    var draw_flag = true;
-    console.log("radio crane_id", crane_id);
-    if(is_select_crane){
-      var start = crane_date_list[crane_id].start_y;
-      var end = crane_date_list[crane_id].end_y;
-      display_min_max_date(start, end);
-    }else{
-      var start_date = String($('#date_selection_start').val()).replace(/-/g, '/');
-      var end_date = String($('#date_selection_end').val()).replace(/-/g, '/');
-      // console.log("selected_craneID", crane_id);
-      var start = new Date(start_date);
-      var end = new Date(end_date);
-      if( start > end ){
-        $('#date_selection_start').val( dateFormat(prev_start_date) );
-        $('#date_selection_end').val( dateFormat(prev_end_date) );
-        alert("開始年月日<終了年月日としてください");
-        draw_flag = false;
-      }else if( start < crane_date_list[crane_id].start_y ){
-        $('#date_selection_start').val( dateFormat(crane_date_list[crane_id].start_y) );
-        alert(slash_dateFormat(start)+"以前にはデータが無いため開始年月日を"+slash_dateFormat(crane_date_list[crane_id].start_y)+"にしました");
-        start = crane_date_list[crane_id].start_y;
-      }else if( end > crane_date_list[crane_id].end_y ){
-        $('#date_selection_end').val( dateFormat(crane_date_list[crane_id].end_y) );
-        alert(slash_dateFormat(end)+"以降にはデータが無いため終了年月日を"+slash_dateFormat(crane_date_list[crane_id].end_y)+"にしました");
-        end = crane_date_list[crane_id].end_y;
-      }
-    }
-    // console.log("start_date", start_date);
-    // console.log("end_date", end_date);
-    // console.log("start", start);
-    // console.log("end", end);
-    if(draw_flag){
-      update_data(crane_id, start, end);
-    }
-  }
-});
-
 function display_crane_selection(){
-  // クレーンのセレクトボックス
+  // // クレーンのセレクトボックス
+  // for(var i = 1, len = spec_data_list.length; i < len; i++){
+  //   $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
+  // }
+  console.log("spec_data_list",spec_data_list);
   for(var i = 1, len = spec_data_list.length; i < len; i++){
-    $('.select_crane').append($('<option>').html(spec_data_list[i][0]).val(spec_data_list[i][0]));
+    var $input = $('<input type="radio" name="crane_id" value="'+spec_data_list[i][0]+'" class="select_crane"/>');
+    var $label = $('<label>'+spec_data_list[i][0]+'号機</label>')
+    if(i == 1){
+      $input = $input.attr("checked", true );
+    }
+    $("#crane_form").append($input).append($label);
   }
 }
 
@@ -212,9 +170,6 @@ function display_table_data(crane_id){
   // console.log('sum_class_num',sum_class_num);
   // console.log('sum_class_time',sum_class_time);
 
-
-
-
   // 表示
   for(var i = 0; i < segment_num; i++){ 
     // 回数データ
@@ -271,3 +226,56 @@ function calc_damage_crane( data ){
   // console.log(sum);
   return sum;
 }
+
+// 設定変時の動作
+$(window).on('load',function(){
+  // セレクトボックスを変更した際の処理
+  $(function(){
+    $('input[name=crane_id]:radio').change(function() {
+      on_change_action(true);
+    });
+    $('#date_selection_start').change(function(){
+      on_change_action(false);
+    });
+    $('#date_selection_end').change(function(){
+      on_change_action(false);
+    });
+    function on_change_action( is_select_crane ){
+      var crane_id = $('input[name=crane_id]:checked').val();
+      var draw_flag = true;
+      console.log("radio crane_id", crane_id);
+      if(is_select_crane){
+        var start = crane_date_list[crane_id].start_y;
+        var end = crane_date_list[crane_id].end_y;
+        display_min_max_date(start, end);
+      }else{
+        var start_date = String($('#date_selection_start').val()).replace(/-/g, '/');
+        var end_date = String($('#date_selection_end').val()).replace(/-/g, '/');
+        // console.log("selected_craneID", crane_id);
+        var start = new Date(start_date);
+        var end = new Date(end_date);
+        if( start > end ){
+          $('#date_selection_start').val( dateFormat(prev_start_date) );
+          $('#date_selection_end').val( dateFormat(prev_end_date) );
+          alert("開始年月日<終了年月日としてください");
+          draw_flag = false;
+        }else if( start < crane_date_list[crane_id].start_y ){
+          $('#date_selection_start').val( dateFormat(crane_date_list[crane_id].start_y) );
+          alert(slash_dateFormat(start)+"以前にはデータが無いため開始年月日を"+slash_dateFormat(crane_date_list[crane_id].start_y)+"にしました");
+          start = crane_date_list[crane_id].start_y;
+        }else if( end > crane_date_list[crane_id].end_y ){
+          $('#date_selection_end').val( dateFormat(crane_date_list[crane_id].end_y) );
+          alert(slash_dateFormat(end)+"以降にはデータが無いため終了年月日を"+slash_dateFormat(crane_date_list[crane_id].end_y)+"にしました");
+          end = crane_date_list[crane_id].end_y;
+        }
+      }
+      // console.log("start_date", start_date);
+      // console.log("end_date", end_date);
+      // console.log("start", start);
+      // console.log("end", end);
+      if(draw_flag){
+        update_data(crane_id, start, end);
+      }
+    }
+  });
+});

@@ -17,9 +17,9 @@
     <section class="controlls">
       <div class="selections round_border">
         <h2>クレーンを選択</h2>
-        <form action="test" method="POST">
-            <input type="radio" name="crane_id" value="1" checked class="select_crane"> 1号機
-            <input type="radio" name="crane_id" value="2" class="select_crane"> 2号機
+        <form action="test" method="POST" id="crane_form">
+            <!-- <input type="radio" name="crane_id" value="1" checked class="select_crane"> 1号機
+            <input type="radio" name="crane_id" value="2" class="select_crane"> 2号機 -->
         </form>
         <!-- 表示期間 -->
         <div class="display_period">
@@ -68,11 +68,11 @@
     <section class="summary_sheet">
       <div class="flex units">
         <div class="table_info">
-          <h2>荷重区分，ゾーン別回数表</h2>
+          <h2>荷重区分，ゾーン別回数</h2>
           <p>（単位：回数）</p>
         </div>
         <div class="table_info">
-          <h2>荷重区分，ゾーン別時間表</h2>
+          <h2>荷重区分，ゾーン別時間</h2>
           <p>（単位：時間）</p>
         </div>
       </div>
@@ -306,13 +306,13 @@
       <div class="flex">
         <div class="chart">
           <div id="stacked_radar_chart_txt">
-            <h3 class="chart_title">累積荷重区分別ゾーン頻度</h3>
+            <h3 class="chart_title">荷重区分別ゾーン頻度（累積）</h3>
             <div id="stacked_radar_chart"></div>
           </div>
         </div>
         <div class="chart">
           <div id="stacked_radar_chart_time_txt">
-            <h3 class="chart_title">累積荷重区分別ゾーン累計時間</h3>
+            <h3 class="chart_title">荷重区分別ゾーン累計時間（累積）</h3>
             <div id="stacked_radar_chart_time"></div>
           </div>
         </div>
