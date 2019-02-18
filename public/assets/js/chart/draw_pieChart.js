@@ -23,7 +23,7 @@ function draw_pieChart(damage_data) {
   // var result = getCSV("assets/data/demo.csv");
   // console.log(damage_data[0][1]);
   // console.log(damage_data);
-  
+  console.log("start drawing 3D chart");
 
 
   // サイズを指定

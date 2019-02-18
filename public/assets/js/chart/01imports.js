@@ -1,1 +1,1 @@
-// import "@babel/polyfill";
+/*@cc_on _d=document;eval('var document=_d')@*/

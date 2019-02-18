@@ -52,15 +52,15 @@ function update_data( crane_id, start, end ){
   draw_radar_chart_sum("#radar_chart_sum_time" , sum_segments_time);
   console.log("userAgent",userAgent);
   console.log("userAgent", typeof( userAgent));
+  // テスト用
   if(userAgent.indexOf('chrome') != -1 ) {
     console.log('お使いのブラウザはchromeですね！');
     // draw_pieChart( calc_pieChart_data( crane_id ) );
-  }else {
-    $('.pieChartContainer').remove();
-    $('.radar_chart_sum_time').css({
-      'margin': '0 auto'
-    });
   }
+  else {
+    $('.pieChartContainer').remove();
+  }
+  draw_pieChart( calc_pieChart_data( crane_id ) );
 
   // draw_stacked_chart( crane_id , '#stacked_chart' , false);
   // alert("グラフを表示します\n "+crane_id+"号機\n開始　"+slash_dateFormat(start)+"\n終了　"+slash_dateFormat(end));

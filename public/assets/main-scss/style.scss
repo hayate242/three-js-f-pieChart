@@ -358,8 +358,18 @@ $content_width: 1400px;
   max-width: $content_width;
   margin: 0 auto;
 }
-
-
+.square {
+	display: inline-block;
+	width: 10px;
+  height: 10px;
+  margin-right: 4px;
+}
+.range1 { background: #1F77B3; }
+.range2 { background: #FF7F0D; }
+.range3 { background: #2BA02C; }
+.range4 { background: #D62728; }
+.range5 { background: #9468BC; }
+.range6 { background: #8D564B; }
 .text_center {
   text-align: center;
 }
@@ -570,7 +580,13 @@ footer {
       border: solid 1px $border_color;
       border-collapse: collapse;
       th {
+        position: relative;
         text-align: center;
+      }
+      .column1 {
+        text-align: left;
+        padding-left: 10px;
+        width: 100px;
       }
       td {
         font-weight: bold;
@@ -578,6 +594,7 @@ footer {
     }
   }
 }
+
 
 .bearing_segment_exp {
   margin-top: 10px;
