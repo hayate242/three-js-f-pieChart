@@ -44,6 +44,10 @@ function save_log_data( log_data ){
   // format_crane_data(crane_date_list[1].start_y, crane_date_list[2].end_y);
 }
 
+const calc_load_factor = (load_weight, capacity_weight) => {
+  return load_weight/capacity_weight;
+};
+
 function format_crane_data( start, end ){
   // console.log("format_start", start);
   // console.log("format_end", end);
@@ -68,6 +72,7 @@ function format_crane_data( start, end ){
   // console.log("init",crane_data);
   var isFirst = true;
   log_data_list.forEach(function(data){
+    console.log("data",data);
     if(isFirst){
       isFirst = false;
     }else{
@@ -80,12 +85,13 @@ function format_crane_data( start, end ){
       if(the_date >= start && the_date <= end){
         // console.log("data", data);
         // 負荷率
-        if     (data[7] > 0    && data[7] <= 0.10)  { classify_data(data,0); }
-        else if(data[7] > 0.10 && data[7] <= 0.50)  { classify_data(data,1); }
-        else if(data[7] > 0.50 && data[7] <= 0.63)  { classify_data(data,2); }
-        else if(data[7] > 0.63 && data[7] <= 0.80)  { classify_data(data,3); }
-        else if(data[7] > 0.80 && data[7] <= 1   )  { classify_data(data,4); }
-        else if(data[7] > 1)                        { classify_data(data,5); }
+        var load_factor = calc_load_factor(data[6], spec_data_list[parseInt(data[0])][1])
+        if     (load_factor > 0    && load_factor <= 0.10)  { classify_data(data,0); }
+        else if(load_factor > 0.10 && load_factor <= 0.50)  { classify_data(data,1); }
+        else if(load_factor > 0.50 && load_factor <= 0.63)  { classify_data(data,2); }
+        else if(load_factor > 0.63 && load_factor <= 0.80)  { classify_data(data,3); }
+        else if(load_factor > 0.80 && load_factor <= 1   )  { classify_data(data,4); }
+        else if(load_factor > 1)                        { classify_data(data,5); }
       }
     }
   });
